@@ -1,6 +1,6 @@
-package de.rki.demis.fhir.utils;
+package de.rki.demis.fhir.util;
 
-import de.rki.demis.fhir.utils.constants.DateFormatter;
+import de.rki.demis.fhir.util.constant.DateFormatter;
 
 import javax.ws.rs.WebApplicationException;
 import java.text.DateFormat;

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaAuditing
 @SpringBootApplication
-//@EntityScan(basePackages = {"de.rki.demis.fhir.model"})
-//@EnableJpaRepositories(basePackages = {"de.rki.demis.fhir.repository"})
+@EntityScan(basePackages = {"de.rki.demis.fhir.model"})
+@EnableJpaRepositories(basePackages = {"de.rki.demis.fhir.repository"})
 public class FhirServerApplication {
 
     public static void main(String[] args) {

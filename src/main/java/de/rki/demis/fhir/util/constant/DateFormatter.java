@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.utils.constants;
+package de.rki.demis.fhir.util.constant;
 
 /**
  * 

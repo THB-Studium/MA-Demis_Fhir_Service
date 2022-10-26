@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.utils.constants;
+package de.rki.demis.fhir.util.constant;
 
 import lombok.experimental.UtilityClass;
 
@@ -9,8 +9,8 @@ public class Constants {
   public static final String UNSUPPORTED_PROFILE_TYPE = "Unsupported profile type";
   public static final String UNSUPPORTED_RESOURCE_BUNDLE = "Unsupported resource bundle";
   public static final String ALL_OK = "All OK";
-  public static final String TAG_NOT_EMPTY = "The tag must not be empty";
-  public static final String LAST_UPDATED_NOT_NULL = "The bundleString date must not be null";
+  public static final String NOT_EMPTY_MSG = "must not be empty";
+  public static final String NOT_NULL_MSG = "must not be null";
 
 
   /** Apis */
