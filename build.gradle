@@ -27,7 +27,7 @@ dependencies {
 
     // Jpa models generation for generation of Meta-Models:...
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
-    implementation 'javax.annotation:javax.annotation-api'
+//    implementation 'javax.annotation:javax.annotation-api'
 
 
     // Swagger:....
