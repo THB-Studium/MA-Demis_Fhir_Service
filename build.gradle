@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'de.rki.demis'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -19,16 +19,68 @@ repositories {
 }
 
 dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+    // Spring-boot:....
     implementation 'org.springframework.boot:spring-boot-starter-jersey'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.4'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.6'
+
+    // Jpa models generation for generation of Meta-Models:...
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+    implementation 'javax.annotation:javax.annotation-api'
+
+
+    // Swagger:....
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'io.springfox:springfox-swagger-common:3.0.0'
+
+
+    // HAPI Fhir:....
+//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-jpaserver-base:6.0.1' // Core
+//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-client:6.0.1' // Client
+//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-structures-r4:6.1.1' // Structures-r4
+
+
+    // DBs:....
+    runtimeOnly 'org.postgresql:postgresql' // Postgres
+//    implementation 'org.postgresql:postgresql:42.5.0' // Postgres
+//    implementation 'com.datastax.oss:java-driver-core:4.14.1' // Apache Cassandra
+//    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra' // Apache Cassandra
+
+
+    // Extras Tools:....
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+    // Tests:....
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'ch.qos.logback:logback-classic'
+
 }
 
+// For generated class of jpa metadata model generator:....
+ext {
+    generatedMainJava = "${buildDir}/generated/main/java"
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generatedMainJava)
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDirs = [generatedMainJava]
+        }
+    }
+}
+
+// task for tests:....
 tasks.named('test') {
     useJUnitPlatform()
 }
