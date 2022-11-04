@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.service;
+package de.rki.demis.fhir.service.utils;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;

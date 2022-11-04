@@ -21,9 +21,7 @@ public class Bundle2BundleMod {
 
         BundleMod out = new BundleMod();
 
-        out.setId(Objects.isNull(in.getId()) ? null : UUID.fromString(in.getId()));
-//        out.setTag(tag2Sting(in.getMeta().getTag()));
-//        out.setLastUpdated(in.getMeta().getLastUpdated());
+        out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
 
         return out;
     }

@@ -14,7 +14,7 @@ package de.rki.demis.fhir.controller.bundles;
 //    @RequestMapping(method = RequestMethod.GET)
 //    public List<BundleMod> search(
 //            @QueryParam("_tag") String tag,
-//            @QueryParam("_lastUpdated") DateParam lastUpdated) {
+//            @QueryParam("_lastUpdated") DateQueryParser lastUpdated) {
 //
 //        log.info("::: BundleSearchController.search() - search :::");
 //        log.info("::: search Binaries by 'tag' and/or 'lastUpdated' :::");
@@ -22,7 +22,7 @@ package de.rki.demis.fhir.controller.bundles;
 //        BundleCriteria criteria = new BundleCriteria();
 //
 //        criteria.setTag(tag);
-//        criteria.setLastUpdated(!Objects.isNull(lastUpdated) ? lastUpdated.getDate() : null);
+//        criteria.setLastUpdated(Objects.nonNull(lastUpdated) ? lastUpdated.getDate() : null);
 //
 //        return service.search(criteria);
 //    }

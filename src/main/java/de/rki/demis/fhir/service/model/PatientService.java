@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.service;
+package de.rki.demis.fhir.service.model;
 
 import de.rki.demis.fhir.model.PatientMod;
 //import de.rki.demis.fhir.repository.PatientRepository;

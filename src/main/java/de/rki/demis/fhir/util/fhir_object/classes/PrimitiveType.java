@@ -16,11 +16,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-//@MappedSuperclass
+@MappedSuperclass
 public class PrimitiveType<T> extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;
 
-    private T myCoercedValue; // todo: Generic type jpa persistent
+//    private T myCoercedValue; todo: Generic type jpa persistent
     private String myStringValue;
 }

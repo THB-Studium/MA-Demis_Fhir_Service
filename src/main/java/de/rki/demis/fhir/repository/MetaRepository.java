@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.UUID;
 
-//public interface MetaRepository
-//        extends JpaRepository<Meta, UUID>, JpaSpecificationExecutor<Meta> {
-//
-//    boolean existsById(UUID id);
-//}
+public interface MetaRepository
+        extends JpaRepository<Meta, UUID>, JpaSpecificationExecutor<Meta> {
+
+    boolean existsById(UUID id);
+}

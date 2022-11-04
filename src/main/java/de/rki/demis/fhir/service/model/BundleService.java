@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.service;
+package de.rki.demis.fhir.service.model;
 
 import de.rki.demis.fhir.exception.ParsingException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
@@ -7,6 +7,7 @@ import de.rki.demis.fhir.model.BundleMod;
 import de.rki.demis.fhir.repository.BundleRepository;
 import de.rki.demis.fhir.search.criteria.BundleCriteria;
 import de.rki.demis.fhir.search.specs.BundleSpecs;
+import de.rki.demis.fhir.service.utils.FhirParserService;
 import de.rki.demis.fhir.transfert.bundle.Bundle2BundleMod;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Bundle;

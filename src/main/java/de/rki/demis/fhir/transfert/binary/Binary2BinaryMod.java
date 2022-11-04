@@ -1,13 +1,16 @@
 package de.rki.demis.fhir.transfert.binary;
 
 import de.rki.demis.fhir.model.BinaryMod;
+import de.rki.demis.fhir.transfert.meta.MetaFhir2Meta;
 import org.hl7.fhir.r4.model.Binary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Binary2BinaryMod {
@@ -21,16 +24,23 @@ public class Binary2BinaryMod {
 
         BinaryMod out = new BinaryMod();
 
-//        out.setId(Objects.isNull(in.getId()) ? null : UUID.fromString(in.getId()));
-//        out.setMeta(new Meta(null,
-//                in.getMeta().getVersionId(),
-//                in.getMeta().getLastUpdated(),
-//                in.getMeta().getSource(),
-//                in.getMeta().getProfile().toString(),
-//                null,
-//                null));
-//        out.setContentType(in.getContentType());
-//        out.setData(in.getData().toString());
+        // Resource type attributes
+        out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
+        out.setResourceType(in.getResourceType().toString());
+        out.setMeta(MetaFhir2Meta.apply(in.getMeta()));
+//        out.setImplicitRules(UriTypeFhir2UriType.apply(in.getImplicitRulesElement())); todo
+//        out.setLanguage(CodeTypeFhir2CodeType.apply(in.getLanguageElement())); todo
+
+        // Base type attributes
+        out.setFormatCommentsPre(new HashSet<>(in.getFormatCommentsPre()));
+        out.setFormatCommentsPost(new HashSet<>(in.getFormatCommentsPost()));
+
+        // BinaryMod attributes
+        out.setContentType(in.getContentType());
+//        out.setSecurityContext(Reference2Reference.apply(in.getSecurityContext())); todo
+//        out.setSecurityContextTarget(RessourceFhir2Ressource.apply(in.getSecurityContextTarget())); todo
+//        out.setData(Base64BinaryTypeFhir2Base64BinaryType.apply(in.getDataElement())); todo
+        out.setData(in.getData());
 
         return out;
     }

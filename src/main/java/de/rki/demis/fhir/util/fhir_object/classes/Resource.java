@@ -13,8 +13,10 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hl7.fhir.r4.model.IdType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -51,6 +53,7 @@ public class Resource extends BaseResource implements Serializable {
             value = "The logical id of the resource, as used in the URL for the resource. Once assigned, this value never changes."
     )
     private UUID id;
+    private String resourceType;
     @OneToOne
     @Child(
             name = "meta",
@@ -63,28 +66,28 @@ public class Resource extends BaseResource implements Serializable {
             value = "The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource."
     )
     private Meta meta;
-    @OneToOne
-    @Child(
-            name = "implicitRules",
-            type = {org.hl7.fhir.r4.model.UriType.class},
-            order = 2,
-            modifier = true,
-            summary = true
-    )
-    @Description(
-            shortDefinition = "A set of rules under which this content was created",
-            value = "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc."
-    )
-    private UriType implicitRules; // xs:anyURI - 	A JSON string - a URI - Regex: \S*
-    @OneToOne
-    @Child(
-            name = "language",
-            type = {org.hl7.fhir.r4.model.CodeType.class},
-            order = 3
-    )
-    @Description(
-            shortDefinition = "Language of the resource content",
-            value = "The base language in which the resource is written."
-    )
-    private CodeType language; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
+//    @OneToOne
+//    @Child(
+//            name = "implicitRules",
+//            type = {org.hl7.fhir.r4.model.UriType.class},
+//            order = 2,
+//            modifier = true,
+//            summary = true
+//    )
+//    @Description(
+//            shortDefinition = "A set of rules under which this content was created",
+//            value = "A reference to a set of rules that were followed when the resource was constructed, and which must be understood when processing the content. Often, this is a reference to an implementation guide that defines the special rules along with other profiles etc."
+//    )
+//    private UriType implicitRules; // xs:anyURI - 	A JSON string - a URI - Regex: \S*
+//    @OneToOne
+//    @Child(
+//            name = "language",
+//            type = {org.hl7.fhir.r4.model.CodeType.class},
+//            order = 3
+//    )
+//    @Description(
+//            shortDefinition = "Language of the resource content",
+//            value = "The base language in which the resource is written."
+//    )
+//    private CodeType language; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
 }

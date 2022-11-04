@@ -21,14 +21,14 @@ public class BundleSpecs implements Specification<BundleMod> {
         final List<Predicate> predicates = new ArrayList<>();
 
 //        // by tag:
-//        if (!Objects.isNull(criteria.getTag())) {
+//        if (Objects.nonNull(criteria.getTag())) {
 //            Predicate tagPredicate = builder.like(
 //                    builder.upper(root.get(BundleMod_.tag)), criteria.getTag().toUpperCase());
 //            predicates.add(tagPredicate);
 //        }
 //
 //        // by lastUpdated:
-//        if (!Objects.isNull(criteria.getLastUpdated())) {
+//        if (Objects.nonNull(criteria.getLastUpdated())) {
 //            Predicate lastUpdatedPredicate = builder.greaterThanOrEqualTo(
 //                    root.get(BundleMod_.lastUpdated), criteria.getLastUpdated());
 //            predicates.add(lastUpdatedPredicate);

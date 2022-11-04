@@ -13,7 +13,9 @@ import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.StringType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import java.io.Serial;
 import java.io.Serializable;

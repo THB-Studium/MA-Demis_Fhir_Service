@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.StringType;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -24,6 +25,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class CodeableConcept extends Element implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 760353246L;
+
+
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     @Child(
@@ -33,11 +38,13 @@ public class CodeableConcept extends Element implements Serializable {
             shortDefinition = "Code defined by a terminology system",
             value = "A reference to a code defined by a terminology system.")
     private Set<Coding> coding;
+
     @Child(
             name = "text", type = {StringType.class},
             order = 1, summary = true)
     @Description(
             shortDefinition = "Plain text representation of the concept",
-            value = "A human language representation of the concept as seen/selected/uttered by the user who entered the data and/or which represents the intended meaning of the user.")
+            value = "A human language representation of the concept as seen/selected/uttered by the user who " +
+                    "entered the data and/or which represents the intended meaning of the user.")
     private String text;
 }

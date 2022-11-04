@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.UUID;
 
-//public interface PatientRepository
-//        extends JpaRepository<PatientMod, UUID>, JpaSpecificationExecutor<PatientMod> {
-//
-//}
+public interface PatientRepository
+        extends JpaRepository<PatientMod, UUID>, JpaSpecificationExecutor<PatientMod> {
+
+}

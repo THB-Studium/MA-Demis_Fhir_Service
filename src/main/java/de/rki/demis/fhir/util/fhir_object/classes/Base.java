@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import java.io.Serial;
 import java.io.Serializable;
@@ -24,9 +25,9 @@ public class Base implements Serializable {
 
     //    @ElementCollection
 //    private Map<String, Object> userData; // todo: find a way to persist 'Object' type with JPA (@Convert(converter = ObjectConverter.class))
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> formatCommentsPre;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> formatCommentsPost;
 
     public boolean isEmpty() {

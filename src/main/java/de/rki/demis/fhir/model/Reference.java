@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hl7.fhir.r4.model.StringType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import java.io.Serial;
 import java.io.Serializable;
