@@ -1,11 +1,11 @@
 package de.rki.demis.fhir.util.fhir_object.interfaces;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 public interface IBaseMetaType extends ICompositeType {
 
-    org.hl7.fhir.instance.model.api.IBaseMetaType addProfile(String theProfile);
+    IBaseMetaType addProfile(String theProfile);
 
     IBaseCoding addSecurity();
 
@@ -13,17 +13,17 @@ public interface IBaseMetaType extends ICompositeType {
 
     Date getLastUpdated();
 
-    List<? extends IPrimitiveType<String>> getProfile();
+    IBaseMetaType setLastUpdated(Date theHeaderDateValue);
 
-    List<? extends IBaseCoding> getSecurity();
+    Set<? extends IPrimitiveType<String>> getProfile();
 
-    List<? extends IBaseCoding> getTag();
+    Set<? extends IBaseCoding> getSecurity();
+
+    Set<? extends IBaseCoding> getTag();
 
     String getVersionId();
 
-    org.hl7.fhir.instance.model.api.IBaseMetaType setLastUpdated(Date theHeaderDateValue);
-
-    org.hl7.fhir.instance.model.api.IBaseMetaType setVersionId(String theVersionId);
+    IBaseMetaType setVersionId(String theVersionId);
 
     /**
      * Returns the first tag (if any) that has the given system and code, or returns
@@ -36,6 +36,5 @@ public interface IBaseMetaType extends ICompositeType {
      * <code>null</code> if none
      */
     IBaseCoding getSecurity(String theSystem, String theCode);
-
 
 }

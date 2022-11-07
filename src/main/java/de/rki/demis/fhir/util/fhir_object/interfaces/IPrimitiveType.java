@@ -8,7 +8,7 @@ public interface IPrimitiveType<T> extends IBaseDatatype {
      * If the supplied argument is non-null, returns the results of {@link #getValue()}. If the supplied argument is null, returns null.
      */
     @Nullable
-    static <T> T toValueOrNull(@Nullable org.hl7.fhir.instance.model.api.IPrimitiveType<T> thePrimitiveType) {
+    static <T> T toValueOrNull(@Nullable IPrimitiveType<T> thePrimitiveType) {
         return thePrimitiveType != null ? thePrimitiveType.getValue() : null;
     }
 
@@ -18,7 +18,7 @@ public interface IPrimitiveType<T> extends IBaseDatatype {
 
     T getValue();
 
-    org.hl7.fhir.instance.model.api.IPrimitiveType<T> setValue(T theValue) throws IllegalArgumentException;
+    IPrimitiveType<T> setValue(T theValue) throws IllegalArgumentException;
 
     boolean hasValue();
 

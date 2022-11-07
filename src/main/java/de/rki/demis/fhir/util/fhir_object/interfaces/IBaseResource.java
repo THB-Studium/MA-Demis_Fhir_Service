@@ -7,10 +7,12 @@ import java.util.Collections;
 import java.util.Set;
 
 public interface IBaseResource extends IBase, IElement {
+
     /**
      * Include constant for <code>*</code> (return all includes)
      */
     Include INCLUDE_ALL = new Include("*", false).toLocked();
+
     /**
      * Include set containing only {@link #INCLUDE_ALL}
      */

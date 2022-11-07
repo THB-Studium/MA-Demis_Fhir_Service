@@ -1,6 +1,5 @@
 package de.rki.demis.fhir.util.fhir_object.interfaces;
 
-import org.hl7.fhir.instance.model.api.IBaseEnumFactory;
 
 public interface EnumFactory<T extends Enum<?>> extends IBaseEnumFactory<T> {
 

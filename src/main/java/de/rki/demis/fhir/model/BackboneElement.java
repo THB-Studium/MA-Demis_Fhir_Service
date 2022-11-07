@@ -11,6 +11,8 @@ import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +25,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BackboneElement extends Element implements Serializable {
     @Serial
     private static final long serialVersionUID = -1431673179L;

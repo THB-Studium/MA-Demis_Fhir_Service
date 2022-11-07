@@ -21,12 +21,14 @@ public class Include implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+
     private String myValue;
     private boolean myIterate;
     private boolean myImmutable;
     private String myParamType;
     private String myParamName;
     private String myParamTargetType;
+
 
     public Include(String theValue, boolean theIterate) {
         this(theValue, theIterate, false);
@@ -40,7 +42,7 @@ public class Include implements Serializable {
 
     public void setValue(String theValue) {
         if (myImmutable) {
-            throw new IllegalStateException(Msg.code(1888) + "Can not change the value of this include");
+            throw new IllegalStateException(Msg.code(1888) + "::: Can not change the value of this include :::");
         }
 
         String value = defaultString(theValue);
@@ -49,6 +51,7 @@ public class Include implements Serializable {
         String paramType;
         String paramName;
         String paramTargetType;
+
         if (firstColon == -1 || firstColon == value.length() - 1) {
             paramType = null;
             paramName = null;

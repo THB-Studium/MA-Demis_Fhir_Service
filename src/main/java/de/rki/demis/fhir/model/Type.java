@@ -17,8 +17,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Type extends Element implements Serializable {
     @Serial
     private static final long serialVersionUID = 4623040030733049991L;

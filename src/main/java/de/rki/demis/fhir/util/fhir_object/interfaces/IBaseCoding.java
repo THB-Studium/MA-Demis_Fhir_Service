@@ -4,14 +4,14 @@ public interface IBaseCoding extends IBase {
 
     String getCode();
 
+    IBaseCoding setCode(String theTerm);
+
     String getDisplay();
+
+    IBaseCoding setDisplay(String theLabel);
 
     String getSystem();
 
-    org.hl7.fhir.instance.model.api.IBaseCoding setCode(String theTerm);
-
-    org.hl7.fhir.instance.model.api.IBaseCoding setDisplay(String theLabel);
-
-    org.hl7.fhir.instance.model.api.IBaseCoding setSystem(String theScheme);
+    IBaseCoding setSystem(String theScheme);
 
 }

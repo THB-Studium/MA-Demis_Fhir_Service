@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.service.model;
+package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
@@ -43,7 +43,7 @@ public class MetaService {
 
         if (metaOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("A Meta with 'id = %s' does not exist", metaId)
+                    String.format("::: A Meta with 'id = %s' does not exist :::", metaId)
             );
         }
 
@@ -113,7 +113,7 @@ public class MetaService {
     private void checkForUniqueness(@NotNull Meta meta) {
         if (repository.existsById(meta.getId())) {
             throw new ResourceBadRequestException(
-                    String.format("A Meta with the id=%s already exist", meta.getId())
+                    String.format("::: A Meta with the id=%s already exist :::", meta.getId())
             );
         }
     }
