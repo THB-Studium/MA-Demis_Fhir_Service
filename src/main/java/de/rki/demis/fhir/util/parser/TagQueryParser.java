@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.util;
+package de.rki.demis.fhir.util.parser;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.service.model;
+package de.rki.demis.fhir.service;
 
 import de.rki.demis.fhir.exception.ParsingException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
@@ -7,7 +7,7 @@ import de.rki.demis.fhir.model.BundleMod;
 import de.rki.demis.fhir.repository.BundleRepository;
 import de.rki.demis.fhir.search.criteria.BundleCriteria;
 import de.rki.demis.fhir.search.specs.BundleSpecs;
-import de.rki.demis.fhir.service.utils.FhirParserService;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import de.rki.demis.fhir.transfert.bundle.Bundle2BundleMod;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Bundle;
@@ -36,7 +36,7 @@ public class BundleService {
 
         if (bundleOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("A Bundle with the 'id %s' does not exist", bundleId)
+                    String.format("::: A Bundle with the 'id %s' does not exist :::", bundleId)
             );
         }
 
@@ -77,7 +77,7 @@ public class BundleService {
     private void checkForUniqueness(BundleMod bundle) {
         if (repository.existsById(bundle.getId())) {
             throw new ResourceBadRequestException(
-                    String.format("A Bundle with the id=%s already exist", bundle.getId())
+                    String.format("::: A Bundle with the id=%s already exist :::", bundle.getId())
             );
         }
     }

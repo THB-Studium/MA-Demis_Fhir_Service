@@ -1,33 +1,40 @@
 package de.rki.demis.fhir.util.fhir_object.enums;
 
+import de.rki.demis.fhir.util.fhir_object.classes.Configuration;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.r4.model.Configuration;
+
 
 public enum IdentifierUse {
     /**
      * The identifier recommended for display and use in real-world interactions.
      */
     USUAL,
+
     /**
      * The identifier considered to be most trusted for the identification of this item. Sometimes also known as "primary" and "main". The determination of "official" is subjective and implementation guides often provide additional guidelines for use.
      */
     OFFICIAL,
+
     /**
      * A temporary identifier.
      */
     TEMP,
+
     /**
      * An identifier that was assigned in secondary use - it serves to identify the object in a relative context, but cannot be consistently assigned to the same object again in a different context.
      */
     SECONDARY,
+
     /**
      * The identifier id no longer considered valid, but may be relevant for search purposes.  E.g. Changes to identifier schemes, account merges, etc.
      */
     OLD,
+
     /**
      * added to help the parsers with the generic types
      */
     NULL;
+
 
     public static IdentifierUse fromCode(String codeString) throws FHIRException {
         if (codeString == null || "".equals(codeString))
@@ -45,7 +52,7 @@ public enum IdentifierUse {
         if (Configuration.isAcceptInvalidEnums())
             return null;
         else
-            throw new FHIRException("Unknown IdentifierUse code '" + codeString + "'");
+            throw new FHIRException("::: Unknown IdentifierUse code '" + codeString + "' :::");
     }
 
     public String toCode() {

@@ -2,7 +2,7 @@ package de.rki.demis.fhir.controller.binairies;
 
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
-import de.rki.demis.fhir.service.model.BinaryService;
+import de.rki.demis.fhir.service.BinaryService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -69,7 +69,7 @@ public class BinarySpecs implements Specification<BinaryMod> {
             Join<BinaryMod, Meta> metaJoin = root.join(BinaryMod_.meta);
 
             // to select the correct search date operation
-            switch (criteria.getLastUpdatedOp()) {
+            switch (criteria.getSearchDateOp()) {
                 case AP, EQ -> predicates.add(builder.equal(
                         metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
                 case EB, LT -> predicates.add(builder.lessThan(
@@ -83,7 +83,7 @@ public class BinarySpecs implements Specification<BinaryMod> {
                 case NE -> predicates.add(builder.notEqual(
                         metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
                 default -> throw new ResourceNotFoundException(
-                        String.format("Search date operation '%s' not allowed!", criteria.getLastUpdatedOp()));
+                        String.format("::: Search date operation '%s' not allowed! :::", criteria.getSearchDateOp()));
             }
         }
 

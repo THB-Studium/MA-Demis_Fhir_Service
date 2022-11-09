@@ -43,19 +43,20 @@ public class BinaryMod extends BaseBinary implements Serializable {
 //    private CodeType contentType; todo
     private String contentType;
 
-//    @OneToOne
-//    @Child(
-//            name = "securityContext",
-//            type = {org.hl7.fhir.r4.model.Reference.class},
-//            order = 1, summary = true)
-//    @Description(
-//            shortDefinition = "Identifies another resource to use as proxy when enforcing access control",
-//            value = "This element identifies another resource that can be used as a proxy of the security sensitivity to use when deciding and enforcing access control rules for the Binary resource. Given that the Binary resource contains very few elements that can be used to determine the sensitivity of the data and relationships to individuals, the referenced resource stands in as a proxy equivalent for this purpose. This referenced resource may be related to the Binary (e.g. Media, DocumentReference), or may be some non-related Resource purely as a security proxy. E.g. to identify that the binary resource relates to a patient, and access should only be granted to applications that have access to the patient.")
-//    private Reference securityContext;
-//    @OneToOne
-//    private Resource securityContextTarget; todo
-//    @OneToOne
+    @OneToOne
+    @Child(
+            name = "securityContext",
+            type = {org.hl7.fhir.r4.model.Reference.class},
+            order = 1, summary = true)
+    @Description(
+            shortDefinition = "Identifies another resource to use as proxy when enforcing access control",
+            value = "This element identifies another resource that can be used as a proxy of the security sensitivity to use when deciding and enforcing access control rules for the Binary resource. Given that the Binary resource contains very few elements that can be used to determine the sensitivity of the data and relationships to individuals, the referenced resource stands in as a proxy equivalent for this purpose. This referenced resource may be related to the Binary (e.g. Media, DocumentReference), or may be some non-related Resource purely as a security proxy. E.g. to identify that the binary resource relates to a patient, and access should only be granted to applications that have access to the patient.")
+    private Reference securityContext;
 
+    @OneToOne
+    private Resource securityContextTarget;
+
+//    @OneToOne
     @Child(
             name = "data",
             type = {org.hl7.fhir.r4.model.Base64BinaryType.class}, order = 2)

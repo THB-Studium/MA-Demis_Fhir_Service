@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.util;
+package de.rki.demis.fhir.util.parser;
 
 import de.rki.demis.fhir.util.fhir_object.enums.SearchDatePrefix;
 import lombok.Data;

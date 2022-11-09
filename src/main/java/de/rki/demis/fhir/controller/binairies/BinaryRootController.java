@@ -2,8 +2,8 @@ package de.rki.demis.fhir.controller.binairies;
 
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
-import de.rki.demis.fhir.service.model.BinaryService;
-import de.rki.demis.fhir.service.utils.FhirParserService;
+import de.rki.demis.fhir.service.BinaryService;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Binary;
@@ -43,21 +43,25 @@ public class BinaryRootController {
     public BinaryMod create(
             @RequestBody @NotBlank String newBinaryString,
             @RequestHeader(CONTENT_TYPE) org.springframework.http.MediaType mediaType) {
+
         log.info("::: create() - create a BinaryMod :::");
         Binary binary = fhirParserService.parseBinary(newBinaryString, mediaType);
         binary.setId("");
         BinaryMod newBinaryMod = Objects.requireNonNull(Binary2BinaryMod.apply(binary));
         BinaryMod created = service.create(newBinaryMod);
         log.info("::: create() - BinaryMod created :::");
+
         return created;
     }
 
     @Produces(MediaType.APPLICATION_JSON)
     @RequestMapping(method = RequestMethod.GET)
     public List<BinaryMod> listAll() {
+
         log.info("::: listAll() - fetch all :::");
         List<BinaryMod> binaries = service.listAll();
         log.info("::: listAll() - Binaries Resources fetched :::");
+
         return binaries;
     }
 }

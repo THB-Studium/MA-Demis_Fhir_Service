@@ -3,9 +3,9 @@ package de.rki.demis.fhir.controller.binairies;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.search.criteria.BinaryCriteria;
-import de.rki.demis.fhir.service.model.BinaryService;
-import de.rki.demis.fhir.util.DateQueryParser;
-import de.rki.demis.fhir.util.TagQueryParser;
+import de.rki.demis.fhir.service.BinaryService;
+import de.rki.demis.fhir.util.parser.DateQueryParser;
+import de.rki.demis.fhir.util.parser.TagQueryParser;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class BinarySearchController {
         criteria.setDisplay(tagQueryParser.getDisplay());
 
         // lastUpdated
-        criteria.setLastUpdatedOp(dateQueryParser.getPrefix());
+        criteria.setSearchDateOp(dateQueryParser.getPrefix());
         criteria.setLastUpdated(dateQueryParser.getDate());
 
         return service.search(criteria);

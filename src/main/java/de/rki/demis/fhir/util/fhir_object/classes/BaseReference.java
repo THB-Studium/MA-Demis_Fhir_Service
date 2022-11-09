@@ -24,6 +24,7 @@ public class BaseReference extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = 4623040030049991L;
 
+
     @Transient
     private IBaseResource resource;
 }
