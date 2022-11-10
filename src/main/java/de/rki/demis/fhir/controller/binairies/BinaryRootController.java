@@ -57,11 +57,9 @@ public class BinaryRootController {
     @Produces(MediaType.APPLICATION_JSON)
     @RequestMapping(method = RequestMethod.GET)
     public List<BinaryMod> listAll() {
-
         log.info("::: listAll() - fetch all :::");
         List<BinaryMod> binaries = service.listAll();
         log.info("::: listAll() - Binaries Resources fetched :::");
-
         return binaries;
     }
 }

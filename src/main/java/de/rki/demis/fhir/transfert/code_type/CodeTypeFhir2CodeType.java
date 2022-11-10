@@ -1,9 +1,11 @@
 package de.rki.demis.fhir.transfert.code_type;
 
 import de.rki.demis.fhir.model.CodeType;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -21,9 +23,20 @@ public class CodeTypeFhir2CodeType {
 
         CodeType out = new CodeType();
 
+        // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
+
+        // Base type attributes
+        out.setFormatCommentsPre(new HashSet<>(in.getFormatCommentsPre()));
+        out.setFormatCommentsPost(new HashSet<>(in.getFormatCommentsPost()));
+
+        // PrimitiveType attributes
         out.setMyStringValue(in.getValueAsString());
 //        out.setMyCoercedValue(in.getValue());
+
+        // CodeType attributes
         out.setSystem(in.getSystem());
 
         return out;

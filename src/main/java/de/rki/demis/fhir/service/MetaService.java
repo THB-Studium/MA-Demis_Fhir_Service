@@ -52,11 +52,14 @@ public class MetaService {
 
     public Meta create(@NotNull Meta newMeta) {
         if (Objects.isNull(newMeta.getId()) || !repository.existsById(newMeta.getId())) {
+
+            // Source
             UriType source = newMeta.getSource();
             if (Objects.isNull(source.getId()) || !uriTypeRepository.existsById(source.getId())) {
                 source = uriTypeRepository.save(source);
             }
 
+            // Profile
             Set<CanonicalType> profile = new HashSet<>();
             newMeta.getProfile().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !canonicalTypeRepository.existsById(item.getId())) {
@@ -65,6 +68,7 @@ public class MetaService {
                 profile.add(item);
             });
 
+            // Security
             Set<Coding> security = new HashSet<>();
             newMeta.getSecurity().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
@@ -73,6 +77,7 @@ public class MetaService {
                 security.add(item);
             });
 
+            // Tag
             Set<Coding> tag = new HashSet<>();
             newMeta.getTag().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
@@ -80,7 +85,6 @@ public class MetaService {
                 }
                 tag.add(item);
             });
-
 
             newMeta.setSource(source);
             newMeta.setProfile(profile);

@@ -2,7 +2,6 @@ package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
-import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.model.Reference;
 import de.rki.demis.fhir.repository.ExtensionRepository;

@@ -90,12 +90,13 @@ public class Signature extends Type implements Serializable {
                     "application/jose for JWS, and image/* for a graphical image of a signature, etc.")
     private CodeType sigFormat;
 
-    @OneToOne
+    //    @OneToOne
     @Child(name = "data", type = {org.hl7.fhir.r4.model.Base64BinaryType.class},
             order = 6)
     @Description(
             shortDefinition = "The actual signature content (XML DigSig. JWS, picture, etc.)",
             value = "The base64 encoding of the Signature content. When signature is not " +
                     "recorded electronically this element would be empty.")
-    private Base64BinaryType data;
+//    private Base64BinaryType data;
+    private byte[] data; // base64Binary: JSON string - base64 content - Regex: (\s*([0-9a-zA-Z\+\=]){4}\s*)+
 }

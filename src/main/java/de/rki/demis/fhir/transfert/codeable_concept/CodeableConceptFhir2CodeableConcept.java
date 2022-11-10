@@ -26,8 +26,8 @@ public class CodeableConceptFhir2CodeableConcept {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
-//        out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes
         out.setFormatCommentsPre(new HashSet<>(in.getFormatCommentsPre()));

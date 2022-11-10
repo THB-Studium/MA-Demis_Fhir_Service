@@ -2,8 +2,14 @@ package de.rki.demis.fhir.util.constant;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.regex.Pattern;
+
 @UtilityClass
 public class Constants {
+  /** Validation **/
+  public static final String UUID_REGEX_STRING = "/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i";
+  public static final Pattern UUID_REGEX = Pattern.compile(UUID_REGEX_STRING);
+
 
   /** messages */
   public static final String UNSUPPORTED_PROFILE_TYPE = "Unsupported profile type";

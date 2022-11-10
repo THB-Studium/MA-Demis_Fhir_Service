@@ -1,6 +1,8 @@
-package de.rki.demis.fhir.transfert.ressource;
+package de.rki.demis.fhir.transfert.resource;
 
+import de.rki.demis.fhir.transfert.code_type.CodeTypeFhir2CodeType;
 import de.rki.demis.fhir.transfert.meta.MetaFhir2Meta;
+import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +14,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class RessourceFhir2Ressource {
+import static de.rki.demis.fhir.util.constant.Constants.UUID_REGEX;
+
+public class ResourceFhir2Resource {
 
     @Nullable
     public static Resource apply(org.hl7.fhir.r4.model.Resource in) {
@@ -23,11 +27,16 @@ public class RessourceFhir2Ressource {
 
         Resource out = new Resource();
 
+
         // Resource type attributes
-        out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
+        out.setId(Objects.nonNull(in.getId())
+                ? UUID_REGEX.matcher(in.getId()).find()
+                    ? UUID.fromString(in.getId())
+                    : null // todo: handle this null
+                : null);
         out.setMeta(MetaFhir2Meta.apply(in.getMeta()));
-//        out.setImplicitRules(UriTypeFhir2UriType.apply(in.getImplicitRulesElement()));
-//        out.setLanguage(CodeTypeFhir2CodeType.apply(in.getLanguageElement()));
+        out.setImplicitRules(UriTypeFhir2UriType.apply(in.getImplicitRulesElement()));
+        out.setLanguage(CodeTypeFhir2CodeType.apply(in.getLanguageElement()));
 
         // Base type attributes
         out.setFormatCommentsPre(new HashSet<>(in.getFormatCommentsPre()));
@@ -37,10 +46,10 @@ public class RessourceFhir2Ressource {
     }
 
     public static List<Resource> apply(@NotNull List<org.hl7.fhir.r4.model.Resource> in) {
-        return in.stream().map(RessourceFhir2Ressource::apply).collect(Collectors.toList());
+        return in.stream().map(ResourceFhir2Resource::apply).collect(Collectors.toList());
     }
 
     public static Set<Resource> apply(@NotNull Set<org.hl7.fhir.r4.model.Resource> in) {
-        return in.stream().map(RessourceFhir2Ressource::apply).collect(Collectors.toSet());
+        return in.stream().map(ResourceFhir2Resource::apply).collect(Collectors.toSet());
     }
 }

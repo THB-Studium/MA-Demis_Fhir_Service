@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Reference2Reference {
+public class ReferenceFhir2Reference {
 
     @Nullable
     public static Reference apply(org.hl7.fhir.r4.model.Reference in) {
@@ -27,8 +27,8 @@ public class Reference2Reference {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
-//        out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes
         out.setFormatCommentsPre(new HashSet<>(in.getFormatCommentsPre()));
@@ -44,10 +44,10 @@ public class Reference2Reference {
     }
 
     public static List<Reference> apply(@NotNull List<org.hl7.fhir.r4.model.Reference> in) {
-        return in.stream().map(Reference2Reference::apply).collect(Collectors.toList());
+        return in.stream().map(ReferenceFhir2Reference::apply).collect(Collectors.toList());
     }
 
     public static Set<Reference> apply(@NotNull Set<org.hl7.fhir.r4.model.Reference> in) {
-        return in.stream().map(Reference2Reference::apply).collect(Collectors.toSet());
+        return in.stream().map(ReferenceFhir2Reference::apply).collect(Collectors.toSet());
     }
 }
