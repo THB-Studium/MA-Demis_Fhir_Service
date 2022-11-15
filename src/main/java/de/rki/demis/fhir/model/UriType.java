@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -17,8 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(value = "UriType")
 public class UriType extends PrimitiveType<String> implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;

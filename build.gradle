@@ -4,8 +4,8 @@ plugins {
     id 'java'
 }
 
-group = 'de.rki.demis'
-version = '1.0.0'
+group               = 'de.rki.demis'
+version             = '1.0.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -20,39 +20,36 @@ repositories {
 
 
 ext {
-    swaggerVersion    = '3.0.0'
-    hapiFhirVersion   = '6.1.3'
-    generatedMainJava = "${buildDir}/generated/main/java"
+    springBootStarterVers = '2.7.5'
+    swaggerVers           = '3.0.0'
+    hapiFhirVers          = '6.1.3'
+    generatedMainJava     = "${buildDir}/generated/main/java"
 }
 
 dependencies {
     // Spring-boot:....
     implementation "org.springframework.boot:spring-boot-starter-jersey"
-    implementation "org.springframework.boot:spring-boot-starter-web:2.7.5"
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-web-services"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:2.7.5"
+    implementation "org.springframework.boot:spring-boot-configuration-processor"
 
-    // Jpa models generation for generation of Meta-Models:...
+    // Models generation for generation of Meta-Models:...
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
 
 
     // Swagger:....
-    implementation "io.springfox:springfox-swagger-ui:$swaggerVersion"
-    implementation "io.springfox:springfox-swagger2:3.0.0"
-    implementation "io.springfox:springfox-swagger-common:$swaggerVersion"
+    implementation "io.springfox:springfox-swagger-ui:$swaggerVers"
+    implementation "io.springfox:springfox-swagger2:$swaggerVers"
+    implementation "io.springfox:springfox-swagger-common:$swaggerVers"
 
 
     // HAPI Fhir:....
-//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-jpaserver-base:6.0.1' // Core
-//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-client:6.0.1' // Client
-    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiFhirVersion" // Structures-r4
+    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiFhirVers" // Structures-r4
 
 
     // DBs:....
-    runtimeOnly "org.postgresql:postgresql" // Postgres
-//    implementation 'org.postgresql:postgresql:42.5.0' // Postgres
-//    implementation 'com.datastax.oss:java-driver-core:4.14.1' // Apache Cassandra
-//    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra' // Apache Cassandra
+//    runtimeOnly "org.postgresql:postgresql" // Postgres
+    implementation "org.springframework.boot:spring-boot-starter-data-cassandra" // Cassandra
 
 
     // Extras Tools:....
@@ -62,15 +59,15 @@ dependencies {
 
 
     // Tests:....
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
     testImplementation "ch.qos.logback:logback-classic"
 
 }
 
 // For generated class of jpa metadata model generator:....
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorGeneratedSourcesDirectory = file(generatedMainJava)
 }
 

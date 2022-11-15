@@ -7,9 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Transient;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -19,7 +18,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
 public class BaseReference extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = 4623040030049991L;

@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 
-import javax.persistence.MappedSuperclass;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -16,11 +16,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
 public class PrimitiveType<T> extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;
 
-//    private T myCoercedValue; todo: Generic type jpa persistent
+    @CassandraType(type = CassandraType.Name.BLOB)
+    private T myCoercedValue; // todo: Generic type jpa persistent
     private String myStringValue;
 }

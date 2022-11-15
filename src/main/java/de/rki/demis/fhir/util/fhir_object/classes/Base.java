@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
@@ -18,17 +16,15 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@MappedSuperclass
 public class Base implements Serializable {
     @Serial
     private static final long serialVersionUID = -1452741316L;
 
-    //    @ElementCollection
-//    private Map<String, Object> userData; // todo: find a way to persist 'Object'/'Generic' types with JPA (@Convert(converter = ObjectConverter.class))
-    @ElementCollection(fetch = FetchType.EAGER)
+    //    private Map<String, Object> userData; todo: find a way to persist 'Object'/'Generic' types with JPA (@Convert(converter = ObjectConverter.class))
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> formatCommentsPre;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> formatCommentsPost;
 
     public boolean isEmpty() {

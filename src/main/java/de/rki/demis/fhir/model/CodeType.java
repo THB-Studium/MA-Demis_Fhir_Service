@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.persistence.Entity;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Entity
+@Table(value = "CodeType")
 public class CodeType extends PrimitiveType<String> implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;

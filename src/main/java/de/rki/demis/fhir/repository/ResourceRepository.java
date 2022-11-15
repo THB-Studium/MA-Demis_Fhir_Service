@@ -1,15 +1,11 @@
 package de.rki.demis.fhir.repository;
 
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
+import de.rki.demis.fhir.model.Resource;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.cassandra.repository.CassandraRepository;
 
 import java.util.UUID;
 
-public interface ResourceRepository
-        extends JpaRepository<Resource, UUID>, JpaSpecificationExecutor<Resource> {
-
+public interface ResourceRepository extends CassandraRepository<Resource, UUID> {
     boolean existsById(@NotNull UUID id);
-
 }

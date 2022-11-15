@@ -11,6 +11,18 @@ public class Constants {
   public static final Pattern UUID_REGEX = Pattern.compile(UUID_REGEX_STRING);
 
 
+  /** Astra Cassandra Credential **/
+  public static final String DB_KEY_SPACE    = "fhir";
+  public static final String BUNDLE_PATH     = "/cassandra-db/secure-connect-demis-fhir-db.zip";
+  public static final String CLIENT_ID_1     = "ZRkFpitfwxFaAITAEYTgOJLW";
+  public static final String CLIENT_SECRET_1 = "b9MHWTK1-kWCT_l6OZFHzDxGlCAq2nrk-LbzhwfB0yZvZ0Bq+YA8jR5Ls8NyX0Q4w0mmOZ.NqAuJwYOERX3iwwYMYdpUYH8Orprt8_3E_gCEvP0pqlLccF0GvM9m-7sc";
+  public static final String CLIENT_TOKEN_1  = "AstraCS:ZRkFpitfwxFaAITAEYTgOJLW:83a1c9023214066b93da951c2995c2c6b3f136d9f3d0aab8e8e8b2af0d98af17";
+
+  public static final String CLIENT_ID_2     = "oCZZdgRYlhCfDEkhjvyJIvJw";
+  public static final String CLIENT_SECRET_2 = "LI8MA1clL5.+ErIcCTe8J1JZzFRJoO2khRqcZbly17O6LwvdE5m4jHYh8,s6qTOQr8_iUn0.,fJ60SZbKao+9W5tJlWvizbvHFp29llc274OeiF-t0F3YMxCd_cFnOgs";
+  public static final String CLIENT_TOKEN_2  = "AstraCS:oCZZdgRYlhCfDEkhjvyJIvJw:cccd0734a60e66b0d9d1526cb41591a8c1e0d058feb1c38c8b12cb9b8011c5e7";
+
+
   /** messages */
   public static final String UNSUPPORTED_PROFILE_TYPE = "Unsupported profile type";
   public static final String UNSUPPORTED_RESOURCE_BUNDLE = "Unsupported resource bundle";
