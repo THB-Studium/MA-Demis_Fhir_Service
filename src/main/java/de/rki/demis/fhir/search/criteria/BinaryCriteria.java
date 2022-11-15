@@ -7,12 +7,12 @@ import java.util.Date;
 
 @Data
 public class BinaryCriteria {
-    // tag:....
+    // for the query: _tag:....
     private String system;
     private String code;
     private String display;
 
-    // lastUpdated:....
+    // for the query: _lastUpdated:....
     private Date lastUpdated;
     private SearchDatePrefix searchDateOp;
 }

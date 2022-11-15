@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class BundleCriteria {
-    // lastUpdated:....
+    // for the query: _lastUpdated:....
     private Date lastUpdated;
     private SearchDatePrefix searchDateOp;
 }

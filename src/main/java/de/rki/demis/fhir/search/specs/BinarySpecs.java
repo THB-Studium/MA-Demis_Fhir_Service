@@ -37,57 +37,93 @@ public class BinarySpecs implements Specification<BinaryMod> {
 
         /* for criteria: system */
         if (Objects.nonNull(criteria.getSystem())) {
-            Join<Coding, UriType> binary2UriTypeJoin = root
-                    .join(BinaryMod_.meta).join(Meta_.tag).join(Coding_.system);
-
-            predicates.add(builder.like(
-                    builder.lower(binary2UriTypeJoin.get(UriType_.myStringValue)),
-                    criteria.getSystem().toLowerCase()));
+            predicates.add(getSystemPredicate(root, builder));
         }
 
         /* for criteria: code */
         if (Objects.nonNull(criteria.getCode())) {
-            Join<Coding, CodeType> binary2CodeTypeJoin = root
-                    .join(BinaryMod_.meta).join(Meta_.tag).join(Coding_.code);
-
-            predicates.add(builder.like(
-                    builder.lower(binary2CodeTypeJoin.get(UriType_.myStringValue)),
-                    criteria.getCode().toLowerCase()));
+            predicates.add(getCodePredicate(root, builder));
         }
 
         /* for criteria: display */
         if (Objects.nonNull(criteria.getDisplay())) {
-            SetJoin<Meta, Coding> binary2codingJoin = root.join(BinaryMod_.meta).join(Meta_.tag);
-            predicates.add(builder.like(
-                    builder.lower(binary2codingJoin.get(Coding_.display)),
-                    criteria.getDisplay().toLowerCase()));
+            predicates.add(getDisplayPredicate(root, builder));
         }
 
 
         //::: by lastUpdated:.......
-        if (Objects.nonNull(criteria.getLastUpdated())) {
-            Join<BinaryMod, Meta> metaJoin = root.join(BinaryMod_.meta);
-
-            // to select the correct search date operation
-            switch (criteria.getSearchDateOp()) {
-                case AP, EQ -> predicates.add(builder.equal(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                case EB, LT -> predicates.add(builder.lessThan(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                case GE -> predicates.add(builder.greaterThanOrEqualTo(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                case GT, SA -> predicates.add(builder.greaterThan(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                case LE -> predicates.add(builder.lessThanOrEqualTo(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                case NE -> predicates.add(builder.notEqual(
-                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated()));
-                default -> throw new ResourceNotFoundException(
-                        String.format("::: Search date operation '%s' not allowed! :::", criteria.getSearchDateOp()));
-            }
+        if (Objects.nonNull(criteria.getSearchDateOp()) && Objects.nonNull(criteria.getLastUpdated())) {
+            predicates.add(getLastUpdatedPredicate(root, builder));
         }
 
         query.distinct(true);
         return builder.and(predicates.toArray(new Predicate[0]));
     }
+
+
+    /*** criteria builder for: system ***/
+    private Predicate getSystemPredicate(@NotNull Root<BinaryMod> root, @NotNull CriteriaBuilder builder) {
+        Join<Coding, UriType> binary2UriTypeJoin = root
+                .join(BinaryMod_.meta).join(Meta_.tag).join(Coding_.system);
+
+        return builder.like(
+                builder.lower(binary2UriTypeJoin.get(UriType_.myStringValue)),
+                criteria.getSystem().toLowerCase());
+    }
+
+    /*** criteria builder for: code ***/
+    private Predicate getCodePredicate(@NotNull Root<BinaryMod> root, @NotNull CriteriaBuilder builder) {
+        Join<Coding, CodeType> binary2CodeTypeJoin = root
+                .join(BinaryMod_.meta).join(Meta_.tag).join(Coding_.code);
+
+        return builder.like(
+                builder.lower(binary2CodeTypeJoin.get(UriType_.myStringValue)),
+                criteria.getCode().toLowerCase());
+    }
+
+    /*** criteria builder for: display ***/
+    private Predicate getDisplayPredicate(@NotNull Root<BinaryMod> root, @NotNull CriteriaBuilder builder) {
+        SetJoin<Meta, Coding> binary2codingJoin = root.join(BinaryMod_.meta).join(Meta_.tag);
+
+        return builder.like(
+                builder.lower(binary2codingJoin.get(Coding_.display)),
+                criteria.getDisplay().toLowerCase());
+    }
+
+    /*** criteria builder for: lastUpdated ***/
+    private Predicate getLastUpdatedPredicate(@NotNull Root<BinaryMod> root, @NotNull CriteriaBuilder builder) {
+        Join<BinaryMod, Meta> metaJoin = root.join(BinaryMod_.meta);
+
+        // to select the correct search date operation
+        switch (criteria.getSearchDateOp()) {
+            case AP, EQ -> {
+                return builder.equal(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            case EB, LT -> {
+                return builder.lessThan(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            case GE -> {
+                return builder.greaterThanOrEqualTo(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            case GT, SA -> {
+                return builder.greaterThan(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            case LE -> {
+                return builder.lessThanOrEqualTo(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            case NE -> {
+                return builder.notEqual(
+                        metaJoin.get(Meta_.lastUpdated), criteria.getLastUpdated());
+            }
+            default -> throw new ResourceNotFoundException(
+                    String.format("::: Search date operation '%s' not allowed! :::", criteria.getSearchDateOp()));
+        }
+    }
+
+
 }
