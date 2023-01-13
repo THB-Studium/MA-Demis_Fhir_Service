@@ -47,29 +47,35 @@ public class BinaryService {
     }
 
     public BinaryMod create(@NotNull BinaryMod newBinaryMod) {
-        // Meta
-        if (Objects.nonNull(newBinaryMod.getMeta())) {
-            newBinaryMod.setMeta(metaService
-                    .create(newBinaryMod.getMeta()));
-        }
-
-        // ImplicitRules
-        if (Objects.nonNull(newBinaryMod.getImplicitRules())) {
-            newBinaryMod.setImplicitRules(uriTypeService
-                    .create(newBinaryMod.getImplicitRules()));
-        }
-
-        // Language
-        if (Objects.nonNull(newBinaryMod.getLanguage())) {
-            newBinaryMod.setLanguage(codeTypeService
-                    .create(newBinaryMod.getLanguage()));
-        }
-
-        // SecurityContext
-        if (Objects.nonNull(newBinaryMod.getSecurityContext())) {
-            newBinaryMod.setSecurityContext(referenceService
-                    .create(newBinaryMod.getSecurityContext()));
-        }
+//        // Meta
+//        if (Objects.nonNull(newBinaryMod.getMeta())) {
+//            newBinaryMod.setMeta(metaService
+//                    .create(newBinaryMod.getMeta()));
+//        }
+//
+//        // ImplicitRules
+//        if (Objects.nonNull(newBinaryMod.getImplicitRules())) {
+//            newBinaryMod.setImplicitRules(uriTypeService
+//                    .create(newBinaryMod.getImplicitRules()));
+//        }
+//
+//        // Language
+//        if (Objects.nonNull(newBinaryMod.getLanguage())) {
+//            newBinaryMod.setLanguage(codeTypeService
+//                    .create(newBinaryMod.getLanguage()));
+//        }
+//
+//        // SecurityContext
+//        if (Objects.nonNull(newBinaryMod.getSecurityContext())) {
+//            newBinaryMod.setSecurityContext(referenceService
+//                    .create(newBinaryMod.getSecurityContext()));
+//        }
+//
+//        // SecurityContextTarget
+//        if (Objects.nonNull(newBinaryMod.getSecurityContextTarget())) {
+//            newBinaryMod.setSecurityContextTarget(resourceService
+//                    .create(newBinaryMod.getSecurityContextTarget()));
+//        }
 
         // SecurityContextTarget
         if (Objects.nonNull(newBinaryMod.getSecurityContextTarget())) {
@@ -77,6 +83,7 @@ public class BinaryService {
                     .create(newBinaryMod.getSecurityContextTarget()));
         }
 
+        newBinaryMod.setId(UUID.randomUUID());
         return repository.save(newBinaryMod);
     }
 

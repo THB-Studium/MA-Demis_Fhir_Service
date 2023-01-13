@@ -20,7 +20,6 @@ public class PrimitiveType<T> extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;
 
-    @CassandraType(type = CassandraType.Name.BLOB)
     private T myCoercedValue; // todo: Generic type jpa persistent
     private String myStringValue;
 }

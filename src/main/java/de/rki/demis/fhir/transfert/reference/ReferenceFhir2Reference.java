@@ -37,7 +37,7 @@ public class ReferenceFhir2Reference {
         // Reference type attributes
         out.setReference(in.getReference());
         out.setType(UriTypeFhir2UriType.apply(in.getTypeElement()));
-        out.setIdentifier(IdentifierFhir2Identifier.apply(in.getIdentifier()));
+//        out.setIdentifier(IdentifierFhir2Identifier.apply(in.getIdentifier()));
         out.setDisplay(in.getDisplay());
 
         return out;

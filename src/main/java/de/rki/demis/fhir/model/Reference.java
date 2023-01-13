@@ -45,17 +45,17 @@ public class Reference extends BaseReference implements Serializable {
      ***/
     private UriType type;
 
-    /***
-     * shortDefinition = "Logical reference, when literal reference is not known",
-     *           value = "An identifier for the target resource. This is used when there is no way to reference the other
-     *                   resource directly, either because the entity it represents is not available through a FHIR server,
-     *                   or because there is no way for the author of the resource to convert a known identifier to an
-     *                   actual location. There is no requirement that a Reference.identifier point to something that is
-     *                   actually exposed as a FHIR instance, but it SHALL point to a business concept that would be
-     *                   expected to be exposed as a FHIR instance, and that instance would need to be of a FHIR resource
-     *                   type allowed by the reference."
-     ***/
-    private Identifier identifier;
+//    /***
+//     * shortDefinition = "Logical reference, when literal reference is not known",
+//     *           value = "An identifier for the target resource. This is used when there is no way to reference the other
+//     *                   resource directly, either because the entity it represents is not available through a FHIR server,
+//     *                   or because there is no way for the author of the resource to convert a known identifier to an
+//     *                   actual location. There is no requirement that a Reference.identifier point to something that is
+//     *                   actually exposed as a FHIR instance, but it SHALL point to a business concept that would be
+//     *                   expected to be exposed as a FHIR instance, and that instance would need to be of a FHIR resource
+//     *                   type allowed by the reference."
+//     ***/
+//    private Identifier identifier; // todo: Cassandra Issue
 
     /***
      * shortDefinition = "Text alternative for the resource",

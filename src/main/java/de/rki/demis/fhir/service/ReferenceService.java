@@ -59,10 +59,10 @@ public class ReferenceService {
             newReference.setType(uriTypeService.create(newReference.getType()));
         }
 
-        // Identifier
-        if (Objects.nonNull(newReference.getIdentifier())) {
-            newReference.setIdentifier(identifierService.create(newReference.getIdentifier()));
-        }
+//        // Identifier
+//        if (Objects.nonNull(newReference.getIdentifier())) {
+//            newReference.setIdentifier(identifierService.create(newReference.getIdentifier()));
+//        }
 
 //        newReference.setExtension(extension);
         return repository.save(newReference);
