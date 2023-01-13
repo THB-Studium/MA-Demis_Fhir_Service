@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
@@ -22,8 +24,9 @@ repositories {
 ext {
     springBootStarterVers = '2.7.5'
     swaggerVers           = '3.0.0'
-    hapiFhirVers          = '6.1.3'
-    generatedMainJava     = "${buildDir}/generated/main/java"
+    hapiFhirVers          = '6.2.2'
+    datastaxVers          = '6.2.2'
+    generatedMainJava     = "${buildDir}/generated/main/java" as GStringImpl
 }
 
 dependencies {
@@ -48,7 +51,6 @@ dependencies {
 
 
     // DBs:....
-//    runtimeOnly "org.postgresql:postgresql" // Postgres
     implementation "org.springframework.boot:spring-boot-starter-data-cassandra" // Cassandra
 
 

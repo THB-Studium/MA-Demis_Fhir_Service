@@ -17,8 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class ReferenceService {
 
 
     public List<Reference> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public Reference getOne(UUID referenceId) {
@@ -47,14 +45,14 @@ public class ReferenceService {
     }
 
     public Reference create(@NotNull Reference newReference) {
-        // extension
-        Set<Extension> extension = new HashSet<>();
-        newReference.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
+//        // extension
+//        Set<Extension> extension = new HashSet<>();
+//        newReference.getExtension().forEach(item -> {
+//            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
+//                item = extensionService.create(item);
+//            }
+//            extension.add(item);
+//        });
 
         // Type
         if (Objects.nonNull(newReference.getType())) {
@@ -66,8 +64,7 @@ public class ReferenceService {
             newReference.setIdentifier(identifierService.create(newReference.getIdentifier()));
         }
 
-        newReference.setExtension(extension);
-        newReference.setId(null);
+//        newReference.setExtension(extension);
         return repository.save(newReference);
     }
 

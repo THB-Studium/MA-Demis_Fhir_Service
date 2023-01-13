@@ -18,8 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class CodeableConceptService {
 
 
     public List<CodeableConcept> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public CodeableConcept getOne(UUID codeableConceptId) {
@@ -52,23 +50,20 @@ public class CodeableConceptService {
 
         newCodeableConcept.getCoding().forEach(item -> {
             if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                item.setId(UUID.randomUUID());
                 item = codingRepository.save(item);
             }
             coding.add(item);
         });
 
-        newCodeableConcept.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item.setId(UUID.randomUUID());
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
+//        newCodeableConcept.getExtension().forEach(item -> {
+//            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
+//                item = extensionService.create(item);
+//            }
+//            extension.add(item);
+//        });
 
         newCodeableConcept.setCoding(coding);
-        newCodeableConcept.setExtension(extension);
-        newCodeableConcept.setId(null);
+//        newCodeableConcept.setExtension(extension);
         return repository.save(newCodeableConcept);
     }
 

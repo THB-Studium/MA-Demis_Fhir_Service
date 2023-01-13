@@ -20,8 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +31,8 @@ public class MetaService {
     private final CodingService codingService;
 
 
-
     public List<Meta> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public Meta getOne(UUID metaId) {
@@ -56,7 +53,6 @@ public class MetaService {
             // Source
             UriType source = newMeta.getSource();
             if (Objects.isNull(source.getId()) || !uriTypeRepository.existsById(source.getId())) {
-                source.setId(UUID.randomUUID());
                 source = uriTypeRepository.save(source);
             }
 
@@ -64,7 +60,6 @@ public class MetaService {
             Set<CanonicalType> profile = new HashSet<>();
             newMeta.getProfile().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !canonicalTypeRepository.existsById(item.getId())) {
-                    item.setId(UUID.randomUUID());
                     item = canonicalTypeRepository.save(item);
                 }
                 profile.add(item);
@@ -74,7 +69,6 @@ public class MetaService {
             Set<Coding> security = new HashSet<>();
             newMeta.getSecurity().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                    item.setId(UUID.randomUUID());
                     item = codingService.create(item);
                 }
                 security.add(item);
@@ -84,7 +78,6 @@ public class MetaService {
             Set<Coding> tag = new HashSet<>();
             newMeta.getTag().forEach(item -> {
                 if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                    item.setId(UUID.randomUUID());
                     item = codingService.create(item);
                 }
                 tag.add(item);
@@ -94,7 +87,6 @@ public class MetaService {
             newMeta.setProfile(profile);
             newMeta.setSecurity(security);
             newMeta.setTag(tag);
-            newMeta.setId(UUID.randomUUID());
         }
 
         return repository.save(newMeta);

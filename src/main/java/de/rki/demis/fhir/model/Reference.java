@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "Reference")
+@UserDefinedType(value = "Reference")
 public class Reference extends BaseReference implements Serializable {
     @Serial
     private static final long serialVersionUID = 784245805L;
@@ -44,7 +43,6 @@ public class Reference extends BaseReference implements Serializable {
      *                   Absolute URLs are only allowed for logical models (and can only be used in references in logical
      *                   models, not resources)."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private UriType type;
 
     /***
@@ -57,7 +55,6 @@ public class Reference extends BaseReference implements Serializable {
      *                   expected to be exposed as a FHIR instance, and that instance would need to be of a FHIR resource
      *                   type allowed by the reference."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private Identifier identifier;
 
     /***

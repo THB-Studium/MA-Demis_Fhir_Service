@@ -5,8 +5,8 @@ import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.exception.ResourceNotFoundException;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.repository.BinaryRepository;
-import de.rki.demis.fhir.util.service.FhirParserService;
 import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Binary;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class BinaryService {
 
 
     public List<BinaryMod> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public BinaryMod getOne(UUID binaryModId) {
@@ -79,7 +77,6 @@ public class BinaryService {
                     .create(newBinaryMod.getSecurityContextTarget()));
         }
 
-        newBinaryMod.setId(UUID.randomUUID());
         return repository.save(newBinaryMod);
     }
 

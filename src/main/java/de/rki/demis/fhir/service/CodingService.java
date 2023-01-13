@@ -12,15 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class CodingService {
 
 
     public List<Coding> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public Coding getOne(UUID metaId) {
@@ -49,14 +46,13 @@ public class CodingService {
     }
 
     public Coding create(@NotNull Coding newCoding) {
-        Set<Extension> extension = new HashSet<>();
-        newCoding.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item.setId(UUID.randomUUID());
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
+//        Set<Extension> extension = new HashSet<>();
+//        newCoding.getExtension().forEach(item -> {
+//            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
+//                item = extensionService.create(item);
+//            }
+//            extension.add(item);
+//        });
 
         // System
         if (Objects.nonNull(newCoding.getSystem())) {
@@ -68,7 +64,6 @@ public class CodingService {
             newCoding.setCode(codeTypeService.create(newCoding.getCode()));
         }
 
-        newCoding.setId(UUID.randomUUID());
         return repository.save(newCoding);
     }
 

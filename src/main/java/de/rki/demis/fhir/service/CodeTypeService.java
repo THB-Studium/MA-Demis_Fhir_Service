@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class CodeTypeService {
 
 
     public List<CodeType> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public CodeType getOne(UUID codeTypeId) {
@@ -38,7 +36,6 @@ public class CodeTypeService {
     }
 
     public CodeType create(@NotNull CodeType newCodeType) {
-        newCodeType.setId(UUID.randomUUID());
         return repository.save(newCodeType);
     }
 

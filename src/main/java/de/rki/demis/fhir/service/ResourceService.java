@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class ResourceService {
 
 
     public List<Resource> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public Resource getOne(UUID resourceId) {
@@ -58,7 +56,6 @@ public class ResourceService {
                     .create(newResource.getLanguage()));
         }
 
-        newResource.setId(UUID.randomUUID());
         return repository.save(newResource);
     }
 

@@ -41,7 +41,6 @@ public class BinaryMod extends BaseBinary implements Serializable {
      *                   proxy. E.g. to identify that the binary resource relates to a patient, and access should only
      *                   be granted to applications that have access to the patient."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private Reference securityContext;
 
     @CassandraType(type = CassandraType.Name.UUID)

@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "Coding")
+@UserDefinedType(value = "Coding")
 public class Coding extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = -1417514061L;
@@ -26,7 +25,6 @@ public class Coding extends Type implements Serializable {
      * shortDefinition = "Identity of the terminology system",
      *           value = "The identification of the code system that defines the meaning of the symbol in the code."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private UriType system; // xs:anyURI - JSON string - a URI - Regex: \S*
 
     /***
@@ -43,7 +41,6 @@ public class Coding extends Type implements Serializable {
      *           value = "A symbol in syntax defined by the system. The symbol may be a predefined code or an expression
      *                    in a syntax defined by the coding system (e.g. post-coordination)."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private CodeType code; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
 
     /***

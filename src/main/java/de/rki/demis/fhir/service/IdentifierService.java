@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class IdentifierService {
 
 
     public List<Identifier> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public Identifier getOne(UUID identifierId) {
@@ -57,7 +55,6 @@ public class IdentifierService {
 //        }
 
 
-        newIdentifier.setId(UUID.randomUUID());
         return repository.save(newIdentifier);
     }
 

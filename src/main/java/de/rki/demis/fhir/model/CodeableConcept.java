@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "CodeableConcept")
+@UserDefinedType(value = "CodeableConcept")
 public class CodeableConcept extends Element implements Serializable {
     @Serial
     private static final long serialVersionUID = 760353246L;
@@ -28,7 +27,6 @@ public class CodeableConcept extends Element implements Serializable {
      * shortDefinition = "Code defined by a terminology system",
      *           value = "A reference to a code defined by a terminology system."
      ***/
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.UUID)
     private Set<Coding> coding;
 
     /***

@@ -27,7 +27,7 @@ public class ReferenceFhir2Reference {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes

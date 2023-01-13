@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +19,8 @@ public class UriTypeService {
     private final UriTypeRepository repository;
 
 
-
     public List<UriType> listAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+        return repository.findAll();
     }
 
     public UriType getOne(UUID uriTypeId) {
@@ -39,7 +36,6 @@ public class UriTypeService {
     }
 
     public UriType create(@NotNull UriType newUriType) {
-        newUriType.setId(UUID.randomUUID());
         return repository.save(newUriType);
     }
 

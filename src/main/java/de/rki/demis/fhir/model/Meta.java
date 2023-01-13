@@ -1,18 +1,11 @@
 package de.rki.demis.fhir.model;
 
-import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.Description;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import de.rki.demis.fhir.util.constant.DateFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.InstantType;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -24,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "Meta")
+@UserDefinedType(value = "Meta")
 public class Meta extends Type implements Serializable {
     @Serial
     private static final long serialVersionUID = -1386695622L;
@@ -49,15 +42,13 @@ public class Meta extends Type implements Serializable {
      *                    [[[Provenance]]] information that can be used to track or differentiate the source of information
      *                    in the resource. The source may identify another FHIR server, document, message, database, etc."
      ***/
-    @CassandraType(type = CassandraType.Name.UUID)
     private UriType source; // xs:anyURI - JSON string - a URI - Regex: \S*
 
     /***
      * shortDefinition = "Profiles this resource claims to conform to",
-     *             value = "A list of profiles (references to [[[StructureDefinition]]] resources) that this resource
-     *                      claims to conform to. The URL is a reference to [[[StructureDefinition.url]]]."
+     *           value = "A list of profiles (references to [[[StructureDefinition]]] resources) that this resource
+     *                    claims to conform to. The URL is a reference to [[[StructureDefinition.url]]]."
      ***/
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.UUID)
     private Set<CanonicalType> profile; // JSON string - a canonical URL
 
     /***
@@ -65,7 +56,6 @@ public class Meta extends Type implements Serializable {
      *           value = "Security labels applied to this resource. These tags connect specific resources to the
      *                    overall security policy and infrastructure."
      ***/
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.UUID)
     private Set<Coding> security;
 
     /***
@@ -74,6 +64,5 @@ public class Meta extends Type implements Serializable {
      *                    to process and workflow, and applications are not required to consider the tags when interpreting
      *                    the meaning of a resource."
      ***/
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.UUID)
     private Set<Coding> tag;
 }
