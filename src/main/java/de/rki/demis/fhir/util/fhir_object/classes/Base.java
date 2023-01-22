@@ -9,6 +9,7 @@ import org.springframework.data.cassandra.core.mapping.CassandraType;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -20,11 +21,9 @@ public class Base implements Serializable {
     @Serial
     private static final long serialVersionUID = -1452741316L;
 
-    //    private Map<String, Object> userData; todo: find a way to persist 'Object'/'Generic' types with JPA (@Convert(converter = ObjectConverter.class))
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.MAP, typeArguments = {CassandraType.Name.TEXT, CassandraType.Name.TEXT})
+    private Map<String, Object> userData;
     private Set<String> formatCommentsPre;
-
-    @CassandraType(type = CassandraType.Name.SET, typeArguments = CassandraType.Name.TEXT)
     private Set<String> formatCommentsPost;
 
     public boolean isEmpty() {

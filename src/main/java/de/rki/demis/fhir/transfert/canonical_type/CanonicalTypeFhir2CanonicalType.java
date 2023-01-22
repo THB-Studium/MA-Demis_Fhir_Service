@@ -1,7 +1,6 @@
 package de.rki.demis.fhir.transfert.canonical_type;
 
-import de.rki.demis.fhir.model.CanonicalType;
-import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
+import de.rki.demis.fhir.model.udt.CanonicalType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

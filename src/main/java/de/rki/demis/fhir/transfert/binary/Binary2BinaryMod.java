@@ -1,6 +1,6 @@
 package de.rki.demis.fhir.transfert.binary;
 
-import de.rki.demis.fhir.model.BinaryMod;
+import de.rki.demis.fhir.model.table.BinaryMod;
 import de.rki.demis.fhir.transfert.code_type.CodeTypeFhir2CodeType;
 import de.rki.demis.fhir.transfert.meta.MetaFhir2Meta;
 import de.rki.demis.fhir.transfert.reference.ReferenceFhir2Reference;

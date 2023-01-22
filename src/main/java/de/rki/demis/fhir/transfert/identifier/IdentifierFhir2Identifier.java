@@ -1,8 +1,7 @@
 package de.rki.demis.fhir.transfert.identifier;
 
-import de.rki.demis.fhir.model.Identifier;
+import de.rki.demis.fhir.model.udt.Identifier;
 import de.rki.demis.fhir.transfert.codeable_concept.CodeableConceptFhir2CodeableConcept;
-import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ public class IdentifierFhir2Identifier {
         out.setSystem(UriTypeFhir2UriType.apply(in.getSystemElement()));
         out.setValue(in.getValue());
         out.setPeriod(null); // todo
-        out.setAssigner(null); // todo: has benn set to null to avoid while wit Reference
+//        out.setAssigner(null); // todo: has benn set to null to avoid circle wit Reference
 
         return out;
     }

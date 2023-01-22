@@ -1,7 +1,7 @@
 package de.rki.demis.fhir.controller.binairies;
 
 import de.rki.demis.fhir.controller.ApiConstants;
-import de.rki.demis.fhir.model.BinaryMod;
+import de.rki.demis.fhir.model.table.BinaryMod;
 import de.rki.demis.fhir.service.BinaryService;
 import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
 import de.rki.demis.fhir.util.service.FhirParserService;

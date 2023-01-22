@@ -1,0 +1,12 @@
+package de.rki.demis.fhir.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "demis")
+public class AppSettings {
+    private boolean initData;
+}

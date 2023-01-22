@@ -1,6 +1,6 @@
 package de.rki.demis.fhir.transfert.extension;
 
-import de.rki.demis.fhir.model.Extension;
+import de.rki.demis.fhir.model.udt.Extension;
 import de.rki.demis.fhir.transfert.type.TypeFhir2Type;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;

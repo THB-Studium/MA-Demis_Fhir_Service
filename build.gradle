@@ -16,6 +16,14 @@ configurations {
     }
 }
 
+configurations.implementation {
+    exclude group: "org.ow2.asm", module: "asm"
+    exclude group: "org.ow2.asm", module: "asm-tree"
+    exclude group: "org.ow2.asm", module: "asm-util"
+    exclude group: "org.ow2.asm", module: "asm-commons"
+    exclude group: "org.ow2.asm", module: "asm-analysis"
+}
+
 repositories {
     mavenCentral()
 }
@@ -25,16 +33,20 @@ ext {
     springBootStarterVers = '2.7.5'
     swaggerVers           = '3.0.0'
     hapiFhirVers          = '6.2.2'
-    datastaxVers          = '6.2.2'
+    cassandraVers         = '3.0.1'
     generatedMainJava     = "${buildDir}/generated/main/java" as GStringImpl
 }
 
 dependencies {
     // Spring-boot:....
-    implementation "org.springframework.boot:spring-boot-starter-jersey"
+    implementation ("org.springframework.boot:spring-boot-starter-jersey") {
+        exclude group: 'org.javassist', module: "javassist"
+    }
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-web-services"
     implementation "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "javax.persistence:javax.persistence-api:2.2"
+
 
     // Models generation for generation of Meta-Models:...
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
@@ -51,13 +63,21 @@ dependencies {
 
 
     // DBs:....
-    implementation "org.springframework.boot:spring-boot-starter-data-cassandra" // Cassandra
+    implementation "org.springframework.boot:spring-boot-starter-data-cassandra:3.0.2" // Cassandra DB
+//    implementation "org.springframework.data:spring-data-cassandra:4.0.1"
+//    implementation "com.datastax.oss:java-driver-query-builder:4.15.0"
+
+
 
 
     // Extras Tools:....
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
     developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+    // Configuration-Processor:...
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.boot:spring-boot-configuration-processor:3.0.1"
 
 
     // Tests:....
@@ -70,7 +90,7 @@ dependencies {
 
 // For generated class of jpa metadata model generator:....
 tasks.withType(JavaCompile).configureEach {
-    options.annotationProcessorGeneratedSourcesDirectory = file(generatedMainJava)
+    options.compilerArgs += ['-AgeneratedAnnotationProcessorSourcesDirectory=' + file(generatedMainJava).absolutePath]
 }
 
 sourceSets {
@@ -80,6 +100,11 @@ sourceSets {
         }
     }
 }
+
+tasks.named('compileJava') {
+    inputs.files(tasks.named('processResources'))
+}
+
 
 // task for tests:....
 tasks.named('test') {

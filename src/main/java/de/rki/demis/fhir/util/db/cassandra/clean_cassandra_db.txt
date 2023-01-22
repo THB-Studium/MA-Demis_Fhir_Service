@@ -1,0 +1,26 @@
+-- Tables:
+
+drop table if exists "BinaryMod";
+
+drop table if exists "BundleMod";
+
+
+-- Type (UDT):
+
+drop type if exists "MetaUDT";
+
+drop type if exists "CanonicalTypeUDT";
+
+drop type if exists "IdentifierUDT";
+
+drop type if exists "CodeableConceptUDT";
+
+drop type if exists "CodingUDT";
+
+drop type if exists "CodeTypeUDT";
+
+drop type if exists "EnumerationUDT";
+
+drop type if exists "ReferenceUDT";
+
+drop type if exists "UriTypeUDT";

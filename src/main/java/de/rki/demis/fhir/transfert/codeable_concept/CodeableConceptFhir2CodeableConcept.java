@@ -1,8 +1,7 @@
 package de.rki.demis.fhir.transfert.codeable_concept;
 
-import de.rki.demis.fhir.model.CodeableConcept;
+import de.rki.demis.fhir.model.udt.CodeableConcept;
 import de.rki.demis.fhir.transfert.coding.CodingFhir2Coding;
-import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

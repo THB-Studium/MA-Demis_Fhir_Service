@@ -1,9 +1,8 @@
 package de.rki.demis.fhir.transfert.meta;
 
-import de.rki.demis.fhir.model.Meta;
+import de.rki.demis.fhir.model.udt.Meta;
 import de.rki.demis.fhir.transfert.canonical_type.CanonicalTypeFhir2CanonicalType;
 import de.rki.demis.fhir.transfert.coding.CodingFhir2Coding;
-import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
