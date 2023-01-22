@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
@@ -39,5 +41,6 @@ public class BackboneElement extends Element implements Serializable {
      *                   modifier extensions. Modifier extensions SHALL NOT change the meaning of any elements on Resource or
      *                   DomainResource (including cannot change the meaning of modifierExtension itself)."
      ***/
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Extension> modifierExtension;
 }

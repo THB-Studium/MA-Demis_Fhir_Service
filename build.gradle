@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
@@ -14,15 +16,24 @@ configurations {
     }
 }
 
+configurations.implementation {
+    exclude group: 'org.ow2.asm', module: "asm"
+    exclude group: "org.ow2.asm", module: "asm-tree"
+    exclude group: 'org.ow2.asm', module: "asm-util"
+    exclude group: 'org.ow2.asm', module: "asm-commons"
+    exclude group: 'org.ow2.asm', module: "asm-analysis"
+}
+
 repositories {
     mavenCentral()
 }
 
 
 ext {
-    swaggerVersion    = '3.0.0'
-    hapiFhirVersion   = '6.1.3'
-    generatedMainJava = "${buildDir}/generated/main/java"
+    springBootStarterVers = '2.7.5'
+    swaggerVers           = '3.0.0'
+    hapiFhirVers          = '6.2.2'
+    generatedMainJava     = "${buildDir}/generated/main/java" as GStringImpl
 }
 
 dependencies {
@@ -37,22 +48,17 @@ dependencies {
 
 
     // Swagger:....
-    implementation "io.springfox:springfox-swagger-ui:$swaggerVersion"
-    implementation "io.springfox:springfox-swagger2:3.0.0"
-    implementation "io.springfox:springfox-swagger-common:$swaggerVersion"
+    implementation "io.springfox:springfox-swagger-ui:$swaggerVers"
+    implementation "io.springfox:springfox-swagger2:$swaggerVers"
+    implementation "io.springfox:springfox-swagger-common:$swaggerVers"
 
 
     // HAPI Fhir:....
-//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-jpaserver-base:6.0.1' // Core
-//    implementation 'ca.uhn.hapi.fhir:hapi-fhir-client:6.0.1' // Client
-    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiFhirVersion" // Structures-r4
+    implementation "ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiFhirVers" // Structures-r4
 
 
     // DBs:....
     runtimeOnly "org.postgresql:postgresql" // Postgres
-//    implementation 'org.postgresql:postgresql:42.5.0' // Postgres
-//    implementation 'com.datastax.oss:java-driver-core:4.14.1' // Apache Cassandra
-//    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra' // Apache Cassandra
 
 
     // Extras Tools:....
@@ -70,8 +76,8 @@ dependencies {
 }
 
 // For generated class of jpa metadata model generator:....
-tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(generatedMainJava)
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-AgeneratedAnnotationProcessorSourcesDirectory=' + file(generatedMainJava).absolutePath]
 }
 
 sourceSets {
