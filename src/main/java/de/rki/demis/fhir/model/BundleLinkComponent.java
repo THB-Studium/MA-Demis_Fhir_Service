@@ -1,7 +1,5 @@
 package de.rki.demis.fhir.model;
 
-import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,23 +25,21 @@ public class BundleLinkComponent extends BackboneElement implements Serializable
     private static final long serialVersionUID = -1010386066L;
 
 
+    /***
+     * shortDefinition = "See http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1",
+     *           value = "A name which details the functional use for this link - see
+     *                    [http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1]
+     *                    (http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1)."
+     ***/
     @NotNull(message = "The 'relation' " + NOT_NULL_MSG)
-    @Child(name = "relation", type = {org.hl7.fhir.r4.model.StringType.class},
-            order = 1, min = 1, summary = true)
-    @Description(
-            shortDefinition = "See http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1",
-            value = "A name which details the functional use for this link - see " +
-                    "[http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1]" +
-                    "(http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1).")
     private String relation;
 
+    /***
+     * shortDefinition = "Reference details for the link",
+     *           value = "The reference details for the link."
+     ***/
     @OneToOne
     @NotNull(message = "The 'url' " + NOT_NULL_MSG)
-    @Child(name = "url", type = {org.hl7.fhir.r4.model.UriType.class},
-            order = 2, min = 1, summary = true)
-    @Description(
-            shortDefinition = "Reference details for the link",
-            value = "The reference details for the link.")
     private UriType url;
 
 }
