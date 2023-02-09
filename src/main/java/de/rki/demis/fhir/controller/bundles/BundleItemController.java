@@ -1,7 +1,7 @@
 package de.rki.demis.fhir.controller.bundles;
 
 import de.rki.demis.fhir.controller.ApiConstants;
-import de.rki.demis.fhir.model.BundleMod;
+import de.rki.demis.fhir.model.table.BundleMod;
 import de.rki.demis.fhir.service.BundleService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

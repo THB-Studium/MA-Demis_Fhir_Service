@@ -3,7 +3,10 @@ package de.rki.demis.fhir.controller.binairies;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.table.BinaryMod;
 import de.rki.demis.fhir.service.BinaryService;
+import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
+import org.hl7.fhir.r4.model.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Objects;
 import java.util.UUID;
 
 import static de.rki.demis.fhir.util.constant.Constants.BINARY_ID;

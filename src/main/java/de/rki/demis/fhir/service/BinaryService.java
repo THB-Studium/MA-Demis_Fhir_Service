@@ -1,15 +1,12 @@
 package de.rki.demis.fhir.service;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
-import com.datastax.oss.driver.api.querybuilder.relation.Relation;
-import com.datastax.oss.driver.api.querybuilder.select.Select;
-import com.datastax.oss.driver.api.querybuilder.term.Term;
 import de.rki.demis.fhir.exception.ParsingException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.exception.ResourceNotFoundException;
 import de.rki.demis.fhir.model.table.BinaryMod;
 import de.rki.demis.fhir.repository.BinaryRepository;
+import de.rki.demis.fhir.search.criteria.BinaryCriteria;
 import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
 import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +36,6 @@ public class BinaryService {
 
 
     public List<BinaryMod> listAll() {
-        test();
         return repository.findAll();
     }
 
@@ -59,19 +55,18 @@ public class BinaryService {
         if (Objects.isNull(newBinaryMod.getId())) {
             newBinaryMod.setId(UUID.randomUUID());
         }
+        checkForUniqueness(newBinaryMod);
         return repository.save(newBinaryMod);
     }
 
     public void update(UUID binaryId, String updateString, MediaType mediaType)
             throws ResourceNotFoundException, ParsingException {
 
-        Binary binary = fhirParserService.parseBinary(updateString, mediaType);
-        BinaryMod binaryModFound = getOne(binaryId);
-        BinaryMod update = Objects.requireNonNull(Binary2BinaryMod.apply(binary));
+        getOne(binaryId); // to check if a binary with the given id exist
 
-        if (!Objects.equals(binaryModFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
+        Binary updateParsed = fhirParserService.parseBinary(updateString, mediaType);
+        updateParsed.setId("");
+        BinaryMod update = Objects.requireNonNull(Binary2BinaryMod.apply(updateParsed));
 
         update.setId(binaryId);
         repository.save(update);
@@ -82,9 +77,11 @@ public class BinaryService {
         repository.deleteById(binaryId);
     }
 
-//    public List<BinaryMod> search(BinaryCriteria criteria) {
+    public List<BinaryMod> search(BinaryCriteria criteria) {
 //        return repository.findAll(new BinarySpecs(criteria));
-//    }
+
+        return test(criteria); // todo
+    }
 
     private void checkForUniqueness(@NotNull BinaryMod binary) {
         if (repository.existsById(binary.getId())) {
@@ -94,10 +91,10 @@ public class BinaryService {
         }
     }
 
-    private void test() {
+    @NotNull
+    private List<BinaryMod> test(@NotNull BinaryCriteria criteria) {
         try (CqlSession session = CqlSession.builder().withKeyspace("spring_cassandra").build()) {
             UUID myId = UUID.fromString("b5c6bf85-c904-4774-a9fb-e716e82cf223");
-            String myStringValue = "http://hl7.org/fhir/composition-status";
             cassandraOperationsTemplate = new CassandraTemplate(session);
 
 
@@ -105,11 +102,11 @@ public class BinaryService {
 //                    .all()
 //                    .whereColumn("meta")
 //                    .where(Relation.columns("meta", "tag", "System", "myStringValue"))
-//                    .whereCustomIndex("binarymod_meta_idx", QueryBuilder.literal(myStringValue))
-//                    .where(Relation.columns("meta", "tag", "system", "myStringValue").in(QueryBuilder.literal(myStringValue)))
+//                    .whereCustomIndex("binarymod_meta_idx", QueryBuilder.literal(criteria.getSystem()))
+//                    .where(Relation.columns("meta", "tag", "system", "myStringValue").in(QueryBuilder.literal(criteria.getSystem())))
 //                    .whereColumn("tag").isNotNull()
 //                    .whereColumn("system").isNotNull()
-//                    .whereColumn("myStringValue").like(QueryBuilder.literal(myStringValue))
+//                    .whereColumn("myStringValue").like(QueryBuilder.literal(criteria.getSystem()))
 //                    .allowFiltering();
 //                    .column("meta")
 //                    .field("meta","tag")
@@ -120,15 +117,20 @@ public class BinaryService {
 
 
 
-////            queryTest.where(QueryBuilder.c).equals(myStringValue);
+
+////            queryTest.where(QueryBuilder.c).equals(criteria.getSystem());
 //
-//            String cql = query.toString() + "= " + myStringValue;
+//            String cql = query.toString() + "= " + criteria.getSystem();
 //                    .stream().skip(0).limit(20).toList();
 //
 //            System.out.println(result);
+
+
+
+
 //            List<BinaryMod> result = cassandraOperationsTemplate.select(query.asCql(), BinaryMod.class)
 
-            String query = "select * from spring_cassandra.binarymod where meta.tag.system.mystringvalue:" + myStringValue;
+            String query = "select * from spring_cassandra.binarymod where meta.tag.system.mystringvalue:" + criteria.getSystem();
             List<BinaryMod> result = cassandraOperationsTemplate.select(query, BinaryMod.class);
             System.out.println(result);
 
@@ -136,12 +138,16 @@ public class BinaryService {
 
 
 
-            List<BinaryMod> binaryMods = cassandraOperationsTemplate.select(
-                    Query.query(Criteria.where("meta").like(myStringValue)),
-                    BinaryMod.class)
-                    ;
+//            List<BinaryMod> binaryMods = cassandraOperationsTemplate.select(
+//                    Query.query(Criteria.where("meta").like(criteria.getSystem())),
+//                    BinaryMod.class)
+//                    ;
+//
+//            System.out.println(binaryMods);
 
-            System.out.println(binaryMods);
+
+
+
 
 //            List<BinaryMod> binaryMods = template.select(Query.query(
 //                    Criteria.where("id")
@@ -149,10 +155,13 @@ public class BinaryService {
 
 //            System.out.println(binaryMods);
 
-//            String cql = "SELECT * FROM spring_cassandra.binarymod WHERE meta.implicitrules.mystringvalue = ? ";
-//            List<BinaryMod> result = cassandraTemplate.select(cql, new Object[]{myStringValue}, BinaryMod.class);
 
-//            String cql = "meta.mystringvalue = '" + myStringValue + "'";
+
+
+//            String cql = "SELECT * FROM spring_cassandra.binarymod WHERE meta.implicitrules.mystringvalue = ? ";
+//            List<BinaryMod> result = cassandraTemplate.select(cql, new Object[]{criteria.getSystem()}, BinaryMod.class);
+
+//            String cql = "meta.mystringvalue = '" + criteria.getSystem() + "'";
 //            List<BinaryMod> result = template.select(cql, BinaryMod.class)
 //                    .stream().skip(0).limit(20).toList();
 
@@ -171,6 +180,8 @@ public class BinaryService {
 //            assert row != null;
 //            System.out.println(row.getColumnDefinitions());
         }
+
+        return repository.findAll();
     }
 
 }

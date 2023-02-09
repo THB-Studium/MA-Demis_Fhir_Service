@@ -1,7 +1,7 @@
 package de.rki.demis.fhir.controller.bundles;
 
 import de.rki.demis.fhir.controller.ApiConstants;
-import de.rki.demis.fhir.model.BundleMod;
+import de.rki.demis.fhir.model.table.BundleMod;
 import de.rki.demis.fhir.search.criteria.BundleCriteria;
 import de.rki.demis.fhir.service.BundleService;
 import de.rki.demis.fhir.util.parser.DateQueryParser;
