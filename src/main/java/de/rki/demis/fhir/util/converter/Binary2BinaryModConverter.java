@@ -1,4 +1,4 @@
-package de.rki.demis.fhir.transfert.binary;
+package de.rki.demis.fhir.util.converter;
 
 import de.rki.demis.fhir.model.table.BinaryMod;
 import de.rki.demis.fhir.transfert.code_type.CodeTypeFhir2CodeType;
@@ -8,23 +8,16 @@ import de.rki.demis.fhir.transfert.resource.ResourceFhir2Resource;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.hl7.fhir.r4.model.Binary;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.core.convert.converter.Converter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-public class Binary2BinaryMod {
+public class Binary2BinaryModConverter implements Converter<Binary, BinaryMod> {
 
-    @Nullable
-    public static BinaryMod apply(Binary in) {
-        if (Objects.isNull(in)) {
-            return null;
-        }
-
+    @Override
+    public BinaryMod convert(@NotNull Binary in) {
         BinaryMod out = new BinaryMod();
 
         // Resource type attributes
@@ -41,18 +34,9 @@ public class Binary2BinaryMod {
         // BinaryMod attributes
         out.setContentType(in.getContentType());
         out.setSecurityContext(ReferenceFhir2Reference.apply(in.getSecurityContext()));
-//        out.setSecurityContextTarget(ResourceFhir2Resource.apply(in.getSecurityContextTarget()));
-//        out.setData(Base64BinaryTypeFhir2Base64BinaryType.apply(in.getDataElement())); todo
+        out.setSecurityContextTarget(ResourceFhir2Resource.apply(in.getSecurityContextTarget()));
         out.setData(in.getData());
 
         return out;
-    }
-
-    public static List<BinaryMod> apply(@NotNull List<Binary> in) {
-        return in.stream().map(Binary2BinaryMod::apply).collect(Collectors.toList());
-    }
-
-    public static Set<BinaryMod> apply(@NotNull Set<Binary> in) {
-        return in.stream().map(Binary2BinaryMod::apply).collect(Collectors.toSet());
     }
 }

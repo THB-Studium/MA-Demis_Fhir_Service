@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serial;
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-//@UserDefinedType(value = "ExtensionUDT")
+@UserDefinedType(value = "ExtensionUDT")
 public class Extension extends BaseExtension implements Serializable {
     @Serial
     private static final long serialVersionUID = 194602931L;
@@ -37,6 +38,7 @@ public class Extension extends BaseExtension implements Serializable {
      * (see [Extensibility](extensibility.html) for a list)."
      **/
     // @JsonIdentityInfo is used here to fix circular reference btw. "Element" and "Extension"
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "type_udt")
     private Type value;
 }

@@ -66,8 +66,9 @@ public class Constants {
 
   /*** For CASSANDRA ***/
 
-  public static final String KEY_SPACE_NAME   = "spring_cassandra";
+  public static final String KEY_SPACE_NAME   = "demis_cassandra_db";
   public static final String DELETE_TABLE   = "DROP TABLE IF EXISTS " + KEY_SPACE_NAME;
   public static final String DELETE_UDT     = "DROP TYPE IF EXISTS " + KEY_SPACE_NAME;
+  public static final String CREATE_UDT     = "CREATE TYPE IF NOT EXISTS " + KEY_SPACE_NAME;
 
 }

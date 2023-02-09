@@ -3,6 +3,7 @@ package de.rki.demis.fhir.transfert.meta;
 import de.rki.demis.fhir.model.udt.Meta;
 import de.rki.demis.fhir.transfert.canonical_type.CanonicalTypeFhir2CanonicalType;
 import de.rki.demis.fhir.transfert.coding.CodingFhir2Coding;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +29,7 @@ public class MetaFhir2Meta {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes

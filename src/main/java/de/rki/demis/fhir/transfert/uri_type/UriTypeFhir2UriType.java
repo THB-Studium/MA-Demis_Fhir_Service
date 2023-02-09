@@ -1,6 +1,7 @@
 package de.rki.demis.fhir.transfert.uri_type;
 
 import de.rki.demis.fhir.model.udt.UriType;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ public class UriTypeFhir2UriType {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes
@@ -33,7 +34,7 @@ public class UriTypeFhir2UriType {
 
         // PrimitiveType<T> attributes
         out.setMyStringValue(in.getValueAsString());
-//        out.setMyCoercedValue(in.getValue());
+        out.setMyCoercedValue(in.getValue());
 
         return out;
     }

@@ -8,5 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "demis")
 public class AppSettings {
-    private boolean initData;
+    private boolean clearDB;
+    private boolean initUDT;
 }

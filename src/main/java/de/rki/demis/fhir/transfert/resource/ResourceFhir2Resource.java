@@ -34,6 +34,7 @@ public class ResourceFhir2Resource {
                     ? UUID.fromString(in.getId())
                     : null // todo: handle this null
                 : null);
+        out.setResourceType(in.getResourceType().toString());
         out.setMeta(MetaFhir2Meta.apply(in.getMeta()));
         out.setImplicitRules(UriTypeFhir2UriType.apply(in.getImplicitRulesElement()));
         out.setLanguage(CodeTypeFhir2CodeType.apply(in.getLanguageElement()));

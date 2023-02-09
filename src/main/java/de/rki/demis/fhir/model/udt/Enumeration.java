@@ -16,7 +16,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@UserDefinedType(value = "EnumerationUDT")
 public class Enumeration<T extends Enum<?>> extends PrimitiveType<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

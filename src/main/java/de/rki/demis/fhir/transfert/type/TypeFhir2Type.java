@@ -1,6 +1,7 @@
 package de.rki.demis.fhir.transfert.type;
 
 import de.rki.demis.fhir.model.udt.Type;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ public class TypeFhir2Type {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes

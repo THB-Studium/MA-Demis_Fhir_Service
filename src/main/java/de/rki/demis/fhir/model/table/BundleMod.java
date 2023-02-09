@@ -1,7 +1,10 @@
 package de.rki.demis.fhir.model.table;
 
+import de.rki.demis.fhir.model.udt.BundleEntryComponent;
+import de.rki.demis.fhir.model.udt.BundleLinkComponent;
 import de.rki.demis.fhir.model.udt.Enumeration;
 import de.rki.demis.fhir.model.udt.Identifier;
+import de.rki.demis.fhir.model.udt.Signature;
 import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import de.rki.demis.fhir.util.fhir_object.enums.BundleType;
 import lombok.AllArgsConstructor;
@@ -16,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import static de.rki.demis.fhir.util.constant.Constants.NOT_NULL_MSG;
 
@@ -35,15 +39,15 @@ public class BundleMod extends Resource implements Serializable {
      *           value = "A persistent identifier for the bundle that won't change as a bundle is
      *           copied from server to server."
      ***/
-//    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "IdentifierUDT")
-//    private Identifier identifier;
-//
-//    /***
-//     * shortDefinition = "document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection",
-//     *           value = "Indicates the purpose of this bundle - how it is intended to be used."
-//     */
-//    @NotNull(message = "The 'Bundle type' " + NOT_NULL_MSG)
-//    private Enumeration<BundleType> type; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
+    private Identifier identifier;
+
+    /***
+     * shortDefinition = "document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection",
+     *           value = "Indicates the purpose of this bundle - how it is intended to be used."
+     */
+    @NotNull(message = "The 'Bundle type' " + NOT_NULL_MSG)
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "enumeration_bundletype_udt")
+    private Enumeration<BundleType> type; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
 
     /***
      * shortDefinition = "When the bundle was assembled",
@@ -59,22 +63,22 @@ public class BundleMod extends Resource implements Serializable {
      ***/
     private int total;
 
-//    /***
-//     * shortDefinition = "Links related to this Bundle",
-//     *           value = "A series of links that provide context to this bundle."
-//     ***/
-//    private Set<BundleLinkComponent> link;
+    /***
+     * shortDefinition = "Links related to this Bundle",
+     *           value = "A series of links that provide context to this bundle."
+     ***/
+    private Set<BundleLinkComponent> link;
 
-//    /***
-//     * shortDefinition = "Entry in the bundle - will have a resource or information",
-//     *           value = "An entry in a bundle resource - will either contain a resource or information
-//     *           about a resource (transactions and history only)."
-//     ***/
-//    private Set<BundleEntryComponent> entry;
+    /***
+     * shortDefinition = "Entry in the bundle - will have a resource or information",
+     *           value = "An entry in a bundle resource - will either contain a resource or information
+     *           about a resource (transactions and history only)."
+     ***/
+    private Set<BundleEntryComponent> entry;
 
-//    /***
-//     * shortDefinition = "Digital Signature",
-//     *           value = "Digital Signature - base64 encoded. XML-DSig or a JWT."
-//     ***/
-//    private Signature signature;
+    /***
+     * shortDefinition = "Digital Signature",
+     *           value = "Digital Signature - base64 encoded. XML-DSig or a JWT."
+     ***/
+    private Signature signature;
 }

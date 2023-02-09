@@ -26,7 +26,6 @@ public class Coding extends Type implements Serializable {
      * shortDefinition = "Identity of the terminology system",
      *           value = "The identification of the code system that defines the meaning of the symbol in the code."
      ***/
-    @Indexed
     private UriType system; // xs:anyURI - JSON string - a URI - Regex: \S*
 
     /***
@@ -43,14 +42,12 @@ public class Coding extends Type implements Serializable {
      *           value = "A symbol in syntax defined by the system. The symbol may be a predefined code or an expression
      *                    in a syntax defined by the coding system (e.g. post-coordination)."
      ***/
-    @Indexed
     private CodeType code; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
 
     /***
      * shortDefinition = "Representation defined by the system",
      *           value = "A representation of the meaning of the code in the system, following the rules of the system."
      ***/
-    @Indexed
     private String display;
 
     /***

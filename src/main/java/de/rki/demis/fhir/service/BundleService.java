@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BundleService {
     private final BundleRepository repository;
-    private final FhirParserService fhirParserService;
 
     public List<BundleMod> listAll() {
         return repository.findAll();
@@ -47,13 +46,14 @@ public class BundleService {
         return repository.save(newBundle);
     }
 
-    public void update(UUID bundleId, String updateString, MediaType mediaType)
+    public void update(UUID bundleId, @NotNull BundleMod update)
             throws ResourceNotFoundException, ParsingException {
 
         getOne(bundleId); // to check if a bundle with the given id exist
-        Bundle updateParsed = fhirParserService.parseBundle(updateString, mediaType);
-        updateParsed.setId("");
-        BundleMod update = Objects.requireNonNull(Bundle2BundleMod.apply(updateParsed));
+
+        if (!bundleId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
 
         update.setId(bundleId);
         repository.save(update);

@@ -1,11 +1,18 @@
 package de.rki.demis.fhir.transfert.identifier;
 
+import de.rki.demis.fhir.model.udt.Enumeration;
 import de.rki.demis.fhir.model.udt.Identifier;
 import de.rki.demis.fhir.transfert.codeable_concept.CodeableConceptFhir2CodeableConcept;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
+import de.rki.demis.fhir.transfert.reference.ReferenceFhir2Reference;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
+import de.rki.demis.fhir.util.fhir_object.enums.IdentifierUse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +33,7 @@ public class IdentifierFhir2Identifier {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes
@@ -34,12 +41,21 @@ public class IdentifierFhir2Identifier {
         out.setFormatCommentsPost(new HashSet<>(in.getFormatCommentsPost()));
 
         // Identifier type attributes
-//        out.setUse(null); // todo
+//        out.setUse(new Enumeration<IdentifierUse>());
+//        out.getUse().setMyStringValue(Objects.nonNull(in.getUse()) ? in.getUse().getDisplay() : null);
+        out.setUse(null); // todo
+
         out.setType(CodeableConceptFhir2CodeableConcept.apply(in.getType()));
         out.setSystem(UriTypeFhir2UriType.apply(in.getSystemElement()));
         out.setValue(in.getValue());
-        out.setPeriod(null); // todo
-//        out.setAssigner(null); // todo: has benn set to null to avoid circle wit Reference
+
+        if(Objects.nonNull(in.getPeriod()) && Objects.nonNull(in.getPeriod().getStart()) && Objects.nonNull(in.getPeriod().getEnd())) {
+            LocalDate startDate = in.getPeriod().getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endLocalDate = in.getPeriod().getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            out.setPeriod(Period.between(startDate, endLocalDate).normalized());
+        }
+
+        out.setAssigner(null); // todo: has benn set to null to avoid circle wit Reference
 
         return out;
     }

@@ -38,7 +38,6 @@ public class Meta extends Type implements Serializable {
      * shortDefinition = "When the resource version last changed",
      *           value = "When the resource last changed - e.g. when the version changed."
      ***/
-    @Indexed
     private Date lastUpdated;
 
     /***
@@ -69,6 +68,5 @@ public class Meta extends Type implements Serializable {
      *                    to process and workflow, and applications are not required to consider the tags when interpreting
      *                    the meaning of a resource."
      ***/
-    @Indexed
     private Set<Coding> tag;
 }

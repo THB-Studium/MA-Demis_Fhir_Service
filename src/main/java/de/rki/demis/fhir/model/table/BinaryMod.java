@@ -45,7 +45,7 @@ public class BinaryMod extends BaseBinary implements Serializable {
      ***/
     private Reference securityContext;
 
-    @CassandraType(type = CassandraType.Name.UUID)
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "resource_udt")
     private Resource securityContextTarget;
 
     /***

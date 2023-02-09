@@ -2,6 +2,7 @@ package de.rki.demis.fhir.transfert.codeable_concept;
 
 import de.rki.demis.fhir.model.udt.CodeableConcept;
 import de.rki.demis.fhir.transfert.coding.CodingFhir2Coding;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,7 @@ public class CodeableConceptFhir2CodeableConcept {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes

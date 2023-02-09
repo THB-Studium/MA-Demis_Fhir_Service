@@ -1,5 +1,7 @@
 package de.rki.demis.fhir.model.udt;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.rki.demis.fhir.util.fhir_object.classes.Element;
 import de.rki.demis.fhir.util.fhir_object.enums.IdentifierUse;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ public class Identifier extends Element implements Serializable {
      * shortDefinition = "usual | official | temp | secondary | old (If known)",
      *           value = "The purpose of this identifier."
      ***/
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "enumeration_identifieruse_udt")
     private Enumeration<IdentifierUse> use; // xs:token - JSON string - Regex: [^\s]+(\s[^\s]+)*
 
     /***
@@ -59,9 +62,10 @@ public class Identifier extends Element implements Serializable {
      ***/
     private Period period;
 
-//    /***
-//     * shortDefinition = "Organization that issued id (maybe just text)",
-//     *           value = "Organization that issued/manages the identifier."
-//     ***/
-//    private Reference assigner;
+    /***
+     * shortDefinition = "Organization that issued id (maybe just text)",
+     *           value = "Organization that issued/manages the identifier."
+     ***/
+    @CassandraType(type = CassandraType.Name.TEXT)
+    private Reference assigner; // todo: cycle
 }

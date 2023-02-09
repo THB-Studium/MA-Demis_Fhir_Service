@@ -22,6 +22,5 @@ public class PrimitiveType<T> extends Type implements Serializable {
 
     private T myCoercedValue;
 
-    @Indexed
     private String myStringValue;
 }

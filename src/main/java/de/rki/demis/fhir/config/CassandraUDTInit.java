@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_UDT;
 import static de.rki.demis.fhir.util.constant.Constants.DELETE_TABLE;
 import static de.rki.demis.fhir.util.constant.Constants.DELETE_UDT;
 
@@ -14,6 +15,15 @@ import static de.rki.demis.fhir.util.constant.Constants.DELETE_UDT;
 public class CassandraUDTInit {
     private final AppSettings settings;
     private final CassandraTemplate cassandraTemplate;
+
+    private final String[] _udts = {
+            "MetaUDT", "CanonicalTypeUDT", "IdentifierUDT", "CodeableConceptUDT", "CodingUDT",
+            "CodeTypeUDT", "EnumerationUDT", "ReferenceUDT", "UriTypeUDT"
+    };
+
+    private final String[] _tables = {
+            "BinaryMod", "BundleMod"
+    };
 
     @Autowired
     public CassandraUDTInit(AppSettings settings, CassandraTemplate cassandraTemplate) {
@@ -23,27 +33,36 @@ public class CassandraUDTInit {
 
     @PostConstruct
     public void init() {
-        if (settings.isInitData()) {
+        if (settings.isClearDB()) {
             deleteTables();
             deleteUDTs();
+        }
+
+        if (settings.isInitUDT()) {
+            createUDTs();
         }
     }
 
     private void deleteTables() {
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_TABLE + ".BinaryMod;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_TABLE + ".BundleMod;"));
+        for (String item : _tables) {
+            cqlQueryOperation(DELETE_TABLE, item);
+        }
     }
 
     private void deleteUDTs() {
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".MetaUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".CanonicalTypeUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".IdentifierUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".CodeableConceptUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".CodingUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".CodeTypeUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".EnumerationUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".ReferenceUDT;"));
-        cassandraTemplate.execute(SimpleStatement.newInstance(DELETE_UDT + ".UriTypeUDT;"));
+        for (String item : _udts) {
+            cqlQueryOperation(DELETE_UDT, item);
+        }
+    }
+
+    private void createUDTs() {
+        for (String item : _udts) {
+            cqlQueryOperation(CREATE_UDT, item);
+        }
+    }
+
+    private void cqlQueryOperation(String cqlOperation, String cqlInstance) {
+        cassandraTemplate.execute(SimpleStatement.newInstance(cqlOperation + "." + cqlInstance));
     }
 
 }

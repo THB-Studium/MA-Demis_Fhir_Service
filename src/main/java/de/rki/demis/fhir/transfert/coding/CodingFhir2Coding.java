@@ -2,6 +2,7 @@ package de.rki.demis.fhir.transfert.coding;
 
 import de.rki.demis.fhir.model.udt.Coding;
 import de.rki.demis.fhir.transfert.code_type.CodeTypeFhir2CodeType;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ public class CodingFhir2Coding {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes

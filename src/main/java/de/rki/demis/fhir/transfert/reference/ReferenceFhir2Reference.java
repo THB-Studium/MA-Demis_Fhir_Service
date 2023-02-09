@@ -1,6 +1,8 @@
 package de.rki.demis.fhir.transfert.reference;
 
 import de.rki.demis.fhir.model.udt.Reference;
+import de.rki.demis.fhir.transfert.extension.ExtensionFhir2Extension;
+import de.rki.demis.fhir.transfert.identifier.IdentifierFhir2Identifier;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +27,7 @@ public class ReferenceFhir2Reference {
 
         // Element type attributes
         out.setId(Objects.nonNull(in.getId()) ? UUID.fromString(in.getId()) : null);
-//        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
+        out.setExtension(ExtensionFhir2Extension.apply(new HashSet<>(in.getExtension())));
         out.setDisallowExtensions(in.getExtensionFirstRep().isDisallowExtensions());
 
         // Base type attributes
@@ -35,7 +37,7 @@ public class ReferenceFhir2Reference {
         // Reference type attributes
         out.setReference(in.getReference());
         out.setType(UriTypeFhir2UriType.apply(in.getTypeElement()));
-//        out.setIdentifier(IdentifierFhir2Identifier.apply(in.getIdentifier()));
+        out.setIdentifier(IdentifierFhir2Identifier.apply(in.getIdentifier()));
         out.setDisplay(in.getDisplay());
 
         return out;

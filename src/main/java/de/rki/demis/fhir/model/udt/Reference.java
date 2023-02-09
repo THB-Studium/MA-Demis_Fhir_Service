@@ -1,5 +1,7 @@
 package de.rki.demis.fhir.model.udt;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.rki.demis.fhir.util.fhir_object.classes.BaseReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,7 +58,7 @@ public class Reference extends BaseReference implements Serializable {
      *                   expected to be exposed as a FHIR instance, and that instance would need to be of a FHIR resource
      *                   type allowed by the reference."
      ***/
-    private Identifier identifier; // todo: Cause Cassandra Issue
+    private Identifier identifier;
 
     /***
      * shortDefinition = "Text alternative for the resource",
