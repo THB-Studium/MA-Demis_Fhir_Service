@@ -62,6 +62,7 @@ dependencies {
 
     // DBs:....
     runtimeOnly "org.postgresql:postgresql:42.5.4" // Postgres
+    implementation "org.hibernate:hibernate-core:5.6.8.Final"
 
 
     // Extras Tools:....
@@ -80,7 +81,7 @@ dependencies {
 
 // For generated class of jpa metadata model generator:....
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-AgeneratedAnnotationProcessorSourcesDirectory=' + file(generatedMainJava).absolutePath]
+    options.compilerArgs += ["-AgeneratedAnnotationProcessorSourcesDirectory=" + file(generatedMainJava).absolutePath]
 }
 
 sourceSets {
@@ -92,6 +93,6 @@ sourceSets {
 }
 
 // task for tests:....
-tasks.named('test') {
+tasks.named("test") {
     useJUnitPlatform()
 }
