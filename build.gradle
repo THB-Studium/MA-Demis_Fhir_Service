@@ -17,11 +17,11 @@ configurations {
 }
 
 configurations.implementation {
-    exclude group: 'org.ow2.asm', module: "asm"
+    exclude group: "org.ow2.asm", module: "asm"
     exclude group: "org.ow2.asm", module: "asm-tree"
-    exclude group: 'org.ow2.asm', module: "asm-util"
-    exclude group: 'org.ow2.asm', module: "asm-commons"
-    exclude group: 'org.ow2.asm', module: "asm-analysis"
+    exclude group: "org.ow2.asm", module: "asm-util"
+    exclude group: "org.ow2.asm", module: "asm-commons"
+    exclude group: "org.ow2.asm", module: "asm-analysis"
 }
 
 repositories {
@@ -30,21 +30,24 @@ repositories {
 
 
 ext {
-    springBootStarterVers = '2.7.5'
-    swaggerVers           = '3.0.0'
-    hapiFhirVers          = '6.2.2'
+    springBootStarterVers = "3.0.4"
+    jpaVers               = "2.5.6"
+    jpaModelgenVers       = "5.4.32.Final"
+    swaggerVers           = "3.0.0"
+    lombokVers            = "1.18.26"
+    hapiFhirVers          = "6.4.3"
     generatedMainJava     = "${buildDir}/generated/main/java" as GStringImpl
 }
 
 dependencies {
     // Spring-boot:....
     implementation "org.springframework.boot:spring-boot-starter-jersey"
-    implementation "org.springframework.boot:spring-boot-starter-web:2.7.5"
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootStarterVers"
     implementation "org.springframework.boot:spring-boot-starter-web-services"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:2.7.5"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$jpaVers"
 
     // Jpa models generation for generation of Meta-Models:...
-    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$jpaModelgenVers"
 
 
     // Swagger:....
@@ -58,20 +61,20 @@ dependencies {
 
 
     // DBs:....
-    runtimeOnly "org.postgresql:postgresql" // Postgres
+    runtimeOnly "org.postgresql:postgresql:42.5.4" // Postgres
 
 
     // Extras Tools:....
-    compileOnly "org.projectlombok:lombok"
-    annotationProcessor "org.projectlombok:lombok"
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly "org.projectlombok:lombok:$lombokVers"
+    annotationProcessor "org.projectlombok:lombok:$lombokVers"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:2.7.3"
 
 
     // Tests:....
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootStarterVers") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
-    testImplementation "ch.qos.logback:logback-classic"
+    testImplementation "ch.qos.logback:logback-classic:1.4.6"
 
 }
 
