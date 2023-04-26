@@ -2,12 +2,9 @@ package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
-import de.rki.demis.fhir.model.CodeType;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
-import de.rki.demis.fhir.repository.CodeTypeRepository;
 import de.rki.demis.fhir.repository.CodingRepository;
-import de.rki.demis.fhir.repository.ExtensionRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -20,12 +17,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class CodingService {
     private final CodingRepository repository;
-    private final ExtensionRepository extensionRepository;
     private final ExtensionService extensionService;
     private final UriTypeService uriTypeService;
     private final CodeTypeService codeTypeService;
@@ -48,37 +50,21 @@ public class CodingService {
     }
 
     public Coding create(@NotNull Coding newCoding) {
-        Set<Extension> extension = new HashSet<>();
-        newCoding.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
-
-        // System
-        if (Objects.nonNull(newCoding.getSystem())) {
-            newCoding.setSystem(uriTypeService.create(newCoding.getSystem()));
-        }
-
-        // Code
-        if (Objects.nonNull(newCoding.getCode())) {
-            newCoding.setCode(codeTypeService.create(newCoding.getCode()));
-        }
-
+        persistCodingComponents(newCoding, CREATE_OP);
         newCoding.setId(null);
         return repository.save(newCoding);
     }
 
-    public void update(UUID metaId, @NotNull Coding update)
-            throws ResourceNotFoundException {
+    public void update(UUID metaId, @NotNull Coding update) throws ResourceNotFoundException {
+        // to check if the update exist
+        getOne(metaId);
 
-        Coding metaFound = getOne(metaId);
-
-        if (!Objects.equals(metaFound.getId(), update.getId())) {
+        // to check the uniqueness of the update
+        if (!Objects.equals(metaId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistCodingComponents(update, UPDATE_OP);
         update.setId(metaId);
         repository.save(update);
     }
@@ -94,6 +80,24 @@ public class CodingService {
                     String.format("::: A Coding with the id=%s already exist :::", meta.getId())
             );
         }
+    }
+
+    private void persistCodingComponents(@NotNull Coding coding, String requestOperation) {
+        // Extension
+        Set<Extension> extension = new HashSet<>();
+        coding.getExtension().forEach(item -> extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+
+        // System
+        if (Objects.nonNull(coding.getSystem())) {
+            coding.setSystem(persistUriTypeEntity(coding.getSystem(), uriTypeService, requestOperation));
+        }
+
+        // Code
+        if (Objects.nonNull(coding.getCode())) {
+            coding.setCode(persistCodeTypeEntity(coding.getCode(), codeTypeService, requestOperation));
+        }
+
+        coding.setExtension(extension);
     }
 
 }

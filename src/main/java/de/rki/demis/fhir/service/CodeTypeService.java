@@ -43,9 +43,9 @@ public class CodeTypeService {
     }
 
     public void update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
-        CodeType codeTypeFound = getOne(codeTypeId);
+        getOne(codeTypeId);
 
-        if (!Objects.equals(codeTypeFound.getId(), update.getId())) {
+        if (!Objects.equals(codeTypeId, update.getId())) {
             checkForUniqueness(update);
         }
 

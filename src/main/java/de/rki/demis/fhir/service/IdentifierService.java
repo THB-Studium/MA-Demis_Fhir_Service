@@ -14,6 +14,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
@@ -40,33 +45,19 @@ public class IdentifierService {
     }
 
     public Identifier create(@NotNull Identifier newIdentifier) {
-        // Type
-        if (Objects.nonNull(newIdentifier.getType())) {
-            newIdentifier.setType(codeableConceptService.create(newIdentifier.getType()));
-        }
-
-        // System
-        if (Objects.nonNull(newIdentifier.getSystem())) {
-            newIdentifier.setSystem(uriTypeService.create(newIdentifier.getSystem()));
-        }
-
-        // Assigner
-//        if (Objects.nonNull(newIdentifier.getAssigner())) {
-//            newIdentifier.setAssigner(referenceService.create(newIdentifier.getAssigner())); // todo: committed because of circle
-//        }
-
-
+        persistIdentifierComponents(newIdentifier, CREATE_OP);
         newIdentifier.setId(null);
         return repository.save(newIdentifier);
     }
 
     public void update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
-        Identifier identifierFound = getOne(identifierId);
+        getOne(identifierId);
 
-        if (!Objects.equals(identifierFound.getId(), update.getId())) {
+        if (!Objects.equals(identifierId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistIdentifierComponents(update, UPDATE_OP);
         update.setId(identifierId);
         repository.save(update);
     }
@@ -82,6 +73,23 @@ public class IdentifierService {
                     String.format("::: A Identifier with the id=%s already exist :::", identifier.getId())
             );
         }
+    }
+
+    private void persistIdentifierComponents(@NotNull Identifier identifier, String requestOperation) {
+        // Type
+        if (Objects.nonNull(identifier.getType())) {
+            identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));
+        }
+
+        // System
+        if (Objects.nonNull(identifier.getSystem())) {
+            identifier.setSystem(persistUriTypeEntity(identifier.getSystem(), uriTypeService, requestOperation));
+        }
+
+//        // Assigner
+//        if (Objects.nonNull(identifier.getAssigner())) {
+//            identifier.setAssigner(persistReferenceEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
+//        }
     }
 
 }

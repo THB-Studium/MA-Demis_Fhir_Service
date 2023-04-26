@@ -14,6 +14,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
@@ -40,24 +45,21 @@ public class ExtensionService {
     }
 
     public Extension create(@NotNull Extension newExtension) {
-        if (Objects.nonNull(newExtension.getUrl())) {
-            newExtension.setUrl(uriTypeService.create(newExtension.getUrl()));
-        }
-        if (Objects.nonNull(newExtension.getValue())) {
-            newExtension.setValue(typeService.create(newExtension.getValue()));
-        }
-
+        persistExtensionComponents(newExtension, CREATE_OP);
         newExtension.setId(null);
         return repository.save(newExtension);
     }
 
     public void update(UUID extensionId, @NotNull Extension update) throws ResourceNotFoundException {
-        Extension extensionFound = getOne(extensionId);
+        // to check if the update exist
+        getOne(extensionId);
 
-        if (!Objects.equals(extensionFound.getId(), update.getId())) {
+        // to check the uniqueness of the update
+        if (!Objects.equals(extensionId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistExtensionComponents(update, UPDATE_OP);
         update.setId(extensionId);
         repository.save(update);
     }
@@ -72,6 +74,18 @@ public class ExtensionService {
             throw new ResourceBadRequestException(
                     String.format("::: A Extension with the id=%s already exist :::", extension.getId())
             );
+        }
+    }
+
+    private void persistExtensionComponents(@NotNull Extension extension, String requestOperation) {
+        // URL
+        if (Objects.nonNull(extension.getUrl())) {
+            extension.setUrl(persistUriTypeEntity(extension.getUrl(), uriTypeService, requestOperation));
+        }
+
+        // VALUE
+        if (Objects.nonNull(extension.getValue())) {
+            extension.setValue(persistTypeEntity(extension.getValue(), typeService, requestOperation));
         }
     }
 

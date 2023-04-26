@@ -4,7 +4,6 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.model.Reference;
-import de.rki.demis.fhir.repository.ExtensionRepository;
 import de.rki.demis.fhir.repository.ReferenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,12 +17,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistIdentifierEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class ReferenceService {
     private final ReferenceRepository repository;
-    private final ExtensionRepository extensionRepository;
     private final ExtensionService extensionService;
     private final UriTypeService uriTypeService;
     private final IdentifierService identifierService;
@@ -46,37 +50,19 @@ public class ReferenceService {
     }
 
     public Reference create(@NotNull Reference newReference) {
-        // extension
-        Set<Extension> extension = new HashSet<>();
-        newReference.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
-
-        // Type
-        if (Objects.nonNull(newReference.getType())) {
-            newReference.setType(uriTypeService.create(newReference.getType()));
-        }
-
-        // Identifier
-        if (Objects.nonNull(newReference.getIdentifier())) {
-            newReference.setIdentifier(identifierService.create(newReference.getIdentifier()));
-        }
-
-        newReference.setExtension(extension);
+        persistReferenceComponents(newReference, CREATE_OP);
         newReference.setId(null);
         return repository.save(newReference);
     }
 
     public void update(UUID referenceId, @NotNull Reference update) throws ResourceNotFoundException {
-        Reference referenceFound = getOne(referenceId);
+        getOne(referenceId);
 
-        if (!Objects.equals(referenceFound.getId(), update.getId())) {
+        if (!Objects.equals(referenceId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistReferenceComponents(update, UPDATE_OP);
         update.setId(referenceId);
         repository.save(update);
     }
@@ -92,6 +78,25 @@ public class ReferenceService {
                     String.format("::: A Reference with the id=%s already exist :::", reference.getId())
             );
         }
+    }
+
+    private void persistReferenceComponents(@NotNull Reference reference, String requestOperation) {
+        // extension
+        Set<Extension> extension = new HashSet<>();
+        reference.getExtension().forEach(item ->
+                extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+
+        // Type
+        if (Objects.nonNull(reference.getType())) {
+            reference.setType(persistUriTypeEntity(reference.getType(), uriTypeService, requestOperation));
+        }
+
+        // Identifier
+        if (Objects.nonNull(reference.getIdentifier())) {
+            reference.setIdentifier(persistIdentifierEntity(reference.getIdentifier(), identifierService, requestOperation));
+        }
+
+        reference.setExtension(extension);
     }
 
 }

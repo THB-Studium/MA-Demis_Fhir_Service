@@ -19,6 +19,11 @@ public class Constants {
   public static final String NOT_NULL_MSG = "must not be null";
 
 
+  /** Request Operation */
+  public static final String CREATE_OP  = "create";
+  public static final String UPDATE_OP  = "update";
+
+
   /** APIs */
   public static final String SEARCH     = "search";
   public static final String BINARY_ID  = "binaryId";

@@ -6,8 +6,6 @@ import de.rki.demis.fhir.model.CodeableConcept;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodeableConceptRepository;
-import de.rki.demis.fhir.repository.CodingRepository;
-import de.rki.demis.fhir.repository.ExtensionRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -20,13 +18,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class CodeableConceptService {
     private final CodeableConceptRepository repository;
-    private final CodingRepository codingRepository;
-    private final ExtensionRepository extensionRepository;
+    private final CodingService codingService;
     private final ExtensionService extensionService;
 
 
@@ -47,36 +49,19 @@ public class CodeableConceptService {
     }
 
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
-        Set<Coding> coding = new HashSet<>();
-        Set<Extension> extension = new HashSet<>();
-
-        newCodeableConcept.getCoding().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                item = codingRepository.save(item);
-            }
-            coding.add(item);
-        });
-
-        newCodeableConcept.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
-
-        newCodeableConcept.setCoding(coding);
-        newCodeableConcept.setExtension(extension);
+        persistCodeableConceptComponents(newCodeableConcept, CREATE_OP);
         newCodeableConcept.setId(null);
         return repository.save(newCodeableConcept);
     }
 
     public void update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
-        CodeableConcept codeableConceptFound = getOne(codeableConceptId);
+        getOne(codeableConceptId);
 
-        if (!Objects.equals(codeableConceptFound.getId(), update.getId())) {
+        if (!Objects.equals(codeableConceptId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistCodeableConceptComponents(update, UPDATE_OP);
         update.setId(codeableConceptId);
         repository.save(update);
     }
@@ -92,6 +77,20 @@ public class CodeableConceptService {
                     String.format("::: A CodeableConcept with the id=%s already exist :::", codeableConcept.getId())
             );
         }
+    }
+
+    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, String requestOperation) {
+        Set<Coding> coding = new HashSet<>();
+        Set<Extension> extension = new HashSet<>();
+
+        codeableConcept.getCoding().forEach(item ->
+                coding.add(persistCodingEntity(item, codingService, requestOperation)));
+
+        codeableConcept.getExtension().forEach(item ->
+                extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+
+        codeableConcept.setCoding(coding);
+        codeableConcept.setExtension(extension);
     }
 
 }

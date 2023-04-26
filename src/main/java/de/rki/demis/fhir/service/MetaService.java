@@ -5,11 +5,7 @@ import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.CanonicalType;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Meta;
-import de.rki.demis.fhir.model.UriType;
-import de.rki.demis.fhir.repository.CanonicalTypeRepository;
-import de.rki.demis.fhir.repository.CodingRepository;
 import de.rki.demis.fhir.repository.MetaRepository;
-import de.rki.demis.fhir.repository.UriTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -22,16 +18,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCanonicalTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
 public class MetaService {
     private final MetaRepository repository;
-    private final UriTypeRepository uriTypeRepository;
-    private final CanonicalTypeRepository canonicalTypeRepository;
-    private final CodingRepository codingRepository;
+    private final UriTypeService uriTypeService;
+    private final CanonicalTypeService canonicalTypeService;
     private final CodingService codingService;
-
 
 
     public List<Meta> listAll() {
@@ -51,60 +51,21 @@ public class MetaService {
     }
 
     public Meta create(@NotNull Meta newMeta) {
-        if (Objects.isNull(newMeta.getId()) || !repository.existsById(newMeta.getId())) {
-
-            // Source
-            UriType source = newMeta.getSource();
-            if (Objects.isNull(source.getId()) || !uriTypeRepository.existsById(source.getId())) {
-                source = uriTypeRepository.save(source);
-            }
-
-            // Profile
-            Set<CanonicalType> profile = new HashSet<>();
-            newMeta.getProfile().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !canonicalTypeRepository.existsById(item.getId())) {
-                    item = canonicalTypeRepository.save(item);
-                }
-                profile.add(item);
-            });
-
-            // Security
-            Set<Coding> security = new HashSet<>();
-            newMeta.getSecurity().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                    item = codingService.create(item);
-                }
-                security.add(item);
-            });
-
-            // Tag
-            Set<Coding> tag = new HashSet<>();
-            newMeta.getTag().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                    item = codingService.create(item);
-                }
-                tag.add(item);
-            });
-
-            newMeta.setSource(source);
-            newMeta.setProfile(profile);
-            newMeta.setSecurity(security);
-            newMeta.setTag(tag);
-            newMeta.setId(null);
-        }
-
+        persistMetaComponents(newMeta, CREATE_OP);
+        newMeta.setId(null);
         return repository.save(newMeta);
     }
 
-    public void update(UUID metaId, @NotNull Meta update)
-            throws ResourceNotFoundException {
+    public void update(@NotNull UUID metaId, @NotNull Meta update) throws ResourceNotFoundException {
+        // to check if the update exist
+        getOne(metaId);
 
-        Meta metaFound = getOne(metaId);
-
-        if (!Objects.equals(metaFound.getId(), update.getId())) {
+        // to check the uniqueness of the update
+        if (!Objects.equals(metaId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistMetaComponents(update, UPDATE_OP);
         update.setId(metaId);
         repository.save(update);
     }
@@ -120,6 +81,32 @@ public class MetaService {
                     String.format("::: A Meta with the id=%s already exist :::", meta.getId())
             );
         }
+    }
+
+    private void persistMetaComponents(@NotNull Meta meta, String requestOperation) {
+        Set<CanonicalType> profile = new HashSet<>();
+        Set<Coding> security = new HashSet<>();
+        Set<Coding> tag = new HashSet<>();
+
+        // Source
+        meta.setSource(persistUriTypeEntity(meta.getSource(), uriTypeService, requestOperation));
+
+        // Profile
+        meta.getProfile().forEach(item ->
+                profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+
+        // Security
+        meta.getSecurity().forEach(item ->
+                security.add(persistCodingEntity(item, codingService, requestOperation)));
+
+        // Tag
+        meta.getTag().forEach(item ->
+                tag.add(persistCodingEntity(item, codingService, requestOperation)));
+
+
+        meta.setProfile(profile);
+        meta.setSecurity(security);
+        meta.setTag(tag);
     }
 
 }

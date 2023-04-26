@@ -14,6 +14,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistMetaEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
@@ -41,34 +47,19 @@ public class ResourceService {
     }
 
     public Resource create(@NotNull Resource newResource) {
-        // Meta
-        if (Objects.nonNull(newResource.getMeta())) {
-            newResource.setMeta(metaService.create(newResource.getMeta()));
-        }
-
-        // ImplicitRules
-        if (Objects.nonNull(newResource.getImplicitRules())) {
-            newResource.setImplicitRules(uriTypeService
-                    .create(newResource.getImplicitRules()));
-        }
-
-        // Language
-        if (Objects.nonNull(newResource.getLanguage())) {
-            newResource.setLanguage(codeTypeService
-                    .create(newResource.getLanguage()));
-        }
-
+        persistResourceComponents(newResource, CREATE_OP);
         newResource.setId(null);
         return repository.save(newResource);
     }
 
     public void update(UUID resourceId, @NotNull Resource update) throws ResourceNotFoundException {
-        Resource resourceFound = getOne(resourceId);
+        getOne(resourceId);
 
-        if (!Objects.equals(resourceFound.getId(), update.getId())) {
+        if (!Objects.equals(resourceId, update.getId())) {
             checkForUniqueness(update);
         }
 
+        persistResourceComponents(update, UPDATE_OP);
         update.setId(resourceId);
         repository.save(update);
     }
@@ -83,6 +74,23 @@ public class ResourceService {
             throw new ResourceBadRequestException(
                     String.format("::: A Resource with the id=%s already exist :::", resource.getId())
             );
+        }
+    }
+
+    private void persistResourceComponents(@NotNull Resource resource, String requestOperation) {
+        // Meta
+        if (Objects.nonNull(resource.getMeta())) {
+            resource.setMeta(persistMetaEntity(resource.getMeta(), metaService, requestOperation));
+        }
+
+        // ImplicitRules
+        if (Objects.nonNull(resource.getImplicitRules())) {
+            resource.setImplicitRules(persistUriTypeEntity(resource.getImplicitRules(), uriTypeService, requestOperation));
+        }
+
+        // Language
+        if (Objects.nonNull(resource.getLanguage())) {
+            resource.setLanguage(persistCodeTypeEntity(resource.getLanguage(), codeTypeService, requestOperation));
         }
     }
 
