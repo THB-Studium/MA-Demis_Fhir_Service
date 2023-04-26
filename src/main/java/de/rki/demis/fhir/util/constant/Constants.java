@@ -22,6 +22,11 @@ public class Constants {
   public static final String ALREADY_EXIST_MSG           = "::: A %s with 'id = %s' already exists :::";
 
 
+  /** Request Operation */
+  public static final String CREATE_OP  = "create";
+  public static final String UPDATE_OP  = "update";
+
+
   /** APIs */
   public static final String SEARCH         = "search";
   public static final String BINARY_ID      = "binaryId";

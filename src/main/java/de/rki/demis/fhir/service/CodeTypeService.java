@@ -45,8 +45,18 @@ public class CodeTypeService implements BaseService<CodeType> {
         return repository.save(newCodeType);
     }
 
+<<<<<<< HEAD
     public CodeType update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
         getOne(codeTypeId); // to check if the update exist
+=======
+    public void update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
+        getOne(codeTypeId);
+
+        if (!Objects.equals(codeTypeId, update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> c598496 (update issues in BinaryService fixed)
         update.setId(codeTypeId);
         return repository.save(update);
     }

@@ -15,9 +15,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+=======
+import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
+import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+>>>>>>> c598496 (update issues in BinaryService fixed)
 
 @Service
 @RequiredArgsConstructor
@@ -45,15 +52,30 @@ public class IdentifierService implements BaseService<Identifier> {
     }
 
     public Identifier create(@NotNull Identifier newIdentifier) {
+<<<<<<< HEAD
         checkForUniqueness(newIdentifier, repository);
         persistIdentifierComponents(newIdentifier, RequestOperation.Create);
+=======
+        persistIdentifierComponents(newIdentifier, CREATE_OP);
+>>>>>>> c598496 (update issues in BinaryService fixed)
         newIdentifier.setId(null);
         return repository.save(newIdentifier);
     }
 
+<<<<<<< HEAD
     public Identifier update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
         getOne(identifierId); // to check if the update exist
         persistIdentifierComponents(update, RequestOperation.Update);
+=======
+    public void update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
+        getOne(identifierId);
+
+        if (!Objects.equals(identifierId, update.getId())) {
+            checkForUniqueness(update);
+        }
+
+        persistIdentifierComponents(update, UPDATE_OP);
+>>>>>>> c598496 (update issues in BinaryService fixed)
         update.setId(identifierId);
         return repository.save(update);
     }
@@ -82,6 +104,23 @@ public class IdentifierService implements BaseService<Identifier> {
 //        // Assigner
 //        if (Objects.nonNull(identifier.getAssigner())) {
 //            identifier.setAssigner(persistEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
+//        }
+    }
+
+    private void persistIdentifierComponents(@NotNull Identifier identifier, String requestOperation) {
+        // Type
+        if (Objects.nonNull(identifier.getType())) {
+            identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));
+        }
+
+        // System
+        if (Objects.nonNull(identifier.getSystem())) {
+            identifier.setSystem(persistUriTypeEntity(identifier.getSystem(), uriTypeService, requestOperation));
+        }
+
+//        // Assigner
+//        if (Objects.nonNull(identifier.getAssigner())) {
+//            identifier.setAssigner(persistReferenceEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
 //        }
     }
 
