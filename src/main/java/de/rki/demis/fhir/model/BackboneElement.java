@@ -24,7 +24,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class BackboneElement extends Element implements Serializable {
+public class BackboneElement extends Element implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -1431673179L;
 

@@ -1,11 +1,12 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.ExtensionRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,10 +15,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class ExtensionService {
+public class ExtensionService implements BaseService<Extension> {
     private final ExtensionRepository repository;
     private final UriTypeService uriTypeService;
     private final TypeService typeService;
@@ -32,7 +37,7 @@ public class ExtensionService {
 
         if (extensionOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Extension with 'id = %s' does not exist :::", extensionId)
+                    String.format(NOT_EXIST_MSG, Extension.class.getSimpleName(), extensionId)
             );
         }
 
@@ -40,26 +45,17 @@ public class ExtensionService {
     }
 
     public Extension create(@NotNull Extension newExtension) {
-        if (Objects.nonNull(newExtension.getUrl())) {
-            newExtension.setUrl(uriTypeService.create(newExtension.getUrl()));
-        }
-        if (Objects.nonNull(newExtension.getValue())) {
-            newExtension.setValue(typeService.create(newExtension.getValue()));
-        }
-
+        checkForUniqueness(newExtension, repository);
+        persistExtensionComponents(newExtension, RequestOperation.Create);
         newExtension.setId(null);
         return repository.save(newExtension);
     }
 
-    public void update(UUID extensionId, @NotNull Extension update) throws ResourceNotFoundException {
-        Extension extensionFound = getOne(extensionId);
-
-        if (!Objects.equals(extensionFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public Extension update(UUID extensionId, @NotNull Extension update) throws ResourceNotFoundException {
+        getOne(extensionId); // to check if the update exist
+        persistExtensionComponents(update, RequestOperation.Update);
         update.setId(extensionId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID extensionId) {
@@ -67,11 +63,20 @@ public class ExtensionService {
         repository.deleteById(extensionId);
     }
 
-    private void checkForUniqueness(@NotNull Extension extension) {
-        if (repository.existsById(extension.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Extension with the id=%s already exist :::", extension.getId())
-            );
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
+    }
+
+    private void persistExtensionComponents(@NotNull Extension extension, RequestOperation requestOperation) {
+        // URL
+        if (Objects.nonNull(extension.getUrl())) {
+            extension.setUrl(persistEntity(extension.getUrl(), uriTypeService, requestOperation));
+        }
+
+        // VALUE
+        if (Objects.nonNull(extension.getValue())) {
+            extension.setValue(persistEntity(extension.getValue(), typeService, requestOperation));
         }
     }
 

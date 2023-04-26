@@ -3,9 +3,12 @@ package de.rki.demis.fhir.controller.binairies;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.service.BinaryService;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
+import org.hl7.fhir.r4.model.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Objects;
 import java.util.UUID;
 
 import static de.rki.demis.fhir.util.constant.Constants.BINARY_ID;
@@ -32,6 +36,8 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 public class BinaryItemController {
     private static final Logger log = LoggerFactory.getLogger(BinaryItemController.class);
     private final BinaryService service;
+    private final FhirParserService fhirParserService;
+    private final ConversionService conversionService;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -58,7 +64,10 @@ public class BinaryItemController {
             @RequestBody @NotBlank String updateString,
             @RequestHeader(CONTENT_TYPE) org.springframework.http.MediaType mediaType) {
         log.info("::: BinaryItemController.update() - Update the BinaryMod [id={}] :::", binaryId);
-        service.update(binaryId, updateString, mediaType);
+        Binary binary = fhirParserService.parseBinary(updateString, mediaType);
+        binary.setId("");
+        BinaryMod update = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Binary object to BinaryMod object
+        service.update(binaryId, update);
         log.info("::: BinaryItemController.update() - BinaryMod with [id={}] updated :::", binaryId);
     }
 

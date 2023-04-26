@@ -29,7 +29,7 @@ public enum SearchEntryMode {
 
 
     public static SearchEntryMode fromCode(String codeString) throws FHIRException {
-        if (codeString == null || "".equals(codeString))
+        if (codeString == null || codeString.isEmpty())
             return null;
         if ("match".equals(codeString))
             return MATCH;
@@ -51,7 +51,6 @@ public enum SearchEntryMode {
             case INCLUDE -> "include";
             case OUTCOME -> "outcome";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -61,7 +60,6 @@ public enum SearchEntryMode {
         return switch (this) {
             case MATCH, OUTCOME, INCLUDE -> "http://hl7.org/fhir/search-entry-mode";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -75,7 +73,6 @@ public enum SearchEntryMode {
             case OUTCOME ->
                     "An OperationOutcome that provides additional information about the processing of a search.";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -87,7 +84,6 @@ public enum SearchEntryMode {
             case INCLUDE -> "Include";
             case OUTCOME -> "Outcome";
             case NULL -> null;
-            default -> "?";
         };
     }
 }

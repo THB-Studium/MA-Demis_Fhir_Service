@@ -1,18 +1,14 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.BundleEntryComponent;
 import de.rki.demis.fhir.model.BundleLinkComponent;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.BundleEntryComponentRepository;
-import de.rki.demis.fhir.repository.BundleEntryRequestComponentRepository;
-import de.rki.demis.fhir.repository.BundleEntryResponseComponentRepository;
-import de.rki.demis.fhir.repository.BundleEntrySearchComponentRepository;
-import de.rki.demis.fhir.repository.BundleLinkComponentRepository;
-import de.rki.demis.fhir.repository.ExtensionRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,16 +19,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class BundleEntryComponentService {
+public class BundleEntryComponentService implements BaseService<BundleEntryComponent> {
     private final BundleEntryComponentRepository repository;
-    private final ExtensionRepository extensionRepository;
-    private final BundleLinkComponentRepository bundleLinkComponentRepository;
-    private final BundleEntrySearchComponentRepository bundleEntrySearchComponentRepository;
-    private final BundleEntryRequestComponentRepository bundleEntryRequestComponentRepository;
-    private final BundleEntryResponseComponentRepository bundleEntryResponseComponentRepository;
+    private final ExtensionService extensionService;
+    private final BundleLinkComponentService bundleLinkComponentService;
+    private final BundleEntrySearchComponentService bundleEntrySearchComponentService;
+    private final BundleEntryRequestComponentService bundleEntryRequestComponentService;
+    private final BundleEntryResponseComponentService bundleEntryResponseComponentService;
     private final UriTypeService uriTypeService;
     private final ResourceService resourceService;
 
@@ -46,7 +46,7 @@ public class BundleEntryComponentService {
 
         if (bundleEntryComponentOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A BundleEntryComponent with 'id = %s' does not exist :::", bundleEntryComponentId)
+                    String.format(NOT_EXIST_MSG, BundleEntryComponent.class.getSimpleName(), bundleEntryComponentId)
             );
         }
 
@@ -54,92 +54,18 @@ public class BundleEntryComponentService {
     }
 
     public BundleEntryComponent create(@NotNull BundleEntryComponent newBundleEntryComponent) {
-        // ModifierExtension
-        Set<Extension> modifierExtension = new HashSet<>();
-        if (Objects.nonNull(newBundleEntryComponent.getModifierExtension())) {
-            newBundleEntryComponent.getModifierExtension().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                    item = extensionRepository.save(item);
-                }
-                modifierExtension.add(item);
-            });
-        }
-
-        // Extension
-        Set<Extension> extension = new HashSet<>();
-        if (Objects.nonNull(newBundleEntryComponent.getExtension())) {
-            newBundleEntryComponent.getExtension().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                    item = extensionRepository.save(item);
-                }
-                extension.add(item);
-            });
-        }
-
-        // Link
-        Set<BundleLinkComponent> link = new HashSet<>();
-        if (Objects.nonNull(newBundleEntryComponent.getLink())) {
-            newBundleEntryComponent.getLink().forEach(item -> {
-                if (Objects.isNull(item.getId()) || !bundleLinkComponentRepository.existsById(item.getId())) {
-                    item = bundleLinkComponentRepository.save(item);
-                }
-                link.add(item);
-            });
-        }
-
-        // FullUrl
-        if (Objects.nonNull(newBundleEntryComponent.getFullUrl())) {
-            newBundleEntryComponent.setFullUrl(uriTypeService
-                    .create(newBundleEntryComponent.getFullUrl()));
-        }
-
-        // Resource
-        if (Objects.nonNull(newBundleEntryComponent.getResource())) {
-            newBundleEntryComponent.setResource(resourceService
-                    .create(newBundleEntryComponent.getResource()));
-        }
-
-        // Search
-        if (Objects.nonNull(newBundleEntryComponent.getSearch())) {
-            newBundleEntryComponent.setSearch(
-                    Objects.isNull(newBundleEntryComponent.getSearch().getId())
-                            ? bundleEntrySearchComponentRepository.save(newBundleEntryComponent.getSearch())
-                            : newBundleEntryComponent.getSearch());
-        }
-
-        // Request
-        if (Objects.nonNull(newBundleEntryComponent.getRequest())) {
-            newBundleEntryComponent.setRequest(
-                    Objects.isNull(newBundleEntryComponent.getRequest().getId())
-                            ? bundleEntryRequestComponentRepository.save(newBundleEntryComponent.getRequest())
-                            : newBundleEntryComponent.getRequest());
-        }
-
-        // Response
-        if (Objects.nonNull(newBundleEntryComponent.getResponse())) {
-            newBundleEntryComponent.setResponse(
-                    Objects.isNull(newBundleEntryComponent.getResponse().getId())
-                            ? bundleEntryResponseComponentRepository.save(newBundleEntryComponent.getResponse())
-                            : newBundleEntryComponent.getResponse());
-        }
-
-        newBundleEntryComponent.setModifierExtension(modifierExtension);
-        newBundleEntryComponent.setExtension(extension);
-        newBundleEntryComponent.setLink(link);
+        checkForUniqueness(newBundleEntryComponent, repository);
+        persistBundleEntryComponentComponents(newBundleEntryComponent, RequestOperation.Create);
         newBundleEntryComponent.setId(null);
         return repository.save(newBundleEntryComponent);
     }
 
-    public void update(UUID bundleEntryComponentId, @NotNull BundleEntryComponent update)
+    public BundleEntryComponent update(UUID bundleEntryComponentId, @NotNull BundleEntryComponent update)
             throws ResourceNotFoundException {
-        BundleEntryComponent bundleEntryComponentFound = getOne(bundleEntryComponentId);
-
-        if (!Objects.equals(bundleEntryComponentFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+        getOne(bundleEntryComponentId);
+        persistBundleEntryComponentComponents(update, RequestOperation.Update);
         update.setId(bundleEntryComponentId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID bundleEntryComponentId) {
@@ -147,13 +73,56 @@ public class BundleEntryComponentService {
         repository.deleteById(bundleEntryComponentId);
     }
 
-    private void checkForUniqueness(@NotNull BundleEntryComponent bundleEntryComponent) {
-        if (repository.existsById(bundleEntryComponent.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A BundleEntryComponent with the id=%s already exist :::",
-                            bundleEntryComponent.getId())
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
+    }
+
+    private void persistBundleEntryComponentComponents(@NotNull BundleEntryComponent bundleEntryComponent, RequestOperation requestOperation) {
+        Set<Extension> modifierExtensions = new HashSet<>();
+        Set<Extension> extensions = new HashSet<>();
+        Set<BundleLinkComponent> links = new HashSet<>();
+
+        // ModifierExtension
+        if (Objects.nonNull(bundleEntryComponent.getModifierExtension())) {
+            bundleEntryComponent.getModifierExtension().forEach(item ->
+                    modifierExtensions.add(persistEntity(item, extensionService, requestOperation))
             );
         }
+
+        // Extension
+        if (Objects.nonNull(bundleEntryComponent.getExtension())) {
+            bundleEntryComponent.getExtension().forEach(item ->
+                    extensions.add(persistEntity(item, extensionService, requestOperation))
+            );
+        }
+
+        // Link
+        if (Objects.nonNull(bundleEntryComponent.getLink())) {
+            bundleEntryComponent.getLink().forEach(item ->
+                    links.add(persistEntity(item, bundleLinkComponentService, requestOperation))
+            );
+        }
+
+        // FullUrl
+        bundleEntryComponent.setFullUrl(persistEntity(bundleEntryComponent.getFullUrl(), uriTypeService, requestOperation));
+
+        // Resource
+        bundleEntryComponent.setResource(persistEntity(bundleEntryComponent.getResource(), resourceService, requestOperation));
+
+        // Search
+        bundleEntryComponent.setSearch(persistEntity(bundleEntryComponent.getSearch(), bundleEntrySearchComponentService, requestOperation));
+
+        // Request
+        bundleEntryComponent.setRequest(persistEntity(bundleEntryComponent.getRequest(), bundleEntryRequestComponentService, requestOperation));
+
+        // Response
+        bundleEntryComponent.setResponse(persistEntity(bundleEntryComponent.getResponse(), bundleEntryResponseComponentService, requestOperation));
+
+
+        bundleEntryComponent.setModifierExtension(modifierExtensions);
+        bundleEntryComponent.setExtension(extensions);
+        bundleEntryComponent.setLink(links);
     }
 
 }

@@ -23,8 +23,6 @@ public class Base implements Serializable {
     @Serial
     private static final long serialVersionUID = -1452741316L;
 
-    //    @ElementCollection
-//    private Map<String, Object> userData; // todo: find a way to persist 'Object'/'Generic' types with JPA (@Convert(converter = ObjectConverter.class))
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> formatCommentsPre;
 

@@ -1,6 +1,5 @@
 package de.rki.demis.fhir.model;
 
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +22,7 @@ import static de.rki.demis.fhir.util.constant.Constants.NOT_EMPTY_MSG;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class BundleEntryResponseComponent extends BackboneElement implements Serializable {
+public class BundleEntryResponseComponent extends BackboneElement implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 923278008L;
 

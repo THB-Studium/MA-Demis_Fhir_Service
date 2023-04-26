@@ -17,7 +17,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Coding extends Type implements Serializable {
+public class Coding extends Type implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -1417514061L;
 

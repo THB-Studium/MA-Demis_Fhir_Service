@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class BundleEntrySearchComponent extends BackboneElement implements Serializable {
+public class BundleEntrySearchComponent extends BackboneElement implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 837739866L;
 

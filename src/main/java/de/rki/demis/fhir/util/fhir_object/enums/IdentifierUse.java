@@ -37,7 +37,7 @@ public enum IdentifierUse {
 
 
     public static IdentifierUse fromCode(String codeString) throws FHIRException {
-        if (codeString == null || "".equals(codeString))
+        if (codeString == null || codeString.isEmpty())
             return null;
         if ("usual".equals(codeString))
             return USUAL;

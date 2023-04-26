@@ -1,8 +1,10 @@
-package de.rki.demis.fhir.util.fhir_object.classes;
+package de.rki.demis.fhir.model;
 
+import de.rki.demis.fhir.model.BaseEntity;
 import de.rki.demis.fhir.model.CodeType;
 import de.rki.demis.fhir.model.Meta;
 import de.rki.demis.fhir.model.UriType;
+import de.rki.demis.fhir.util.fhir_object.classes.BaseResource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +31,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Resource extends BaseResource implements Serializable {
+public class Resource extends BaseResource implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -559462759L;
 

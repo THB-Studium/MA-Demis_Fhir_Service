@@ -1,15 +1,14 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.CodeableConcept;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodeableConceptRepository;
-import de.rki.demis.fhir.repository.CodingRepository;
-import de.rki.demis.fhir.repository.ExtensionRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,13 +19,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class CodeableConceptService {
+public class CodeableConceptService implements BaseService<CodeableConcept> {
     private final CodeableConceptRepository repository;
-    private final CodingRepository codingRepository;
-    private final ExtensionRepository extensionRepository;
+    private final CodingService codingService;
     private final ExtensionService extensionService;
 
 
@@ -39,7 +41,7 @@ public class CodeableConceptService {
 
         if (codeableConceptOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A CodeableConcept with 'id = %s' does not exist :::", codeableConceptId)
+                    String.format(NOT_EXIST_MSG, CodeableConcept.class.getSimpleName(), codeableConceptId)
             );
         }
 
@@ -47,38 +49,17 @@ public class CodeableConceptService {
     }
 
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
-        Set<Coding> coding = new HashSet<>();
-        Set<Extension> extension = new HashSet<>();
-
-        newCodeableConcept.getCoding().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !codingRepository.existsById(item.getId())) {
-                item = codingRepository.save(item);
-            }
-            coding.add(item);
-        });
-
-        newCodeableConcept.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
-
-        newCodeableConcept.setCoding(coding);
-        newCodeableConcept.setExtension(extension);
+        checkForUniqueness(newCodeableConcept, repository);
+        persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
         newCodeableConcept.setId(null);
         return repository.save(newCodeableConcept);
     }
 
-    public void update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
-        CodeableConcept codeableConceptFound = getOne(codeableConceptId);
-
-        if (!Objects.equals(codeableConceptFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public CodeableConcept update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
+        getOne(codeableConceptId); // to check if the update exist
+        persistCodeableConceptComponents(update, RequestOperation.Update);
         update.setId(codeableConceptId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID codeableConceptId) {
@@ -86,12 +67,31 @@ public class CodeableConceptService {
         repository.deleteById(codeableConceptId);
     }
 
-    private void checkForUniqueness(@NotNull CodeableConcept codeableConcept) {
-        if (repository.existsById(codeableConcept.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A CodeableConcept with the id=%s already exist :::", codeableConcept.getId())
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
+    }
+
+    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
+        Set<Coding> coding = new HashSet<>();
+        Set<Extension> extension = new HashSet<>();
+
+        // Coding
+        if (Objects.nonNull(codeableConcept.getCoding())) {
+            codeableConcept.getCoding().forEach(item ->
+                    coding.add(persistEntity(item, codingService, requestOperation))
             );
         }
+
+        // Extension
+        if (Objects.nonNull(codeableConcept.getExtension())) {
+            codeableConcept.getExtension().forEach(item ->
+                    extension.add(persistEntity(item, extensionService, requestOperation))
+            );
+        }
+
+        codeableConcept.setCoding(coding);
+        codeableConcept.setExtension(extension);
     }
 
 }

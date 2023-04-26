@@ -93,5 +93,5 @@ sourceSets {
 
 // task for tests:....
 tasks.named('test') {
-    useJUnitPlatform()
+
 }

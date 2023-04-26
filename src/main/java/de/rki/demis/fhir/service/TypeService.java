@@ -1,25 +1,26 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Type;
 import de.rki.demis.fhir.repository.TypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class TypeService {
+public class TypeService implements BaseService<Type> {
     private final TypeRepository repository;
-
 
 
     public List<Type> listAll() {
@@ -31,7 +32,7 @@ public class TypeService {
 
         if (typeOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Type with 'id = %s' does not exist :::", typeId)
+                    String.format(NOT_EXIST_MSG, Type.class.getSimpleName(), typeId)
             );
         }
 
@@ -39,19 +40,15 @@ public class TypeService {
     }
 
     public Type create(@NotNull Type newType) {
+        checkForUniqueness(newType, repository);
         newType.setId(null);
         return repository.save(newType);
     }
 
-    public void update(UUID typeId, @NotNull Type update) throws ResourceNotFoundException {
-        Type typeFound = getOne(typeId);
-
-        if (!Objects.equals(typeFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public Type update(UUID typeId, @NotNull Type update) throws ResourceNotFoundException {
+        getOne(typeId); // to check if the update exist
         update.setId(typeId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID typeId) {
@@ -59,12 +56,9 @@ public class TypeService {
         repository.deleteById(typeId);
     }
 
-    private void checkForUniqueness(@NotNull Type type) {
-        if (repository.existsById(type.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Type with the id=%s already exist :::", type.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
 }

@@ -2,6 +2,7 @@ package de.rki.demis.fhir.util.fhir_object.classes;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -13,6 +14,7 @@ public class Configuration {
 
     private static int status = 0; // 0: auto-create // 1: error // 2: return null
 
+    @Getter
     private static boolean acceptInvalidEnums;
 
 
@@ -22,10 +24,6 @@ public class Configuration {
 
     public static boolean doAutoCreate() {
         return status == 0;
-    }
-
-    public static boolean isAcceptInvalidEnums() {
-        return acceptInvalidEnums;
     }
 
     public static void setAcceptInvalidEnums(boolean value) {

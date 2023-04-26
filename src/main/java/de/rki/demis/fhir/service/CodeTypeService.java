@@ -1,23 +1,25 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.CodeType;
 import de.rki.demis.fhir.repository.CodeTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class CodeTypeService {
+public class CodeTypeService implements BaseService<CodeType> {
     private final CodeTypeRepository repository;
 
 
@@ -30,7 +32,7 @@ public class CodeTypeService {
 
         if (codeTypeOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A CodeType with 'id = %s' does not exist :::", codeTypeId)
+                    String.format(NOT_EXIST_MSG, CodeType.class.getSimpleName(), codeTypeId)
             );
         }
 
@@ -38,19 +40,15 @@ public class CodeTypeService {
     }
 
     public CodeType create(@NotNull CodeType newCodeType) {
+        checkForUniqueness(newCodeType, repository);
         newCodeType.setId(null);
         return repository.save(newCodeType);
     }
 
-    public void update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
-        CodeType codeTypeFound = getOne(codeTypeId);
-
-        if (!Objects.equals(codeTypeFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public CodeType update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
+        getOne(codeTypeId); // to check if the update exist
         update.setId(codeTypeId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID codeTypeId) {
@@ -58,12 +56,9 @@ public class CodeTypeService {
         repository.deleteById(codeTypeId);
     }
 
-    private void checkForUniqueness(@NotNull CodeType codeType) {
-        if (repository.existsById(codeType.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A CodeType with the id=%s already exist :::", codeType.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
 }

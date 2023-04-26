@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class IdentifierUseEnumFactory implements Serializable {
     public IdentifierUse fromCode(String codeString) throws IllegalArgumentException {
-        if (codeString == null || "".equals(codeString))
+        if (codeString == null || codeString.isEmpty())
             return null;
         if ("usual".equals(codeString))
             return IdentifierUse.USUAL;
@@ -19,27 +19,6 @@ public class IdentifierUseEnumFactory implements Serializable {
             return IdentifierUse.OLD;
         throw new IllegalArgumentException("::: Unknown IdentifierUse code '" + codeString + "' :::");
     }
-
-//    public Enumeration<IdentifierUse> fromType(Base code) throws FHIRException {
-//        if (code == null)
-//            return null;
-//        if (code.isEmpty())
-//            return new Enumeration<>(this);
-//        String codeString = code.toString();
-//        if (codeString == null || "".equals(codeString))
-//            return null;
-//        if ("usual".equals(codeString))
-//            return new Enumeration<>(this, IdentifierUse.USUAL);
-//        if ("official".equals(codeString))
-//            return new Enumeration<>(this, IdentifierUse.OFFICIAL);
-//        if ("temp".equals(codeString))
-//            return new Enumeration<>(this, IdentifierUse.TEMP);
-//        if ("secondary".equals(codeString))
-//            return new Enumeration<>(this, IdentifierUse.SECONDARY);
-//        if ("old".equals(codeString))
-//            return new Enumeration<>(this, IdentifierUse.OLD);
-//        throw new FHIRException("Unknown IdentifierUse code '" + codeString + "'");
-//    }
 
     public String toCode(IdentifierUse code) {
         if (code == IdentifierUse.USUAL)

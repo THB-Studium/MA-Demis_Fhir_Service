@@ -1,15 +1,13 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
-import de.rki.demis.fhir.model.CodeType;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
-import de.rki.demis.fhir.repository.CodeTypeRepository;
 import de.rki.demis.fhir.repository.CodingRepository;
-import de.rki.demis.fhir.repository.ExtensionRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,12 +18,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class CodingService {
+public class CodingService implements BaseService<Coding> {
     private final CodingRepository repository;
-    private final ExtensionRepository extensionRepository;
     private final ExtensionService extensionService;
     private final UriTypeService uriTypeService;
     private final CodeTypeService codeTypeService;
@@ -40,7 +41,7 @@ public class CodingService {
 
         if (metaOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Coding with 'id = %s' does not exist :::", metaId)
+                    String.format(NOT_EXIST_MSG, Coding.class.getSimpleName(), metaId)
             );
         }
 
@@ -48,39 +49,17 @@ public class CodingService {
     }
 
     public Coding create(@NotNull Coding newCoding) {
-        Set<Extension> extension = new HashSet<>();
-        newCoding.getExtension().forEach(item -> {
-            if (Objects.isNull(item.getId()) || !extensionRepository.existsById(item.getId())) {
-                item = extensionService.create(item);
-            }
-            extension.add(item);
-        });
-
-        // System
-        if (Objects.nonNull(newCoding.getSystem())) {
-            newCoding.setSystem(uriTypeService.create(newCoding.getSystem()));
-        }
-
-        // Code
-        if (Objects.nonNull(newCoding.getCode())) {
-            newCoding.setCode(codeTypeService.create(newCoding.getCode()));
-        }
-
+        checkForUniqueness(newCoding, repository);
+        persistCodingComponents(newCoding, RequestOperation.Create);
         newCoding.setId(null);
         return repository.save(newCoding);
     }
 
-    public void update(UUID metaId, @NotNull Coding update)
-            throws ResourceNotFoundException {
-
-        Coding metaFound = getOne(metaId);
-
-        if (!Objects.equals(metaFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public Coding update(UUID metaId, @NotNull Coding update) throws ResourceNotFoundException {
+        getOne(metaId); // to check if the update exist
+        persistCodingComponents(update, RequestOperation.Update);
         update.setId(metaId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID metaId) {
@@ -88,12 +67,31 @@ public class CodingService {
         repository.deleteById(metaId);
     }
 
-    private void checkForUniqueness(@NotNull Coding meta) {
-        if (repository.existsById(meta.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Coding with the id=%s already exist :::", meta.getId())
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
+    }
+
+    private void persistCodingComponents(@NotNull Coding coding, RequestOperation requestOperation) {
+        Set<Extension> extension = new HashSet<>();
+
+        // Extension
+        if (Objects.nonNull(coding.getExtension())) {
+            coding.getExtension().forEach(item -> extension.add(persistEntity(item, extensionService, requestOperation))
             );
         }
+
+        // System
+        if (Objects.nonNull(coding.getSystem())) {
+            coding.setSystem(persistEntity(coding.getSystem(), uriTypeService, requestOperation));
+        }
+
+        // Code
+        if (Objects.nonNull(coding.getCode())) {
+            coding.setCode(persistEntity(coding.getCode(), codeTypeService, requestOperation));
+        }
+
+        coding.setExtension(extension);
     }
 
 }

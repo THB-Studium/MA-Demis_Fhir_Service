@@ -20,16 +20,16 @@ import static de.rki.demis.fhir.util.constant.Constants.NOT_NULL_MSG;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Entity
-public class BundleLinkComponent extends BackboneElement implements Serializable {
+public class BundleLinkComponent extends BackboneElement implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -1010386066L;
 
 
     /***
-     * shortDefinition = "See http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1",
+     * shortDefinition = "See <a href="http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1">...</a>",
      *           value = "A name which details the functional use for this link - see
-     *                    [http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1]
-     *                    (http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1)."
+     *                    [<a href="http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1">...</a>]
+     *                    (<a href="http://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1">...</a>)."
      ***/
     @NotNull(message = "The 'relation' " + NOT_NULL_MSG)
     private String relation;

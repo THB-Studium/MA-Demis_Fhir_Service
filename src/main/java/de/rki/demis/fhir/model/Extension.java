@@ -21,7 +21,7 @@ import static de.rki.demis.fhir.util.constant.Constants.NOT_EMPTY_MSG;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Extension extends BaseExtension implements Serializable {
+public class Extension extends BaseExtension implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 194602931L;
 

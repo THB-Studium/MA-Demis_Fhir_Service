@@ -1,25 +1,24 @@
 package de.rki.demis.fhir.service;
 
 import de.rki.demis.fhir.exception.ParsingException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.exception.ResourceNotFoundException;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.repository.BinaryRepository;
 import de.rki.demis.fhir.search.criteria.BinaryCriteria;
 import de.rki.demis.fhir.search.specs.BinarySpecs;
-import de.rki.demis.fhir.util.service.FhirParserService;
-import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
-import org.hl7.fhir.r4.model.Binary;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,6 @@ public class BinaryService {
     private final CodeTypeService codeTypeService;
     private final ReferenceService referenceService;
     private final ResourceService resourceService;
-    private final FhirParserService fhirParserService;
 
 
     public List<BinaryMod> listAll() {
@@ -43,7 +41,7 @@ public class BinaryService {
 
         if (binaryOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Binary with 'id = %s' does not exist :::", binaryModId)
+                    String.format(NOT_EXIST_MSG, BinaryMod.class.getSimpleName(), binaryModId)
             );
         }
 
@@ -51,51 +49,16 @@ public class BinaryService {
     }
 
     public BinaryMod create(@NotNull BinaryMod newBinaryMod) {
-        // Meta
-        if (Objects.nonNull(newBinaryMod.getMeta())) {
-            newBinaryMod.setMeta(metaService
-                    .create(newBinaryMod.getMeta()));
-        }
-
-        // ImplicitRules
-        if (Objects.nonNull(newBinaryMod.getImplicitRules())) {
-            newBinaryMod.setImplicitRules(uriTypeService
-                    .create(newBinaryMod.getImplicitRules()));
-        }
-
-        // Language
-        if (Objects.nonNull(newBinaryMod.getLanguage())) {
-            newBinaryMod.setLanguage(codeTypeService
-                    .create(newBinaryMod.getLanguage()));
-        }
-
-        // SecurityContext
-        if (Objects.nonNull(newBinaryMod.getSecurityContext())) {
-            newBinaryMod.setSecurityContext(referenceService
-                    .create(newBinaryMod.getSecurityContext()));
-        }
-
-        // SecurityContextTarget
-        if (Objects.nonNull(newBinaryMod.getSecurityContextTarget())) {
-            newBinaryMod.setSecurityContextTarget(resourceService
-                    .create(newBinaryMod.getSecurityContextTarget()));
-        }
-
+        checkForUniqueness(newBinaryMod, repository);
+        persistBinaryModComponents(newBinaryMod, RequestOperation.Create);
         newBinaryMod.setId(null);
         return repository.save(newBinaryMod);
     }
 
-    public void update(UUID binaryId, String updateString, MediaType mediaType)
+    public void update(@NotNull UUID binaryId, @NotNull BinaryMod update)
             throws ResourceNotFoundException, ParsingException {
-
-        BinaryMod binaryModFound = getOne(binaryId);
-        Binary binary = fhirParserService.parseBinary(updateString, mediaType);
-        BinaryMod update = Objects.requireNonNull(Binary2BinaryMod.apply(binary));
-
-        if (!Objects.equals(binaryModFound.getId(), update.getId())) {
-            checkForUniqueness(update);
-        }
-
+        getOne(binaryId); // to check if the update exist
+        persistBinaryModComponents(update, RequestOperation.Update);
         update.setId(binaryId);
         repository.save(update);
     }
@@ -109,12 +72,23 @@ public class BinaryService {
         return repository.findAll(new BinarySpecs(criteria));
     }
 
-    private void checkForUniqueness(@NotNull BinaryMod binary) {
-        if (repository.existsById(binary.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A BinaryMod with the id=%s already exist :::", binary.getId())
-            );
-        }
+    private void persistBinaryModComponents(@NotNull BinaryMod binary, RequestOperation requestOperation) {
+
+        // Meta
+        binary.setMeta(persistEntity(binary.getMeta(), metaService, requestOperation));
+
+        // to update ImplicitRules
+        binary.setImplicitRules(persistEntity(binary.getImplicitRules(), uriTypeService, requestOperation));
+
+        // to update Language
+        binary.setLanguage(persistEntity(binary.getLanguage(), codeTypeService, requestOperation));
+
+        // to update SecurityContext
+        binary.setSecurityContext(persistEntity(binary.getSecurityContext(), referenceService, requestOperation));
+
+        // to update SecurityContextTarget
+        binary.setSecurityContextTarget(persistEntity(binary.getSecurityContextTarget(), resourceService, requestOperation));
+
     }
 
 }
