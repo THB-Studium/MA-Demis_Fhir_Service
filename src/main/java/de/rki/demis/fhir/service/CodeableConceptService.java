@@ -6,6 +6,7 @@ import de.rki.demis.fhir.model.CodeableConcept;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodeableConceptRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 
@@ -49,7 +48,7 @@ public class CodeableConceptService {
     }
 
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
-        persistCodeableConceptComponents(newCodeableConcept, CREATE_OP);
+        persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
         newCodeableConcept.setId(null);
         return repository.save(newCodeableConcept);
     }
@@ -57,11 +56,11 @@ public class CodeableConceptService {
     public void update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
         getOne(codeableConceptId);
 
-        if (!Objects.equals(codeableConceptId, update.getId())) {
+        if (!codeableConceptId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistCodeableConceptComponents(update, UPDATE_OP);
+        persistCodeableConceptComponents(update, RequestOperation.Update);
         update.setId(codeableConceptId);
         repository.save(update);
     }
@@ -79,15 +78,21 @@ public class CodeableConceptService {
         }
     }
 
-    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, String requestOperation) {
+    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
         Set<Coding> coding = new HashSet<>();
         Set<Extension> extension = new HashSet<>();
 
-        codeableConcept.getCoding().forEach(item ->
-                coding.add(persistCodingEntity(item, codingService, requestOperation)));
+        // Coding
+        if (Objects.nonNull(codeableConcept.getCoding())) {
+            codeableConcept.getCoding().forEach(item ->
+                    coding.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
-        codeableConcept.getExtension().forEach(item ->
-                extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        // Extension
+        if (Objects.nonNull(codeableConcept.getExtension())) {
+            codeableConcept.getExtension().forEach(item ->
+                    extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
 
         codeableConcept.setCoding(coding);
         codeableConcept.setExtension(extension);

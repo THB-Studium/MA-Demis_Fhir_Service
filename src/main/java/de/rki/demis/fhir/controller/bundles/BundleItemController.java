@@ -3,7 +3,10 @@ package de.rki.demis.fhir.controller.bundles;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BundleMod;
 import de.rki.demis.fhir.service.BundleService;
+import de.rki.demis.fhir.transfert.bundle.Bundle2BundleMod;
+import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
+import org.hl7.fhir.r4.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -31,6 +35,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 public class BundleItemController {
     private static final Logger log = LoggerFactory.getLogger(BundleItemController.class);
     private final BundleService service;
+    private final FhirParserService fhirParserService;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -57,7 +62,10 @@ public class BundleItemController {
             @RequestBody @NotBlank String updateString,
             @RequestHeader(CONTENT_TYPE) org.springframework.http.MediaType mediaType) {
         log.info("::: BundleItemController.update() - Update the BundleMod [id={}] :::", bundleId);
-        service.update(bundleId, updateString, mediaType);
+        Bundle bundle = fhirParserService.parseBundle(updateString, mediaType);
+        bundle.setId("");
+        BundleMod update = Objects.requireNonNull(Bundle2BundleMod.apply(bundle));
+        service.update(bundleId, update);
         log.info("::: BundleItemController.update() - BundleMod with [id={}] updated :::", bundleId);
     }
 

@@ -4,6 +4,7 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.ExtensionRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 
@@ -45,7 +44,7 @@ public class ExtensionService {
     }
 
     public Extension create(@NotNull Extension newExtension) {
-        persistExtensionComponents(newExtension, CREATE_OP);
+        persistExtensionComponents(newExtension, RequestOperation.Create);
         newExtension.setId(null);
         return repository.save(newExtension);
     }
@@ -55,11 +54,11 @@ public class ExtensionService {
         getOne(extensionId);
 
         // to check the uniqueness of the update
-        if (!Objects.equals(extensionId, update.getId())) {
+        if (!extensionId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistExtensionComponents(update, UPDATE_OP);
+        persistExtensionComponents(update, RequestOperation.Update);
         update.setId(extensionId);
         repository.save(update);
     }
@@ -77,7 +76,7 @@ public class ExtensionService {
         }
     }
 
-    private void persistExtensionComponents(@NotNull Extension extension, String requestOperation) {
+    private void persistExtensionComponents(@NotNull Extension extension, RequestOperation requestOperation) {
         // URL
         if (Objects.nonNull(extension.getUrl())) {
             extension.setUrl(persistUriTypeEntity(extension.getUrl(), uriTypeService, requestOperation));

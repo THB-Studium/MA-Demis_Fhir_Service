@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +18,6 @@ import java.util.UUID;
 @Transactional(rollbackOn = Exception.class)
 public class BundleLinkComponentService {
     private final BundleLinkComponentRepository repository;
-
 
 
     public List<BundleLinkComponent> listAll() {
@@ -45,9 +43,9 @@ public class BundleLinkComponentService {
 
     public void update(UUID bundleLinkComponentId, @NotNull BundleLinkComponent update)
             throws ResourceNotFoundException {
-        BundleLinkComponent bundleLinkComponentFound = getOne(bundleLinkComponentId);
+        getOne(bundleLinkComponentId);
 
-        if (!Objects.equals(bundleLinkComponentFound.getId(), update.getId())) {
+        if (!bundleLinkComponentId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 

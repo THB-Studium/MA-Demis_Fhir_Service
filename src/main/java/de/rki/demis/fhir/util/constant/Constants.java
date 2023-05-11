@@ -8,27 +8,22 @@ import java.util.regex.Pattern;
 public class Constants {
   /** Validation **/
   public static final String UUID_REGEX_STRING = "/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i";
-  public static final Pattern UUID_REGEX = Pattern.compile(UUID_REGEX_STRING);
+  public static final Pattern UUID_REGEX       = Pattern.compile(UUID_REGEX_STRING);
 
 
   /** messages */
-  public static final String UNSUPPORTED_PROFILE_TYPE = "Unsupported profile type";
+  public static final String UNSUPPORTED_PROFILE_TYPE    = "Unsupported profile type";
   public static final String UNSUPPORTED_RESOURCE_BUNDLE = "Unsupported resource bundle";
-  public static final String ALL_OK = "All OK";
-  public static final String NOT_EMPTY_MSG = "must not be empty";
-  public static final String NOT_NULL_MSG = "must not be null";
-
-
-  /** Request Operation */
-  public static final String CREATE_OP  = "create";
-  public static final String UPDATE_OP  = "update";
+  public static final String ALL_OK                      = "All OK";
+  public static final String NOT_EMPTY_MSG               = "must not be empty";
+  public static final String NOT_NULL_MSG                = "must not be null";
 
 
   /** APIs */
-  public static final String SEARCH     = "search";
-  public static final String BINARY_ID  = "binaryId";
-  public static final String BUNDLE_ID  = "bundleId";
-  public static final String PATIENT_ID = "patientId";
+  public static final String SEARCH         = "search";
+  public static final String BINARY_ID      = "binaryId";
+  public static final String BUNDLE_ID      = "bundleId";
+  public static final String PATIENT_ID     = "patientId";
 
 
   /*** API Search parameters ***/

@@ -5,6 +5,7 @@ import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.model.Reference;
 import de.rki.demis.fhir.repository.ReferenceRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistIdentifierEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -50,7 +49,7 @@ public class ReferenceService {
     }
 
     public Reference create(@NotNull Reference newReference) {
-        persistReferenceComponents(newReference, CREATE_OP);
+        persistReferenceComponents(newReference, RequestOperation.Create);
         newReference.setId(null);
         return repository.save(newReference);
     }
@@ -58,11 +57,11 @@ public class ReferenceService {
     public void update(UUID referenceId, @NotNull Reference update) throws ResourceNotFoundException {
         getOne(referenceId);
 
-        if (!Objects.equals(referenceId, update.getId())) {
+        if (!referenceId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistReferenceComponents(update, UPDATE_OP);
+        persistReferenceComponents(update, RequestOperation.Update);
         update.setId(referenceId);
         repository.save(update);
     }
@@ -80,11 +79,14 @@ public class ReferenceService {
         }
     }
 
-    private void persistReferenceComponents(@NotNull Reference reference, String requestOperation) {
-        // extension
+    private void persistReferenceComponents(@NotNull Reference reference, RequestOperation requestOperation) {
         Set<Extension> extension = new HashSet<>();
-        reference.getExtension().forEach(item ->
-                extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+
+        // extension
+        if (Objects.nonNull(reference.getExtension())) {
+            reference.getExtension().forEach(item ->
+                    extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
 
         // Type
         if (Objects.nonNull(reference.getType())) {

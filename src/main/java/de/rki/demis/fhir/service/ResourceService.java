@@ -3,6 +3,7 @@ package de.rki.demis.fhir.service;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.repository.ResourceRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistMetaEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -47,7 +46,7 @@ public class ResourceService {
     }
 
     public Resource create(@NotNull Resource newResource) {
-        persistResourceComponents(newResource, CREATE_OP);
+        persistResourceComponents(newResource, RequestOperation.Create);
         newResource.setId(null);
         return repository.save(newResource);
     }
@@ -55,11 +54,11 @@ public class ResourceService {
     public void update(UUID resourceId, @NotNull Resource update) throws ResourceNotFoundException {
         getOne(resourceId);
 
-        if (!Objects.equals(resourceId, update.getId())) {
+        if (!resourceId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistResourceComponents(update, UPDATE_OP);
+        persistResourceComponents(update, RequestOperation.Update);
         update.setId(resourceId);
         repository.save(update);
     }
@@ -77,7 +76,7 @@ public class ResourceService {
         }
     }
 
-    private void persistResourceComponents(@NotNull Resource resource, String requestOperation) {
+    private void persistResourceComponents(@NotNull Resource resource, RequestOperation requestOperation) {
         // Meta
         if (Objects.nonNull(resource.getMeta())) {
             resource.setMeta(persistMetaEntity(resource.getMeta(), metaService, requestOperation));

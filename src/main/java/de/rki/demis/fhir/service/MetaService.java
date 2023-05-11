@@ -6,6 +6,7 @@ import de.rki.demis.fhir.model.CanonicalType;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Meta;
 import de.rki.demis.fhir.repository.MetaRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCanonicalTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -51,7 +50,7 @@ public class MetaService {
     }
 
     public Meta create(@NotNull Meta newMeta) {
-        persistMetaComponents(newMeta, CREATE_OP);
+        persistMetaComponents(newMeta, RequestOperation.Create);
         newMeta.setId(null);
         return repository.save(newMeta);
     }
@@ -65,7 +64,7 @@ public class MetaService {
             checkForUniqueness(update);
         }
 
-        persistMetaComponents(update, UPDATE_OP);
+        persistMetaComponents(update, RequestOperation.Update);
         update.setId(metaId);
         repository.save(update);
     }
@@ -83,7 +82,7 @@ public class MetaService {
         }
     }
 
-    private void persistMetaComponents(@NotNull Meta meta, String requestOperation) {
+    private void persistMetaComponents(@NotNull Meta meta, RequestOperation requestOperation) {
         Set<CanonicalType> profile = new HashSet<>();
         Set<Coding> security = new HashSet<>();
         Set<Coding> tag = new HashSet<>();
@@ -92,16 +91,22 @@ public class MetaService {
         meta.setSource(persistUriTypeEntity(meta.getSource(), uriTypeService, requestOperation));
 
         // Profile
-        meta.getProfile().forEach(item ->
-                profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+        if (Objects.nonNull(meta.getProfile())) {
+            meta.getProfile().forEach(item ->
+                    profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+        }
 
         // Security
-        meta.getSecurity().forEach(item ->
-                security.add(persistCodingEntity(item, codingService, requestOperation)));
+        if (Objects.nonNull(meta.getSecurity())) {
+            meta.getSecurity().forEach(item ->
+                    security.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
         // Tag
-        meta.getTag().forEach(item ->
-                tag.add(persistCodingEntity(item, codingService, requestOperation)));
+        if (Objects.nonNull(meta.getTag())) {
+            meta.getTag().forEach(item ->
+                    tag.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
 
         meta.setProfile(profile);

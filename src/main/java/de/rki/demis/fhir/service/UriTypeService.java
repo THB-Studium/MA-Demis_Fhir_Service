@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +18,6 @@ import java.util.UUID;
 @Transactional(rollbackOn = Exception.class)
 public class UriTypeService {
     private final UriTypeRepository repository;
-
 
 
     public List<UriType> listAll() {
@@ -44,9 +42,9 @@ public class UriTypeService {
     }
 
     public void update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
-        UriType uriTypeFound = getOne(uriTypeId);
+        getOne(uriTypeId);
 
-        if (!Objects.equals(uriTypeFound.getId(), update.getId())) {
+        if (!uriTypeId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 

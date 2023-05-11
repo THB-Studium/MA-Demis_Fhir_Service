@@ -5,6 +5,7 @@ import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodingRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -50,7 +49,7 @@ public class CodingService {
     }
 
     public Coding create(@NotNull Coding newCoding) {
-        persistCodingComponents(newCoding, CREATE_OP);
+        persistCodingComponents(newCoding, RequestOperation.Create);
         newCoding.setId(null);
         return repository.save(newCoding);
     }
@@ -60,11 +59,11 @@ public class CodingService {
         getOne(metaId);
 
         // to check the uniqueness of the update
-        if (!Objects.equals(metaId, update.getId())) {
+        if (!metaId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistCodingComponents(update, UPDATE_OP);
+        persistCodingComponents(update, RequestOperation.Update);
         update.setId(metaId);
         repository.save(update);
     }
@@ -82,10 +81,13 @@ public class CodingService {
         }
     }
 
-    private void persistCodingComponents(@NotNull Coding coding, String requestOperation) {
-        // Extension
+    private void persistCodingComponents(@NotNull Coding coding, RequestOperation requestOperation) {
         Set<Extension> extension = new HashSet<>();
-        coding.getExtension().forEach(item -> extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+
+        // Extension
+        if (Objects.nonNull(coding.getExtension())) {
+            coding.getExtension().forEach(item -> extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
 
         // System
         if (Objects.nonNull(coding.getSystem())) {

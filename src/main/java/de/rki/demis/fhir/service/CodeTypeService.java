@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,7 +44,7 @@ public class CodeTypeService {
     public void update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
         getOne(codeTypeId);
 
-        if (!Objects.equals(codeTypeId, update.getId())) {
+        if (!codeTypeId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 

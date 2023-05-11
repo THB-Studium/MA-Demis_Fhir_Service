@@ -7,6 +7,7 @@ import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.repository.BinaryRepository;
 import de.rki.demis.fhir.search.criteria.BinaryCriteria;
 import de.rki.demis.fhir.search.specs.BinarySpecs;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistMetaEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistReferenceEntity;
@@ -54,7 +53,7 @@ public class BinaryService {
     }
 
     public BinaryMod create(@NotNull BinaryMod newBinaryMod) {
-        persistBinaryModComponents(newBinaryMod, CREATE_OP);
+        persistBinaryModComponents(newBinaryMod, RequestOperation.Create);
         newBinaryMod.setId(null);
         return repository.save(newBinaryMod);
     }
@@ -70,7 +69,7 @@ public class BinaryService {
             checkForUniqueness(update);
         }
 
-        persistBinaryModComponents(update, UPDATE_OP);
+        persistBinaryModComponents(update, RequestOperation.Update);
         update.setId(binaryId);
         repository.save(update);
     }
@@ -92,7 +91,7 @@ public class BinaryService {
         }
     }
 
-    private void persistBinaryModComponents(@NotNull BinaryMod binary, String requestOperation) {
+    private void persistBinaryModComponents(@NotNull BinaryMod binary, RequestOperation requestOperation) {
 
         // Meta
         binary.setMeta(persistMetaEntity(binary.getMeta(), metaService, requestOperation));

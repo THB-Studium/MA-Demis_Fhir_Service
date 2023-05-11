@@ -4,6 +4,7 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Identifier;
 import de.rki.demis.fhir.repository.IdentifierRepository;
+import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 
@@ -45,7 +44,7 @@ public class IdentifierService {
     }
 
     public Identifier create(@NotNull Identifier newIdentifier) {
-        persistIdentifierComponents(newIdentifier, CREATE_OP);
+        persistIdentifierComponents(newIdentifier, RequestOperation.Create);
         newIdentifier.setId(null);
         return repository.save(newIdentifier);
     }
@@ -53,11 +52,11 @@ public class IdentifierService {
     public void update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
         getOne(identifierId);
 
-        if (!Objects.equals(identifierId, update.getId())) {
+        if (!identifierId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
-        persistIdentifierComponents(update, UPDATE_OP);
+        persistIdentifierComponents(update, RequestOperation.Update);
         update.setId(identifierId);
         repository.save(update);
     }
@@ -75,7 +74,7 @@ public class IdentifierService {
         }
     }
 
-    private void persistIdentifierComponents(@NotNull Identifier identifier, String requestOperation) {
+    private void persistIdentifierComponents(@NotNull Identifier identifier, RequestOperation requestOperation) {
         // Type
         if (Objects.nonNull(identifier.getType())) {
             identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,7 +44,7 @@ public class CanonicalTypeService {
     public void update(UUID canonicalTypeId, @NotNull CanonicalType update) throws ResourceNotFoundException {
         getOne(canonicalTypeId);
 
-        if (!Objects.equals(canonicalTypeId, update.getId())) {
+        if (!canonicalTypeId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
