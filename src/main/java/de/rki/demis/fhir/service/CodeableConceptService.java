@@ -6,9 +6,13 @@ import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodeableConceptRepository;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import de.rki.demis.fhir.util.constant.RequestOperation;
 =======
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import de.rki.demis.fhir.util.constant.RequestOperation;
+>>>>>>> acf3b2c (wip)
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,12 +27,15 @@ import java.util.Set;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 =======
 import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
 import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+=======
+>>>>>>> acf3b2c (wip)
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
@@ -60,11 +67,15 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
 
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         checkForUniqueness(newCodeableConcept, repository);
         persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
 =======
         persistCodeableConceptComponents(newCodeableConcept, CREATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
+>>>>>>> acf3b2c (wip)
         newCodeableConcept.setId(null);
         return repository.save(newCodeableConcept);
     }
@@ -77,12 +88,16 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
     public void update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
         getOne(codeableConceptId);
 
-        if (!Objects.equals(codeableConceptId, update.getId())) {
+        if (!codeableConceptId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
+<<<<<<< HEAD
         persistCodeableConceptComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistCodeableConceptComponents(update, RequestOperation.Update);
+>>>>>>> acf3b2c (wip)
         update.setId(codeableConceptId);
         return repository.save(update);
     }
@@ -119,15 +134,21 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
         codeableConcept.setExtension(extension);
     }
 
-    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, String requestOperation) {
+    private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
         Set<Coding> coding = new HashSet<>();
         Set<Extension> extension = new HashSet<>();
 
-        codeableConcept.getCoding().forEach(item ->
-                coding.add(persistCodingEntity(item, codingService, requestOperation)));
+        // Coding
+        if (Objects.nonNull(codeableConcept.getCoding())) {
+            codeableConcept.getCoding().forEach(item ->
+                    coding.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
-        codeableConcept.getExtension().forEach(item ->
-                extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        // Extension
+        if (Objects.nonNull(codeableConcept.getExtension())) {
+            codeableConcept.getExtension().forEach(item ->
+                    extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
 
         codeableConcept.setCoding(coding);
         codeableConcept.setExtension(extension);

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,8 @@ import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForU
 public class CanonicalTypeService implements BaseService<CanonicalType> {
 =======
 import java.util.Objects;
+=======
+>>>>>>> acf3b2c (wip)
 import java.util.Optional;
 import java.util.UUID;
 
@@ -79,7 +82,7 @@ public class CanonicalTypeService {
     public void update(UUID canonicalTypeId, @NotNull CanonicalType update) throws ResourceNotFoundException {
         getOne(canonicalTypeId);
 
-        if (!Objects.equals(canonicalTypeId, update.getId())) {
+        if (!canonicalTypeId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 

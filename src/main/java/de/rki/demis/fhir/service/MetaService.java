@@ -6,9 +6,13 @@ import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Meta;
 import de.rki.demis.fhir.repository.MetaRepository;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import de.rki.demis.fhir.util.constant.RequestOperation;
 =======
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import de.rki.demis.fhir.util.constant.RequestOperation;
+>>>>>>> acf3b2c (wip)
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,12 +27,15 @@ import java.util.Set;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 =======
 import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
 import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+=======
+>>>>>>> acf3b2c (wip)
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCanonicalTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -60,11 +67,15 @@ public class MetaService implements BaseService<Meta> {
 
     public Meta create(@NotNull Meta newMeta) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         checkForUniqueness(newMeta, repository);
         persistMetaComponents(newMeta, RequestOperation.Create);
 =======
         persistMetaComponents(newMeta, CREATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistMetaComponents(newMeta, RequestOperation.Create);
+>>>>>>> acf3b2c (wip)
         newMeta.setId(null);
         return repository.save(newMeta);
     }
@@ -83,8 +94,12 @@ public class MetaService implements BaseService<Meta> {
             checkForUniqueness(update);
         }
 
+<<<<<<< HEAD
         persistMetaComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistMetaComponents(update, RequestOperation.Update);
+>>>>>>> acf3b2c (wip)
         update.setId(metaId);
         return repository.save(update);
     }
@@ -128,7 +143,7 @@ public class MetaService implements BaseService<Meta> {
         meta.setTag(tag);
     }
 
-    private void persistMetaComponents(@NotNull Meta meta, String requestOperation) {
+    private void persistMetaComponents(@NotNull Meta meta, RequestOperation requestOperation) {
         Set<CanonicalType> profile = new HashSet<>();
         Set<Coding> security = new HashSet<>();
         Set<Coding> tag = new HashSet<>();
@@ -137,16 +152,22 @@ public class MetaService implements BaseService<Meta> {
         meta.setSource(persistUriTypeEntity(meta.getSource(), uriTypeService, requestOperation));
 
         // Profile
-        meta.getProfile().forEach(item ->
-                profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+        if (Objects.nonNull(meta.getProfile())) {
+            meta.getProfile().forEach(item ->
+                    profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+        }
 
         // Security
-        meta.getSecurity().forEach(item ->
-                security.add(persistCodingEntity(item, codingService, requestOperation)));
+        if (Objects.nonNull(meta.getSecurity())) {
+            meta.getSecurity().forEach(item ->
+                    security.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
         // Tag
-        meta.getTag().forEach(item ->
-                tag.add(persistCodingEntity(item, codingService, requestOperation)));
+        if (Objects.nonNull(meta.getTag())) {
+            meta.getTag().forEach(item ->
+                    tag.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
 
 
         meta.setProfile(profile);

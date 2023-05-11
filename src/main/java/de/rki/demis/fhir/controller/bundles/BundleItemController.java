@@ -3,6 +3,10 @@ package de.rki.demis.fhir.controller.bundles;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BundleMod;
 import de.rki.demis.fhir.service.BundleService;
+<<<<<<< HEAD
+=======
+import de.rki.demis.fhir.transfert.bundle.Bundle2BundleMod;
+>>>>>>> acf3b2c (wip)
 import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Bundle;
@@ -36,7 +40,10 @@ public class BundleItemController {
     private static final Logger log = LoggerFactory.getLogger(BundleItemController.class);
     private final BundleService service;
     private final FhirParserService fhirParserService;
+<<<<<<< HEAD
     private final ConversionService conversionService;
+=======
+>>>>>>> acf3b2c (wip)
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -65,7 +72,11 @@ public class BundleItemController {
         log.info("::: BundleItemController.update() - Update the BundleMod [id={}] :::", bundleId);
         Bundle bundle = fhirParserService.parseBundle(updateString, mediaType);
         bundle.setId("");
+<<<<<<< HEAD
         BundleMod update = Objects.requireNonNull(conversionService.convert(bundle, BundleMod.class)); // to covert Bundle object to BundleMod object
+=======
+        BundleMod update = Objects.requireNonNull(Bundle2BundleMod.apply(bundle));
+>>>>>>> acf3b2c (wip)
         service.update(bundleId, update);
         log.info("::: BundleItemController.update() - BundleMod with [id={}] updated :::", bundleId);
     }

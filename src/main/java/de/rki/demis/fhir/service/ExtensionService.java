@@ -16,12 +16,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 =======
 import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
 import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+=======
+>>>>>>> acf3b2c (wip)
 import static de.rki.demis.fhir.util.service.PersistenceService.persistTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
@@ -53,11 +56,15 @@ public class ExtensionService implements BaseService<Extension> {
 
     public Extension create(@NotNull Extension newExtension) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         checkForUniqueness(newExtension, repository);
         persistExtensionComponents(newExtension, RequestOperation.Create);
 =======
         persistExtensionComponents(newExtension, CREATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistExtensionComponents(newExtension, RequestOperation.Create);
+>>>>>>> acf3b2c (wip)
         newExtension.setId(null);
         return repository.save(newExtension);
     }
@@ -72,12 +79,16 @@ public class ExtensionService implements BaseService<Extension> {
         getOne(extensionId);
 
         // to check the uniqueness of the update
-        if (!Objects.equals(extensionId, update.getId())) {
+        if (!extensionId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
+<<<<<<< HEAD
         persistExtensionComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistExtensionComponents(update, RequestOperation.Update);
+>>>>>>> acf3b2c (wip)
         update.setId(extensionId);
         return repository.save(update);
     }
@@ -104,7 +115,7 @@ public class ExtensionService implements BaseService<Extension> {
         }
     }
 
-    private void persistExtensionComponents(@NotNull Extension extension, String requestOperation) {
+    private void persistExtensionComponents(@NotNull Extension extension, RequestOperation requestOperation) {
         // URL
         if (Objects.nonNull(extension.getUrl())) {
             extension.setUrl(persistUriTypeEntity(extension.getUrl(), uriTypeService, requestOperation));

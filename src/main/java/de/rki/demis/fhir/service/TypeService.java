@@ -45,8 +45,18 @@ public class TypeService implements BaseService<Type> {
         return repository.save(newType);
     }
 
+<<<<<<< HEAD
     public Type update(UUID typeId, @NotNull Type update) throws ResourceNotFoundException {
         getOne(typeId); // to check if the update exist
+=======
+    public void update(UUID typeId, @NotNull Type update) throws ResourceNotFoundException {
+        getOne(typeId);
+
+        if (!typeId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> acf3b2c (wip)
         update.setId(typeId);
         return repository.save(update);
     }

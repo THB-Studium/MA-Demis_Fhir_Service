@@ -19,9 +19,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleEntryRequestComponentEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleEntryResponseComponentEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleEntrySearchComponentEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleLinkComponentEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistResourceEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+>>>>>>> acf3b2c (wip)
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +64,10 @@ public class BundleEntryComponentService implements BaseService<BundleEntryCompo
     }
 
     public BundleEntryComponent create(@NotNull BundleEntryComponent newBundleEntryComponent) {
+<<<<<<< HEAD
         checkForUniqueness(newBundleEntryComponent, repository);
+=======
+>>>>>>> acf3b2c (wip)
         persistBundleEntryComponentComponents(newBundleEntryComponent, RequestOperation.Create);
         newBundleEntryComponent.setId(null);
         return repository.save(newBundleEntryComponent);
@@ -63,6 +76,14 @@ public class BundleEntryComponentService implements BaseService<BundleEntryCompo
     public BundleEntryComponent update(UUID bundleEntryComponentId, @NotNull BundleEntryComponent update)
             throws ResourceNotFoundException {
         getOne(bundleEntryComponentId);
+<<<<<<< HEAD
+=======
+
+        if (!bundleEntryComponentId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> acf3b2c (wip)
         persistBundleEntryComponentComponents(update, RequestOperation.Update);
         update.setId(bundleEntryComponentId);
         return repository.save(update);
@@ -118,6 +139,53 @@ public class BundleEntryComponentService implements BaseService<BundleEntryCompo
 
         // Response
         bundleEntryComponent.setResponse(persistEntity(bundleEntryComponent.getResponse(), bundleEntryResponseComponentService, requestOperation));
+
+
+        bundleEntryComponent.setModifierExtension(modifierExtensions);
+        bundleEntryComponent.setExtension(extensions);
+        bundleEntryComponent.setLink(links);
+    }
+
+    private void persistBundleEntryComponentComponents(@NotNull BundleEntryComponent bundleEntryComponent, RequestOperation requestOperation) {
+        Set<Extension> modifierExtensions = new HashSet<>();
+        Set<Extension> extensions = new HashSet<>();
+        Set<BundleLinkComponent> links = new HashSet<>();
+
+        // ModifierExtension
+        if (Objects.nonNull(bundleEntryComponent.getModifierExtension())) {
+            bundleEntryComponent.getModifierExtension().forEach(item ->
+                    modifierExtensions.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
+
+        // Extension
+        if (Objects.nonNull(bundleEntryComponent.getExtension())) {
+            bundleEntryComponent.getExtension().forEach(item ->
+                    extensions.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
+
+        // Link
+        if (Objects.nonNull(bundleEntryComponent.getLink())) {
+            bundleEntryComponent.getLink().forEach(item ->
+                    links.add(persistBundleLinkComponentEntity(item, bundleLinkComponentService, requestOperation)));
+        }
+
+        // FullUrl
+        bundleEntryComponent.setFullUrl(persistUriTypeEntity(bundleEntryComponent.getFullUrl(), uriTypeService, requestOperation));
+
+        // Resource
+        bundleEntryComponent.setResource(persistResourceEntity(bundleEntryComponent.getResource(), resourceService, requestOperation));
+
+        // Search
+        bundleEntryComponent.setSearch(
+                persistBundleEntrySearchComponentEntity(bundleEntryComponent.getSearch(), bundleEntrySearchComponentService, requestOperation));
+
+        // Request
+        bundleEntryComponent.setRequest(
+                persistBundleEntryRequestComponentEntity(bundleEntryComponent.getRequest(), bundleEntryRequestComponentService, requestOperation));
+
+        // Response
+        bundleEntryComponent.setResponse(
+                persistBundleEntryResponseComponentEntity(bundleEntryComponent.getResponse(), bundleEntryResponseComponentService, requestOperation));
 
 
         bundleEntryComponent.setModifierExtension(modifierExtensions);

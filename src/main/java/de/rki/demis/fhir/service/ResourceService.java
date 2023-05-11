@@ -3,7 +3,11 @@ package de.rki.demis.fhir.service;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.repository.ResourceRepository;
 import de.rki.demis.fhir.util.constant.RequestOperation;
+<<<<<<< HEAD
 import de.rki.demis.fhir.model.Resource;
+=======
+import de.rki.demis.fhir.util.fhir_object.classes.Resource;
+>>>>>>> acf3b2c (wip)
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,12 +20,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 =======
 import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
 import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+=======
+>>>>>>> acf3b2c (wip)
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistMetaEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
@@ -55,11 +62,15 @@ public class ResourceService implements BaseService<Resource> {
 
     public Resource create(@NotNull Resource newResource) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         checkForUniqueness(newResource, repository);
         persistResourceComponents(newResource, RequestOperation.Create);
 =======
         persistResourceComponents(newResource, CREATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistResourceComponents(newResource, RequestOperation.Create);
+>>>>>>> acf3b2c (wip)
         newResource.setId(null);
         return repository.save(newResource);
     }
@@ -72,12 +83,16 @@ public class ResourceService implements BaseService<Resource> {
     public void update(UUID resourceId, @NotNull Resource update) throws ResourceNotFoundException {
         getOne(resourceId);
 
-        if (!Objects.equals(resourceId, update.getId())) {
+        if (!resourceId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
+<<<<<<< HEAD
         persistResourceComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistResourceComponents(update, RequestOperation.Update);
+>>>>>>> acf3b2c (wip)
         update.setId(resourceId);
         return repository.save(update);
     }
@@ -109,7 +124,7 @@ public class ResourceService implements BaseService<Resource> {
         }
     }
 
-    private void persistResourceComponents(@NotNull Resource resource, String requestOperation) {
+    private void persistResourceComponents(@NotNull Resource resource, RequestOperation requestOperation) {
         // Meta
         if (Objects.nonNull(resource.getMeta())) {
             resource.setMeta(persistMetaEntity(resource.getMeta(), metaService, requestOperation));

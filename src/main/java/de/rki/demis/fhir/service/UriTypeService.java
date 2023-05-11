@@ -45,8 +45,18 @@ public class UriTypeService implements BaseService<UriType> {
         return repository.save(newUriType);
     }
 
+<<<<<<< HEAD
     public UriType update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
         getOne(uriTypeId); // to check if the update exist
+=======
+    public void update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
+        getOne(uriTypeId);
+
+        if (!uriTypeId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> acf3b2c (wip)
         update.setId(uriTypeId);
         return repository.save(update);
     }

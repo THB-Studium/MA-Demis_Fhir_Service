@@ -52,7 +52,7 @@ public class CodeTypeService implements BaseService<CodeType> {
     public void update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
         getOne(codeTypeId);
 
-        if (!Objects.equals(codeTypeId, update.getId())) {
+        if (!codeTypeId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 

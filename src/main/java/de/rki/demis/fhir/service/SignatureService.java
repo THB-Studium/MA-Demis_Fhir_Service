@@ -19,9 +19,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistReferenceEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistResourceEntity;
+>>>>>>> acf3b2c (wip)
 
 @Service
 @RequiredArgsConstructor
@@ -52,14 +60,27 @@ public class SignatureService implements BaseService<Signature> {
     }
 
     public Signature create(@NotNull Signature newSignature) {
+<<<<<<< HEAD
         checkForUniqueness(newSignature, repository);
+=======
+>>>>>>> acf3b2c (wip)
         persistSignatureComponents(newSignature, RequestOperation.Create);
         newSignature.setId(null);
         return repository.save(newSignature);
     }
 
+<<<<<<< HEAD
     public Signature update(UUID signatureId, @NotNull Signature update) throws ResourceNotFoundException {
         getOne(signatureId); // to check if the update exist
+=======
+    public void update(UUID signatureId, @NotNull Signature update) throws ResourceNotFoundException {
+        getOne(signatureId);
+
+        if (!signatureId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> acf3b2c (wip)
         persistSignatureComponents(update, RequestOperation.Update);
         update.setId(signatureId);
         return repository.save(update);
@@ -110,6 +131,44 @@ public class SignatureService implements BaseService<Signature> {
 
         // SigFormat
         signature.setSigFormat(persistEntity(signature.getSigFormat(), codeTypeService, requestOperation));
+
+        signature.setExtension(extensions);
+        signature.setType(types);
+    }
+
+    private void persistSignatureComponents(@NotNull Signature signature, RequestOperation requestOperation) {
+        Set<Extension> extensions = new HashSet<>();
+        Set<Coding> types = new HashSet<>();
+
+        // Extension
+        if (Objects.nonNull(signature.getExtension())) {
+            signature.getExtension().forEach(item ->
+                    extensions.add(persistExtensionEntity(item, extensionService, requestOperation)));
+        }
+
+        // Type
+        if (Objects.nonNull(signature.getType())){
+            signature.getType().forEach(item ->
+                    types.add(persistCodingEntity(item, codingService, requestOperation)));
+        }
+
+        // Who
+        signature.setWho(persistReferenceEntity(signature.getWho(), referenceService, requestOperation));
+
+        // WhoTarget
+        signature.setWhoTarget(persistResourceEntity(signature.getWhoTarget(), resourceService, requestOperation));
+
+        // OnBehalfOf
+        signature.setOnBehalfOf(persistReferenceEntity(signature.getOnBehalfOf(), referenceService, requestOperation));
+
+        // OnBehalfOfTarget
+        signature.setOnBehalfOfTarget(persistResourceEntity(signature.getOnBehalfOfTarget(), resourceService, requestOperation));
+
+        // TargetFormat
+        signature.setTargetFormat(persistCodeTypeEntity(signature.getTargetFormat(), codeTypeService, requestOperation));
+
+        // SigFormat
+        signature.setSigFormat(persistCodeTypeEntity(signature.getSigFormat(), codeTypeService, requestOperation));
 
         signature.setExtension(extensions);
         signature.setType(types);

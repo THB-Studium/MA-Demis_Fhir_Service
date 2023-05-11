@@ -16,12 +16,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 =======
 import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
 import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
+=======
+>>>>>>> acf3b2c (wip)
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
@@ -53,11 +56,15 @@ public class IdentifierService implements BaseService<Identifier> {
 
     public Identifier create(@NotNull Identifier newIdentifier) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         checkForUniqueness(newIdentifier, repository);
         persistIdentifierComponents(newIdentifier, RequestOperation.Create);
 =======
         persistIdentifierComponents(newIdentifier, CREATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistIdentifierComponents(newIdentifier, RequestOperation.Create);
+>>>>>>> acf3b2c (wip)
         newIdentifier.setId(null);
         return repository.save(newIdentifier);
     }
@@ -70,12 +77,16 @@ public class IdentifierService implements BaseService<Identifier> {
     public void update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
         getOne(identifierId);
 
-        if (!Objects.equals(identifierId, update.getId())) {
+        if (!identifierId.equals(update.getId())) {
             checkForUniqueness(update);
         }
 
+<<<<<<< HEAD
         persistIdentifierComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        persistIdentifierComponents(update, RequestOperation.Update);
+>>>>>>> acf3b2c (wip)
         update.setId(identifierId);
         return repository.save(update);
     }
@@ -107,7 +118,7 @@ public class IdentifierService implements BaseService<Identifier> {
 //        }
     }
 
-    private void persistIdentifierComponents(@NotNull Identifier identifier, String requestOperation) {
+    private void persistIdentifierComponents(@NotNull Identifier identifier, RequestOperation requestOperation) {
         // Type
         if (Objects.nonNull(identifier.getType())) {
             identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));

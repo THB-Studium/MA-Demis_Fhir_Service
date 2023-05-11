@@ -47,7 +47,16 @@ public class BundleLinkComponentService implements BaseService<BundleLinkCompone
 
     public BundleLinkComponent update(UUID bundleLinkComponentId, @NotNull BundleLinkComponent update)
             throws ResourceNotFoundException {
+<<<<<<< HEAD
         getOne(bundleLinkComponentId); // to check if the update exist
+=======
+        getOne(bundleLinkComponentId);
+
+        if (!bundleLinkComponentId.equals(update.getId())) {
+            checkForUniqueness(update);
+        }
+
+>>>>>>> acf3b2c (wip)
         update.setId(bundleLinkComponentId);
         return repository.save(update);
     }
