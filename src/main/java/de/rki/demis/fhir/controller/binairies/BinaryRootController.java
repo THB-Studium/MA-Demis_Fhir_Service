@@ -4,11 +4,11 @@ import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.service.BinaryService;
 import de.rki.demis.fhir.util.service.FhirParserService;
-import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +35,7 @@ public class BinaryRootController {
     private static final Logger log = LoggerFactory.getLogger(BinaryRootController.class);
     private final BinaryService service;
     private final FhirParserService fhirParserService;
+    private final ConversionService conversionService;
 
 
     @RequestMapping(method = RequestMethod.POST)
@@ -47,7 +48,7 @@ public class BinaryRootController {
         log.info("::: create() - create a BinaryMod :::");
         Binary binary = fhirParserService.parseBinary(newBinaryString, mediaType);
         binary.setId("");
-        BinaryMod newBinaryMod = Objects.requireNonNull(Binary2BinaryMod.apply(binary));
+        BinaryMod newBinaryMod = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Bundle object to BundleMod object
         BinaryMod created = service.create(newBinaryMod);
         log.info("::: create() - BinaryMod created :::");
 

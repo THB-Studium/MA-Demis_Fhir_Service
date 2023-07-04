@@ -67,7 +67,7 @@ public class BundleService {
         return repository.save(newBundle);
     }
 
-    public void update(UUID bundleId, BundleMod update)
+    public void update(UUID bundleId, @NotNull BundleMod update)
             throws ResourceNotFoundException, ParsingException {
         getOne(bundleId);
 
