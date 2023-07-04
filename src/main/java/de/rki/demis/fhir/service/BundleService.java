@@ -77,11 +77,15 @@ public class BundleService {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void update(UUID bundleId, @NotNull BundleMod update)
             throws ResourceNotFoundException, ParsingException {
         getOne(bundleId);
 =======
     public void update(UUID bundleId, BundleMod update)
+=======
+    public void update(UUID bundleId, @NotNull BundleMod update)
+>>>>>>> f67cebc (some refactorings done)
             throws ResourceNotFoundException, ParsingException {
         getOne(bundleId);
 
