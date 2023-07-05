@@ -29,6 +29,9 @@ public class Constants {
 =======
 >>>>>>> acf3b2c (wip)
 
+  public static final String NOT_EXIST_MSG               = "::: A %s with 'id = %s' does not exist :::";
+  public static final String ALREADY_EXIST_MSG           = "::: A %s with 'id = %s' already exists :::";
+
 
   /** APIs */
   public static final String SEARCH         = "search";

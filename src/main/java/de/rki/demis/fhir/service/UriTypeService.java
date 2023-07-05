@@ -14,9 +14,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 =======
 >>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
+=======
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+>>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service

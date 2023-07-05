@@ -3,11 +3,15 @@ package de.rki.demis.fhir.service;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import de.rki.demis.fhir.exception.ResourceBadRequestException;
 >>>>>>> acf3b2c (wip)
 =======
 >>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
+=======
+import de.rki.demis.fhir.model.BundleEntryComponent;
+>>>>>>> 694cae4 (some refactorings are done)
 import de.rki.demis.fhir.model.BundleEntryRequestComponent;
 import de.rki.demis.fhir.repository.BundleEntryRequestComponentRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,9 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -63,10 +70,14 @@ public class BundleEntryRequestComponentService implements BaseService<BundleEnt
         if (bundleEntryRequestComponentOp.isEmpty()) {
             throw new ResourceNotFoundException(
 <<<<<<< HEAD
+<<<<<<< HEAD
                     String.format(NOT_EXIST_MSG, BundleEntryRequestComponent.class.getSimpleName(), bundleEntryRequestComponentId)
 =======
                     String.format("::: A BundleEntryRequestComponent with 'id = %s' does not exist :::", bundleEntryRequestComponentId)
 >>>>>>> acf3b2c (wip)
+=======
+                    String.format(NOT_EXIST_MSG, BundleEntryRequestComponent.class.getSimpleName(), bundleEntryRequestComponentId)
+>>>>>>> 694cae4 (some refactorings are done)
             );
         }
 

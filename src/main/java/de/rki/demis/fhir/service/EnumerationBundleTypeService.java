@@ -30,6 +30,9 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -64,10 +67,14 @@ public class EnumerationBundleTypeService implements BaseService<Enumeration<Bun
         if (enumerationOp.isEmpty()) {
             throw new ResourceNotFoundException(
 <<<<<<< HEAD
+<<<<<<< HEAD
                     String.format(NOT_EXIST_MSG, "Enumeration-" + BundleType.class.getSimpleName(), enumerationId)
 =======
                     String.format("::: A Enumeration Bundle Type with 'id = %s' does not exist :::", enumerationId)
 >>>>>>> acf3b2c (wip)
+=======
+                    String.format(NOT_EXIST_MSG, "Enumeration-" + BundleType.class.getSimpleName(), enumerationId)
+>>>>>>> 694cae4 (some refactorings are done)
             );
         }
 

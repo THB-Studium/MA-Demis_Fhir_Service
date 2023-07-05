@@ -29,6 +29,9 @@ import java.util.UUID;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -65,10 +68,14 @@ public class MetaService implements BaseService<Meta> {
 
         if (metaOp.isEmpty()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             throw new ResourceNotFoundException(String.format(NOT_EXIST_MSG, Meta.class.getSimpleName(), metaId));
 =======
             throw new ResourceNotFoundException(String.format("::: A Meta with 'id = %s' does not exist :::", metaId));
 >>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
+=======
+            throw new ResourceNotFoundException(String.format(NOT_EXIST_MSG, Meta.class.getSimpleName(), metaId));
+>>>>>>> 694cae4 (some refactorings are done)
         }
 
         return metaOp.get();

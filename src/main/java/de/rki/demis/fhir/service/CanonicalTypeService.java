@@ -43,6 +43,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -67,10 +68,14 @@ public class CanonicalTypeService implements BaseService<CanonicalType> {
         if (canonicalTypeOp.isEmpty()) {
             throw new ResourceNotFoundException(
 <<<<<<< HEAD
+<<<<<<< HEAD
                     String.format(NOT_EXIST_MSG, CanonicalType.class.getSimpleName(), canonicalTypeId)
 =======
                     String.format("::: A CanonicalType with 'id = %s' does not exist :::", canonicalTypeId)
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+                    String.format(NOT_EXIST_MSG, CanonicalType.class.getSimpleName(), canonicalTypeId)
+>>>>>>> 694cae4 (some refactorings are done)
             );
         }
 

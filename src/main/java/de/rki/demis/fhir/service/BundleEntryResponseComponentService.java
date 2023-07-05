@@ -29,6 +29,9 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -63,10 +66,14 @@ public class BundleEntryResponseComponentService implements BaseService<BundleEn
         if (bundleEntryResponseComponentOp.isEmpty()) {
             throw new ResourceNotFoundException(
 <<<<<<< HEAD
+<<<<<<< HEAD
                     String.format(NOT_EXIST_MSG, BundleEntryResponseComponent.class.getSimpleName(), bundleEntryResponseComponentId)
 =======
                     String.format("::: A BundleEntryResponseComponent with 'id = %s' does not exist :::", bundleEntryResponseComponentId)
 >>>>>>> acf3b2c (wip)
+=======
+                    String.format(NOT_EXIST_MSG, BundleEntryResponseComponent.class.getSimpleName(), bundleEntryResponseComponentId)
+>>>>>>> 694cae4 (some refactorings are done)
             );
         }
 
