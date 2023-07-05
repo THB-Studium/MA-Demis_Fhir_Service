@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -48,6 +51,7 @@ public class BundleLinkComponentService implements BaseService<BundleLinkCompone
     public BundleLinkComponent update(UUID bundleLinkComponentId, @NotNull BundleLinkComponent update)
             throws ResourceNotFoundException {
 <<<<<<< HEAD
+<<<<<<< HEAD
         getOne(bundleLinkComponentId); // to check if the update exist
 =======
         getOne(bundleLinkComponentId);
@@ -57,6 +61,9 @@ public class BundleLinkComponentService implements BaseService<BundleLinkCompone
         }
 
 >>>>>>> acf3b2c (wip)
+=======
+        getOne(bundleLinkComponentId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         update.setId(bundleLinkComponentId);
         return repository.save(update);
     }

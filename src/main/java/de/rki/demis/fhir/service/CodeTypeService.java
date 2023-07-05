@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -46,6 +49,7 @@ public class CodeTypeService implements BaseService<CodeType> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public CodeType update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
         getOne(codeTypeId); // to check if the update exist
 =======
@@ -57,6 +61,10 @@ public class CodeTypeService implements BaseService<CodeType> {
         }
 
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+    public CodeType update(UUID codeTypeId, @NotNull CodeType update) throws ResourceNotFoundException {
+        getOne(codeTypeId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         update.setId(codeTypeId);
         return repository.save(update);
     }

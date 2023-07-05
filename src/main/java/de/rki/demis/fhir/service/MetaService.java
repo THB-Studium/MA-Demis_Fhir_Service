@@ -28,6 +28,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -40,6 +41,10 @@ import static de.rki.demis.fhir.util.service.PersistenceService.persistCanonical
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +64,11 @@ public class MetaService implements BaseService<Meta> {
         Optional<Meta> metaOp = repository.findById(metaId);
 
         if (metaOp.isEmpty()) {
+<<<<<<< HEAD
             throw new ResourceNotFoundException(String.format(NOT_EXIST_MSG, Meta.class.getSimpleName(), metaId));
+=======
+            throw new ResourceNotFoundException(String.format("::: A Meta with 'id = %s' does not exist :::", metaId));
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         }
 
         return metaOp.get();
@@ -68,6 +77,9 @@ public class MetaService implements BaseService<Meta> {
     public Meta create(@NotNull Meta newMeta) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newMeta, repository);
         persistMetaComponents(newMeta, RequestOperation.Create);
 =======
@@ -80,6 +92,7 @@ public class MetaService implements BaseService<Meta> {
         return repository.save(newMeta);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public Meta update(@NotNull UUID metaId, @NotNull Meta update) throws ResourceNotFoundException {
         getOne(metaId); // to check if the update exist
@@ -98,6 +111,10 @@ public class MetaService implements BaseService<Meta> {
         persistMetaComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+    public Meta update(@NotNull UUID metaId, @NotNull Meta update) throws ResourceNotFoundException {
+        getOne(metaId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistMetaComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(metaId);
@@ -112,6 +129,7 @@ public class MetaService implements BaseService<Meta> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
+<<<<<<< HEAD
     }
 
     private void persistMetaComponents(@NotNull Meta meta, RequestOperation requestOperation) {
@@ -141,6 +159,8 @@ public class MetaService implements BaseService<Meta> {
         meta.setProfile(profile);
         meta.setSecurity(security);
         meta.setTag(tag);
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistMetaComponents(@NotNull Meta meta, RequestOperation requestOperation) {
@@ -149,24 +169,21 @@ public class MetaService implements BaseService<Meta> {
         Set<Coding> tag = new HashSet<>();
 
         // Source
-        meta.setSource(persistUriTypeEntity(meta.getSource(), uriTypeService, requestOperation));
+        meta.setSource(persistEntity(meta.getSource(), uriTypeService, requestOperation));
 
         // Profile
         if (Objects.nonNull(meta.getProfile())) {
-            meta.getProfile().forEach(item ->
-                    profile.add(persistCanonicalTypeEntity(item, canonicalTypeService, requestOperation)));
+            meta.getProfile().forEach(item -> profile.add(persistEntity(item, canonicalTypeService, requestOperation)));
         }
 
         // Security
         if (Objects.nonNull(meta.getSecurity())) {
-            meta.getSecurity().forEach(item ->
-                    security.add(persistCodingEntity(item, codingService, requestOperation)));
+            meta.getSecurity().forEach(item -> security.add(persistEntity(item, codingService, requestOperation)));
         }
 
         // Tag
         if (Objects.nonNull(meta.getTag())) {
-            meta.getTag().forEach(item ->
-                    tag.add(persistCodingEntity(item, codingService, requestOperation)));
+            meta.getTag().forEach(item -> tag.add(persistEntity(item, codingService, requestOperation)));
         }
 
 

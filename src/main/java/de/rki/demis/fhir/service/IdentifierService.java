@@ -17,6 +17,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -28,6 +29,10 @@ import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +62,9 @@ public class IdentifierService implements BaseService<Identifier> {
     public Identifier create(@NotNull Identifier newIdentifier) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newIdentifier, repository);
         persistIdentifierComponents(newIdentifier, RequestOperation.Create);
 =======
@@ -69,6 +77,7 @@ public class IdentifierService implements BaseService<Identifier> {
         return repository.save(newIdentifier);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public Identifier update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
         getOne(identifierId); // to check if the update exist
@@ -85,6 +94,10 @@ public class IdentifierService implements BaseService<Identifier> {
         persistIdentifierComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+    public Identifier update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
+        getOne(identifierId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistIdentifierComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(identifierId);
@@ -99,6 +112,7 @@ public class IdentifierService implements BaseService<Identifier> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
+<<<<<<< HEAD
     }
 
     private void persistIdentifierComponents(@NotNull Identifier identifier, RequestOperation requestOperation) {
@@ -116,22 +130,24 @@ public class IdentifierService implements BaseService<Identifier> {
 //        if (Objects.nonNull(identifier.getAssigner())) {
 //            identifier.setAssigner(persistEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
 //        }
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistIdentifierComponents(@NotNull Identifier identifier, RequestOperation requestOperation) {
         // Type
         if (Objects.nonNull(identifier.getType())) {
-            identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));
+            identifier.setType(persistEntity(identifier.getType(), codeableConceptService, requestOperation));
         }
 
         // System
         if (Objects.nonNull(identifier.getSystem())) {
-            identifier.setSystem(persistUriTypeEntity(identifier.getSystem(), uriTypeService, requestOperation));
+            identifier.setSystem(persistEntity(identifier.getSystem(), uriTypeService, requestOperation));
         }
 
 //        // Assigner
 //        if (Objects.nonNull(identifier.getAssigner())) {
-//            identifier.setAssigner(persistReferenceEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
+//            identifier.setAssigner(persistEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
 //        }
     }
 

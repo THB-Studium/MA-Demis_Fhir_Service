@@ -25,6 +25,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -39,6 +40,10 @@ import static de.rki.demis.fhir.util.service.PersistenceService.persistReference
 import static de.rki.demis.fhir.util.service.PersistenceService.persistResourceEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +76,9 @@ public class BinaryService {
     public BinaryMod create(@NotNull BinaryMod newBinaryMod) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newBinaryMod, repository);
         persistBinaryModComponents(newBinaryMod, RequestOperation.Create);
 =======
@@ -85,6 +93,7 @@ public class BinaryService {
 
     public void update(@NotNull UUID binaryId, @NotNull BinaryMod update)
             throws ResourceNotFoundException, ParsingException {
+<<<<<<< HEAD
 <<<<<<< HEAD
         getOne(binaryId); // to check if the update exist
         persistBinaryModComponents(update, RequestOperation.Update);
@@ -102,6 +111,9 @@ public class BinaryService {
         persistBinaryModComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+        getOne(binaryId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistBinaryModComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(binaryId);
@@ -117,6 +129,7 @@ public class BinaryService {
         return repository.findAll(new BinarySpecs(criteria));
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     private void persistBinaryModComponents(@NotNull BinaryMod binary, RequestOperation requestOperation) {
 
@@ -145,22 +158,24 @@ public class BinaryService {
 >>>>>>> c598496 (update issues in BinaryService fixed)
     }
 
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     private void persistBinaryModComponents(@NotNull BinaryMod binary, RequestOperation requestOperation) {
 
         // Meta
-        binary.setMeta(persistMetaEntity(binary.getMeta(), metaService, requestOperation));
+        binary.setMeta(persistEntity(binary.getMeta(), metaService, requestOperation));
 
         // to update ImplicitRules
-        binary.setImplicitRules(persistUriTypeEntity(binary.getImplicitRules(), uriTypeService, requestOperation));
+        binary.setImplicitRules(persistEntity(binary.getImplicitRules(), uriTypeService, requestOperation));
 
         // to update Language
-        binary.setLanguage(persistCodeTypeEntity(binary.getLanguage(), codeTypeService, requestOperation));
+        binary.setLanguage(persistEntity(binary.getLanguage(), codeTypeService, requestOperation));
 
         // to update SecurityContext
-        binary.setSecurityContext(persistReferenceEntity(binary.getSecurityContext(), referenceService, requestOperation));
+        binary.setSecurityContext(persistEntity(binary.getSecurityContext(), referenceService, requestOperation));
 
         // to update SecurityContextTarget
-        binary.setSecurityContextTarget(persistResourceEntity(binary.getSecurityContextTarget(), resourceService, requestOperation));
+        binary.setSecurityContextTarget(persistEntity(binary.getSecurityContextTarget(), resourceService, requestOperation));
 
     }
 

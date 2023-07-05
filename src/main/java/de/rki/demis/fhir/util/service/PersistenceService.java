@@ -2,6 +2,7 @@ package de.rki.demis.fhir.util.service;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import de.rki.demis.fhir.model.BaseEntity;
 import de.rki.demis.fhir.service.BaseService;
 import de.rki.demis.fhir.util.constant.RequestOperation;
@@ -50,6 +51,11 @@ import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 =======
 import de.rki.demis.fhir.util.fhir_object.enums.BundleType;
 >>>>>>> acf3b2c (wip)
+=======
+import de.rki.demis.fhir.model.BaseEntity;
+import de.rki.demis.fhir.service.BaseService;
+import de.rki.demis.fhir.util.constant.RequestOperation;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -67,6 +73,9 @@ public class PersistenceService {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     public static <T extends BaseEntity> T persistEntity(T newEntity, BaseService<T> service, RequestOperation requestOperation) {
         if (Objects.nonNull(newEntity)) {
             newEntity = Objects.equals(requestOperation, RequestOperation.Update) && Objects.nonNull(newEntity.getId()) // to create directly the entity if id = null
@@ -74,6 +83,7 @@ public class PersistenceService {
                         ? service.update(newEntity.getId(), newEntity)
                         : service.create(newEntity)
                     : service.create(newEntity);
+<<<<<<< HEAD
         }
         return newEntity;
 =======
@@ -358,6 +368,10 @@ public class PersistenceService {
 
         return newUriType;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+        }
+        return newEntity;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
 }

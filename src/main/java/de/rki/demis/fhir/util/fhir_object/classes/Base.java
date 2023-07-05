@@ -1,5 +1,6 @@
 package de.rki.demis.fhir.util.fhir_object.classes;
 
+import de.rki.demis.fhir.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

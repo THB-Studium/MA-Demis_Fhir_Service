@@ -17,6 +17,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -28,6 +29,10 @@ import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistTypeEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +62,9 @@ public class ExtensionService implements BaseService<Extension> {
     public Extension create(@NotNull Extension newExtension) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newExtension, repository);
         persistExtensionComponents(newExtension, RequestOperation.Create);
 =======
@@ -69,6 +77,7 @@ public class ExtensionService implements BaseService<Extension> {
         return repository.save(newExtension);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public Extension update(UUID extensionId, @NotNull Extension update) throws ResourceNotFoundException {
         getOne(extensionId); // to check if the update exist
@@ -87,6 +96,10 @@ public class ExtensionService implements BaseService<Extension> {
         persistExtensionComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+    public Extension update(UUID extensionId, @NotNull Extension update) throws ResourceNotFoundException {
+        getOne(extensionId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistExtensionComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(extensionId);
@@ -101,6 +114,7 @@ public class ExtensionService implements BaseService<Extension> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
+<<<<<<< HEAD
     }
 
     private void persistExtensionComponents(@NotNull Extension extension, RequestOperation requestOperation) {
@@ -113,17 +127,19 @@ public class ExtensionService implements BaseService<Extension> {
         if (Objects.nonNull(extension.getValue())) {
             extension.setValue(persistEntity(extension.getValue(), typeService, requestOperation));
         }
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistExtensionComponents(@NotNull Extension extension, RequestOperation requestOperation) {
         // URL
         if (Objects.nonNull(extension.getUrl())) {
-            extension.setUrl(persistUriTypeEntity(extension.getUrl(), uriTypeService, requestOperation));
+            extension.setUrl(persistEntity(extension.getUrl(), uriTypeService, requestOperation));
         }
 
         // VALUE
         if (Objects.nonNull(extension.getValue())) {
-            extension.setValue(persistTypeEntity(extension.getValue(), typeService, requestOperation));
+            extension.setValue(persistEntity(extension.getValue(), typeService, requestOperation));
         }
     }
 

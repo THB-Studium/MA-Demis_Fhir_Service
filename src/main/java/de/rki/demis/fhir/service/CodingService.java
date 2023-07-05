@@ -2,6 +2,9 @@ package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
 import de.rki.demis.fhir.repository.CodingRepository;
@@ -31,6 +34,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -43,6 +47,10 @@ import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeE
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +81,9 @@ public class CodingService implements BaseService<Coding> {
     public Coding create(@NotNull Coding newCoding) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newCoding, repository);
         persistCodingComponents(newCoding, RequestOperation.Create);
 =======
@@ -85,6 +96,7 @@ public class CodingService implements BaseService<Coding> {
         return repository.save(newCoding);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public Coding update(UUID metaId, @NotNull Coding update) throws ResourceNotFoundException {
         getOne(metaId); // to check if the update exist
@@ -103,6 +115,10 @@ public class CodingService implements BaseService<Coding> {
         persistCodingComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+    public Coding update(UUID metaId, @NotNull Coding update) throws ResourceNotFoundException {
+        getOne(metaId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistCodingComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(metaId);
@@ -117,6 +133,7 @@ public class CodingService implements BaseService<Coding> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
+<<<<<<< HEAD
     }
 
     private void persistCodingComponents(@NotNull Coding coding, RequestOperation requestOperation) {
@@ -139,6 +156,8 @@ public class CodingService implements BaseService<Coding> {
         }
 
         coding.setExtension(extension);
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistCodingComponents(@NotNull Coding coding, RequestOperation requestOperation) {
@@ -146,17 +165,18 @@ public class CodingService implements BaseService<Coding> {
 
         // Extension
         if (Objects.nonNull(coding.getExtension())) {
-            coding.getExtension().forEach(item -> extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+            coding.getExtension().forEach(item -> extension.add(persistEntity(item, extensionService, requestOperation))
+            );
         }
 
         // System
         if (Objects.nonNull(coding.getSystem())) {
-            coding.setSystem(persistUriTypeEntity(coding.getSystem(), uriTypeService, requestOperation));
+            coding.setSystem(persistEntity(coding.getSystem(), uriTypeService, requestOperation));
         }
 
         // Code
         if (Objects.nonNull(coding.getCode())) {
-            coding.setCode(persistCodeTypeEntity(coding.getCode(), codeTypeService, requestOperation));
+            coding.setCode(persistEntity(coding.getCode(), codeTypeService, requestOperation));
         }
 
         coding.setExtension(extension);

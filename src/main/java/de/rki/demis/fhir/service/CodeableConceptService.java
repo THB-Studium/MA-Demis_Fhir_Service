@@ -28,6 +28,7 @@ import java.util.UUID;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
@@ -39,6 +40,10 @@ import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
 >>>>>>> c598496 (update issues in BinaryService fixed)
+=======
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +73,9 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newCodeableConcept, repository);
         persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
 =======
@@ -80,6 +88,7 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
         return repository.save(newCodeableConcept);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public CodeableConcept update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
         getOne(codeableConceptId); // to check if the update exist
@@ -96,6 +105,10 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
         persistCodeableConceptComponents(update, UPDATE_OP);
 >>>>>>> c598496 (update issues in BinaryService fixed)
 =======
+=======
+    public CodeableConcept update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
+        getOne(codeableConceptId); // to check if the update exist
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         persistCodeableConceptComponents(update, RequestOperation.Update);
 >>>>>>> acf3b2c (wip)
         update.setId(codeableConceptId);
@@ -110,6 +123,7 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
+<<<<<<< HEAD
     }
 
     private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
@@ -132,6 +146,8 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
 
         codeableConcept.setCoding(coding);
         codeableConcept.setExtension(extension);
+=======
+>>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
@@ -141,13 +157,15 @@ public class CodeableConceptService implements BaseService<CodeableConcept> {
         // Coding
         if (Objects.nonNull(codeableConcept.getCoding())) {
             codeableConcept.getCoding().forEach(item ->
-                    coding.add(persistCodingEntity(item, codingService, requestOperation)));
+                    coding.add(persistEntity(item, codingService, requestOperation))
+            );
         }
 
         // Extension
         if (Objects.nonNull(codeableConcept.getExtension())) {
             codeableConcept.getExtension().forEach(item ->
-                    extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+                    extension.add(persistEntity(item, extensionService, requestOperation))
+            );
         }
 
         codeableConcept.setCoding(coding);
