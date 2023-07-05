@@ -24,7 +24,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class CodeableConcept extends Element implements Serializable {
+public class CodeableConcept extends Element implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 760353246L;
 

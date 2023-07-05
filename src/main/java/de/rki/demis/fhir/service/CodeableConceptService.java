@@ -1,7 +1,6 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.CodeableConcept;
 import de.rki.demis.fhir.model.Coding;
 import de.rki.demis.fhir.model.Extension;
@@ -9,6 +8,7 @@ import de.rki.demis.fhir.repository.CodeableConceptRepository;
 import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,13 +19,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.service.PersistenceService.persistCodingEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class CodeableConceptService {
+public class CodeableConceptService implements BaseService<CodeableConcept> {
     private final CodeableConceptRepository repository;
     private final CodingService codingService;
     private final ExtensionService extensionService;
@@ -48,21 +48,17 @@ public class CodeableConceptService {
     }
 
     public CodeableConcept create(@NotNull CodeableConcept newCodeableConcept) {
+        checkForUniqueness(newCodeableConcept, repository);
         persistCodeableConceptComponents(newCodeableConcept, RequestOperation.Create);
         newCodeableConcept.setId(null);
         return repository.save(newCodeableConcept);
     }
 
-    public void update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
-        getOne(codeableConceptId);
-
-        if (!codeableConceptId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public CodeableConcept update(UUID codeableConceptId, @NotNull CodeableConcept update) throws ResourceNotFoundException {
+        getOne(codeableConceptId); // to check if the update exist
         persistCodeableConceptComponents(update, RequestOperation.Update);
         update.setId(codeableConceptId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID codeableConceptId) {
@@ -70,12 +66,9 @@ public class CodeableConceptService {
         repository.deleteById(codeableConceptId);
     }
 
-    private void checkForUniqueness(@NotNull CodeableConcept codeableConcept) {
-        if (repository.existsById(codeableConcept.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A CodeableConcept with the id=%s already exist :::", codeableConcept.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
     private void persistCodeableConceptComponents(@NotNull CodeableConcept codeableConcept, RequestOperation requestOperation) {
@@ -85,13 +78,15 @@ public class CodeableConceptService {
         // Coding
         if (Objects.nonNull(codeableConcept.getCoding())) {
             codeableConcept.getCoding().forEach(item ->
-                    coding.add(persistCodingEntity(item, codingService, requestOperation)));
+                    coding.add(persistEntity(item, codingService, requestOperation))
+            );
         }
 
         // Extension
         if (Objects.nonNull(codeableConcept.getExtension())) {
             codeableConcept.getExtension().forEach(item ->
-                    extension.add(persistExtensionEntity(item, extensionService, requestOperation)));
+                    extension.add(persistEntity(item, extensionService, requestOperation))
+            );
         }
 
         codeableConcept.setCoding(coding);

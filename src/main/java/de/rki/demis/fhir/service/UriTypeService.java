@@ -1,11 +1,11 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.UriType;
 import de.rki.demis.fhir.repository.UriTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class UriTypeService {
+public class UriTypeService implements BaseService<UriType> {
     private final UriTypeRepository repository;
 
 
@@ -37,19 +39,15 @@ public class UriTypeService {
     }
 
     public UriType create(@NotNull UriType newUriType) {
+        checkForUniqueness(newUriType, repository);
         newUriType.setId(null);
         return repository.save(newUriType);
     }
 
-    public void update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
-        getOne(uriTypeId);
-
-        if (!uriTypeId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public UriType update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
+        getOne(uriTypeId); // to check if the update exist
         update.setId(uriTypeId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID uriTypeId) {
@@ -57,12 +55,9 @@ public class UriTypeService {
         repository.deleteById(uriTypeId);
     }
 
-    private void checkForUniqueness(@NotNull UriType uriType) {
-        if (repository.existsById(uriType.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A UriType with the id=%s already exist :::", uriType.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
 }

@@ -1,11 +1,11 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.BundleLinkComponent;
 import de.rki.demis.fhir.repository.BundleLinkComponentRepository;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class BundleLinkComponentService {
+public class BundleLinkComponentService implements BaseService<BundleLinkComponent> {
     private final BundleLinkComponentRepository repository;
 
 
@@ -37,20 +39,16 @@ public class BundleLinkComponentService {
     }
 
     public BundleLinkComponent create(@NotNull BundleLinkComponent newBundleLinkComponent) {
+        checkForUniqueness(newBundleLinkComponent, repository);
         newBundleLinkComponent.setId(null);
         return repository.save(newBundleLinkComponent);
     }
 
-    public void update(UUID bundleLinkComponentId, @NotNull BundleLinkComponent update)
+    public BundleLinkComponent update(UUID bundleLinkComponentId, @NotNull BundleLinkComponent update)
             throws ResourceNotFoundException {
-        getOne(bundleLinkComponentId);
-
-        if (!bundleLinkComponentId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
+        getOne(bundleLinkComponentId); // to check if the update exist
         update.setId(bundleLinkComponentId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID bundleLinkComponentId) {
@@ -58,12 +56,9 @@ public class BundleLinkComponentService {
         repository.deleteById(bundleLinkComponentId);
     }
 
-    private void checkForUniqueness(@NotNull BundleLinkComponent bundleLinkComponent) {
-        if (repository.existsById(bundleLinkComponent.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A BundleLinkComponent with the id=%s already exist :::", bundleLinkComponent.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
 }

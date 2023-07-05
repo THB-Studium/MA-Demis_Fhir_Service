@@ -1,12 +1,12 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Identifier;
 import de.rki.demis.fhir.repository.IdentifierRepository;
 import de.rki.demis.fhir.util.constant.RequestOperation;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,13 +15,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeableConceptEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class IdentifierService {
+public class IdentifierService implements BaseService<Identifier> {
     private final IdentifierRepository repository;
     private final UriTypeService uriTypeService;
     private final CodeableConceptService codeableConceptService;
@@ -44,21 +44,17 @@ public class IdentifierService {
     }
 
     public Identifier create(@NotNull Identifier newIdentifier) {
+        checkForUniqueness(newIdentifier, repository);
         persistIdentifierComponents(newIdentifier, RequestOperation.Create);
         newIdentifier.setId(null);
         return repository.save(newIdentifier);
     }
 
-    public void update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
-        getOne(identifierId);
-
-        if (!identifierId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public Identifier update(UUID identifierId, @NotNull Identifier update) throws ResourceNotFoundException {
+        getOne(identifierId); // to check if the update exist
         persistIdentifierComponents(update, RequestOperation.Update);
         update.setId(identifierId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID identifierId) {
@@ -66,28 +62,25 @@ public class IdentifierService {
         repository.deleteById(identifierId);
     }
 
-    private void checkForUniqueness(@NotNull Identifier identifier) {
-        if (repository.existsById(identifier.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Identifier with the id=%s already exist :::", identifier.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
     private void persistIdentifierComponents(@NotNull Identifier identifier, RequestOperation requestOperation) {
         // Type
         if (Objects.nonNull(identifier.getType())) {
-            identifier.setType(persistCodeableConceptEntity(identifier.getType(), codeableConceptService, requestOperation));
+            identifier.setType(persistEntity(identifier.getType(), codeableConceptService, requestOperation));
         }
 
         // System
         if (Objects.nonNull(identifier.getSystem())) {
-            identifier.setSystem(persistUriTypeEntity(identifier.getSystem(), uriTypeService, requestOperation));
+            identifier.setSystem(persistEntity(identifier.getSystem(), uriTypeService, requestOperation));
         }
 
 //        // Assigner
 //        if (Objects.nonNull(identifier.getAssigner())) {
-//            identifier.setAssigner(persistReferenceEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
+//            identifier.setAssigner(persistEntity(identifier.getAssigner(), referenceService, requestOperation)); // todo: committed because of circle
 //        }
     }
 

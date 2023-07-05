@@ -17,7 +17,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Enumeration<T extends Enum<?>> extends PrimitiveType<T> implements Serializable {
+public class Enumeration<T extends Enum<?>> extends PrimitiveType<T> implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 

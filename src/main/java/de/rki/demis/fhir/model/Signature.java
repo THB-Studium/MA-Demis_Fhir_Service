@@ -23,7 +23,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Signature extends Type implements Serializable {
+public class Signature extends Type implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 1587325823L;
 

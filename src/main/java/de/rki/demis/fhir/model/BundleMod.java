@@ -27,7 +27,7 @@ import static de.rki.demis.fhir.util.constant.Constants.NOT_NULL_MSG;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class BundleMod extends Resource implements Serializable {
+public class BundleMod extends Resource implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 1353224198L;
 

@@ -21,7 +21,7 @@ import java.time.Period;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Identifier extends Element implements Serializable {
+public class Identifier extends Element implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -478840981L;
 

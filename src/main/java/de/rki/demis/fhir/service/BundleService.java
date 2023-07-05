@@ -1,7 +1,6 @@
 package de.rki.demis.fhir.service;
 
 import de.rki.demis.fhir.exception.ParsingException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.exception.ResourceNotFoundException;
 import de.rki.demis.fhir.model.BundleEntryComponent;
 import de.rki.demis.fhir.model.BundleLinkComponent;
@@ -22,14 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleEntryComponentEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistBundleLinkComponentEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistCodeTypeEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistEnumerationBundleTypeEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistIdentifierEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistMetaEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistSignatureEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
+import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +55,7 @@ public class BundleService {
     }
 
     public BundleMod create(@NotNull BundleMod newBundle) {
+        checkForUniqueness(newBundle, repository);
         persistBundleModComponents(newBundle, RequestOperation.Create);
         newBundle.setId(null);
         return repository.save(newBundle);
@@ -70,11 +64,6 @@ public class BundleService {
     public void update(UUID bundleId, @NotNull BundleMod update)
             throws ResourceNotFoundException, ParsingException {
         getOne(bundleId);
-
-        if (!bundleId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
         persistBundleModComponents(update, RequestOperation.Update);
         update.setId(bundleId);
         repository.save(update);
@@ -89,53 +78,37 @@ public class BundleService {
         return repository.findAll(new BundleSpecs(criteria));
     }
 
-    private void checkForUniqueness(@NotNull BundleMod bundle) {
-        if (repository.existsById(bundle.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Bundle with the id=%s already exist :::", bundle.getId())
-            );
-        }
-    }
-
     private void persistBundleModComponents(@NotNull BundleMod bundleMod, RequestOperation requestOperation) {
         Set<BundleLinkComponent> links = new HashSet<>();
         Set<BundleEntryComponent> entries = new HashSet<>();
 
         // Meta
-        bundleMod.setMeta(
-                persistMetaEntity(bundleMod.getMeta(), metaService, requestOperation));
+        bundleMod.setMeta(persistEntity(bundleMod.getMeta(), metaService, requestOperation));
 
         // ImplicitRules
-        bundleMod.setImplicitRules(
-                persistUriTypeEntity(bundleMod.getImplicitRules(), uriTypeService, requestOperation));
+        bundleMod.setImplicitRules(persistEntity(bundleMod.getImplicitRules(), uriTypeService, requestOperation));
 
         // Language
-        bundleMod.setLanguage(
-                persistCodeTypeEntity(bundleMod.getLanguage(), codeTypeService, requestOperation));
+        bundleMod.setLanguage(persistEntity(bundleMod.getLanguage(), codeTypeService, requestOperation));
 
         // Identifier
-        bundleMod.setIdentifier(
-                persistIdentifierEntity(bundleMod.getIdentifier(), identifierService, requestOperation));
+        bundleMod.setIdentifier(persistEntity(bundleMod.getIdentifier(), identifierService, requestOperation));
 
         // Type
-        bundleMod.setType(
-                persistEnumerationBundleTypeEntity(bundleMod.getType(), enumerationBundleTypeService, requestOperation));
+        bundleMod.setType(persistEntity(bundleMod.getType(), enumerationBundleTypeService, requestOperation));
 
         // Link
         if (Objects.nonNull(bundleMod.getLink())) {
-            bundleMod.getLink().forEach(item -> links.add(
-                    persistBundleLinkComponentEntity(item, bundleLinkComponentService, requestOperation)));
+            bundleMod.getLink().forEach(item -> links.add(persistEntity(item, bundleLinkComponentService, requestOperation)));
         }
 
         // Entry
         if (Objects.nonNull(bundleMod.getEntry())) {
-            bundleMod.getEntry().forEach(item -> entries.add(
-                    persistBundleEntryComponentEntity(item, bundleEntryComponentService, requestOperation)));
+            bundleMod.getEntry().forEach(item -> entries.add(persistEntity(item, bundleEntryComponentService, requestOperation)));
         }
 
         // Signature
-        bundleMod.setSignature(
-                persistSignatureEntity(bundleMod.getSignature(), signatureService, requestOperation));
+        bundleMod.setSignature(persistEntity(bundleMod.getSignature(), signatureService, requestOperation));
 
         bundleMod.setLink(links);
         bundleMod.setEntry(entries);

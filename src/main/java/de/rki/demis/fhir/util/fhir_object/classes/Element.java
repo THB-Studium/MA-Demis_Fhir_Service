@@ -1,5 +1,6 @@
 package de.rki.demis.fhir.util.fhir_object.classes;
 
+import de.rki.demis.fhir.model.BaseEntity;
 import de.rki.demis.fhir.model.Extension;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +31,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Element extends Base implements Serializable {
+public class Element extends Base implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -1452745816L;
 

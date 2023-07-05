@@ -19,7 +19,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Reference extends BaseReference implements Serializable {
+public class Reference extends BaseReference implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 784245805L;
 

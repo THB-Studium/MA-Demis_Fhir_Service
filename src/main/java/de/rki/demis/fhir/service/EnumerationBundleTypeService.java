@@ -1,12 +1,12 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.exception.ResourceBadRequestException;
 import de.rki.demis.fhir.model.Enumeration;
 import de.rki.demis.fhir.repository.EnumerationBundleTypeRepository;
 import de.rki.demis.fhir.util.fhir_object.enums.BundleType;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = Exception.class)
-public class EnumerationBundleTypeService {
+public class EnumerationBundleTypeService implements BaseService<Enumeration<BundleType>> {
     private final EnumerationBundleTypeRepository repository;
 
 
@@ -38,19 +40,15 @@ public class EnumerationBundleTypeService {
     }
 
     public Enumeration<BundleType> create(@NotNull Enumeration<BundleType> newEnumeration) {
+        checkForUniqueness(newEnumeration, repository);
         newEnumeration.setId(null);
         return repository.save(newEnumeration);
     }
 
-    public void update(UUID enumerationId, @NotNull Enumeration<BundleType> update) throws ResourceNotFoundException {
-        getOne(enumerationId);
-
-        if (!enumerationId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
+    public Enumeration<BundleType> update(UUID enumerationId, @NotNull Enumeration<BundleType> update) throws ResourceNotFoundException {
+        getOne(enumerationId);// to check if the update exist
         update.setId(enumerationId);
-        repository.save(update);
+        return repository.save(update);
     }
 
     public void delete(UUID enumerationId) {
@@ -58,12 +56,9 @@ public class EnumerationBundleTypeService {
         repository.deleteById(enumerationId);
     }
 
-    private void checkForUniqueness(@NotNull Enumeration<BundleType> enumeration) {
-        if (repository.existsById(enumeration.getId())) {
-            throw new ResourceBadRequestException(
-                    String.format("::: A Enumeration Bundle Type with the id=%s already exist :::", enumeration.getId())
-            );
-        }
+    @Override
+    public JpaRepository<?, UUID> getRepository() {
+        return repository;
     }
 
 }

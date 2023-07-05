@@ -21,7 +21,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class BundleEntryComponent extends BackboneElement implements Serializable {
+public class BundleEntryComponent extends BackboneElement implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 517783054L;
 

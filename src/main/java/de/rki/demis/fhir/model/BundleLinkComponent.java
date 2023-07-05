@@ -20,7 +20,7 @@ import static de.rki.demis.fhir.util.constant.Constants.NOT_NULL_MSG;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Entity
-public class BundleLinkComponent extends BackboneElement implements Serializable {
+public class BundleLinkComponent extends BackboneElement implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = -1010386066L;
 

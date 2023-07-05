@@ -14,7 +14,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class CanonicalType extends UriType implements Serializable {
+public class CanonicalType extends UriType implements Serializable, BaseEntity {
     @Serial
     private static final long serialVersionUID = 4L;
 }
