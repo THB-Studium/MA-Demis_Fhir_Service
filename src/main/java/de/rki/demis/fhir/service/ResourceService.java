@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -37,7 +38,7 @@ public class ResourceService implements BaseService<Resource> {
 
         if (resourceOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Resource with 'id = %s' does not exist :::", resourceId)
+                    String.format(NOT_EXIST_MSG, Resource.class.getSimpleName(), resourceId)
             );
         }
 

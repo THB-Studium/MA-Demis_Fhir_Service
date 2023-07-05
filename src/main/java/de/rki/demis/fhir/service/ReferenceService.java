@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -40,7 +41,7 @@ public class ReferenceService implements BaseService<Reference> {
 
         if (referenceOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Reference with 'id = %s' does not exist :::", referenceId)
+                    String.format(NOT_EXIST_MSG, Reference.class.getSimpleName(), referenceId)
             );
         }
 

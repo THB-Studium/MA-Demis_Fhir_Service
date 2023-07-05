@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -45,7 +46,7 @@ public class BundleEntryComponentService implements BaseService<BundleEntryCompo
 
         if (bundleEntryComponentOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A BundleEntryComponent with 'id = %s' does not exist :::", bundleEntryComponentId)
+                    String.format(NOT_EXIST_MSG, BundleEntryComponent.class.getSimpleName(), bundleEntryComponentId)
             );
         }
 

@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Objects;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.ALREADY_EXIST_MSG;
+
 public class CheckForUniquenessService {
 
     public static <T extends BaseEntity> void checkForUniqueness(@NotNull T entity, JpaRepository<T, UUID> repository) {
         if (Objects.nonNull(entity.getId()) && repository.existsById(entity.getId())) {
             throw new ResourceBadRequestException(
-                    String.format("::: A %s with the id=%s already exists :::", entity.getClass().getSimpleName(), entity.getId())
+                    String.format(ALREADY_EXIST_MSG, entity.getClass().getSimpleName(), entity.getId())
             );
         }
     }

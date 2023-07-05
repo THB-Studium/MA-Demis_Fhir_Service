@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -36,7 +37,7 @@ public class ExtensionService implements BaseService<Extension> {
 
         if (extensionOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Extension with 'id = %s' does not exist :::", extensionId)
+                    String.format(NOT_EXIST_MSG, Extension.class.getSimpleName(), extensionId)
             );
         }
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -31,7 +32,7 @@ public class UriTypeService implements BaseService<UriType> {
 
         if (uriTypeOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A UriType with 'id = %s' does not exist :::", uriTypeId)
+                    String.format(NOT_EXIST_MSG, UriType.class.getSimpleName(), uriTypeId)
             );
         }
 

@@ -1,6 +1,7 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+import de.rki.demis.fhir.model.BundleEntryComponent;
 import de.rki.demis.fhir.model.BundleEntryRequestComponent;
 import de.rki.demis.fhir.repository.BundleEntryRequestComponentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -31,7 +33,7 @@ public class BundleEntryRequestComponentService implements BaseService<BundleEnt
 
         if (bundleEntryRequestComponentOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A BundleEntryRequestComponent with 'id = %s' does not exist :::", bundleEntryRequestComponentId)
+                    String.format(NOT_EXIST_MSG, BundleEntryRequestComponent.class.getSimpleName(), bundleEntryRequestComponentId)
             );
         }
 

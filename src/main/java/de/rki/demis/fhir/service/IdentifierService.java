@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -36,7 +37,7 @@ public class IdentifierService implements BaseService<Identifier> {
 
         if (identifierOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Identifier with 'id = %s' does not exist :::", identifierId)
+                    String.format(NOT_EXIST_MSG, Identifier.class.getSimpleName(), identifierId)
             );
         }
 

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -40,7 +41,7 @@ public class BinaryService {
 
         if (binaryOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Binary with 'id = %s' does not exist :::", binaryModId)
+                    String.format(NOT_EXIST_MSG, BinaryMod.class.getSimpleName(), binaryModId)
             );
         }
 

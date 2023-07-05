@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -43,7 +44,7 @@ public class SignatureService implements BaseService<Signature> {
 
         if (signatureOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Signature with 'id = %s' does not exist :::", signatureId)
+                    String.format(NOT_EXIST_MSG, Signature.class.getSimpleName(), signatureId)
             );
         }
 

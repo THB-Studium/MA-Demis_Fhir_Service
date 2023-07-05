@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -31,7 +32,7 @@ public class CodeTypeService implements BaseService<CodeType> {
 
         if (codeTypeOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A CodeType with 'id = %s' does not exist :::", codeTypeId)
+                    String.format(NOT_EXIST_MSG, CodeType.class.getSimpleName(), codeTypeId)
             );
         }
 

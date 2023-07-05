@@ -18,6 +18,9 @@ public class Constants {
   public static final String NOT_EMPTY_MSG               = "must not be empty";
   public static final String NOT_NULL_MSG                = "must not be null";
 
+  public static final String NOT_EXIST_MSG               = "::: A %s with 'id = %s' does not exist :::";
+  public static final String ALREADY_EXIST_MSG           = "::: A %s with 'id = %s' already exists :::";
+
 
   /** APIs */
   public static final String SEARCH         = "search";
@@ -38,6 +41,7 @@ public class Constants {
   public static final String TAG            = "_tag";
   public static final String TEXT           = "_text";
   public static final String TYPE           = "_type";
+
 
   /*** API Search Result parameters ***/
 

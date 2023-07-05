@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -40,7 +41,7 @@ public class MetaService implements BaseService<Meta> {
         Optional<Meta> metaOp = repository.findById(metaId);
 
         if (metaOp.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("::: A Meta with 'id = %s' does not exist :::", metaId));
+            throw new ResourceNotFoundException(String.format(NOT_EXIST_MSG, Meta.class.getSimpleName(), metaId));
         }
 
         return metaOp.get();

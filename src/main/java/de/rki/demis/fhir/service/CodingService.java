@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -40,7 +41,7 @@ public class CodingService implements BaseService<Coding> {
 
         if (metaOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Coding with 'id = %s' does not exist :::", metaId)
+                    String.format(NOT_EXIST_MSG, Coding.class.getSimpleName(), metaId)
             );
         }
 

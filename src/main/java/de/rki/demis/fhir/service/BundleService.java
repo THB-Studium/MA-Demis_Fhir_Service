@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
@@ -47,7 +48,7 @@ public class BundleService {
 
         if (bundleOp.isEmpty()) {
             throw new ResourceNotFoundException(
-                    String.format("::: A Bundle with the 'id %s' does not exist :::", bundleId)
+                    String.format(NOT_EXIST_MSG, BundleMod.class.getSimpleName(), bundleId)
             );
         }
 
