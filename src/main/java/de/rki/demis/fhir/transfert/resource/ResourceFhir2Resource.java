@@ -3,7 +3,7 @@ package de.rki.demis.fhir.transfert.resource;
 import de.rki.demis.fhir.transfert.code_type.CodeTypeFhir2CodeType;
 import de.rki.demis.fhir.transfert.meta.MetaFhir2Meta;
 import de.rki.demis.fhir.transfert.uri_type.UriTypeFhir2UriType;
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
+import de.rki.demis.fhir.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

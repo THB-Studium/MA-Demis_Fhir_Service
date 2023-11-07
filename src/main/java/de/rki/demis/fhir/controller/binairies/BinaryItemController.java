@@ -66,7 +66,7 @@ public class BinaryItemController {
         log.info("::: BinaryItemController.update() - Update the BinaryMod [id={}] :::", binaryId);
         Binary binary = fhirParserService.parseBinary(updateString, mediaType);
         binary.setId("");
-        BinaryMod update = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Bundle object to BundleMod object
+        BinaryMod update = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Binary object to BinaryMod object
         service.update(binaryId, update);
         log.info("::: BinaryItemController.update() - BinaryMod with [id={}] updated :::", binaryId);
     }

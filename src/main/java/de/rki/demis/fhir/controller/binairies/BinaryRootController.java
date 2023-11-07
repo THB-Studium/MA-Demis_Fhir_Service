@@ -48,7 +48,7 @@ public class BinaryRootController {
         log.info("::: create() - create a BinaryMod :::");
         Binary binary = fhirParserService.parseBinary(newBinaryString, mediaType);
         binary.setId("");
-        BinaryMod newBinaryMod = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Bundle object to BundleMod object
+        BinaryMod newBinaryMod = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Binary object to BinaryMod object
         BinaryMod created = service.create(newBinaryMod);
         log.info("::: create() - BinaryMod created :::");
 

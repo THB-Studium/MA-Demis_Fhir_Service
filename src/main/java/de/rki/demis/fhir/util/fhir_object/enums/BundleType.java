@@ -55,7 +55,7 @@ public enum BundleType {
     NULL;
 
     public static BundleType fromCode(String codeString) throws FHIRException {
-        if (codeString == null || "".equals(codeString))
+        if (codeString == null || codeString.isEmpty())
             return null;
         if ("document".equals(codeString))
             return DOCUMENT;
@@ -93,7 +93,6 @@ public enum BundleType {
             case SEARCHSET -> "searchset";
             case COLLECTION -> "collection";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -102,7 +101,6 @@ public enum BundleType {
             case DOCUMENT, COLLECTION, SEARCHSET, HISTORY, BATCHRESPONSE, BATCH, TRANSACTIONRESPONSE, TRANSACTION, MESSAGE ->
                     "http://hl7.org/fhir/bundle-type";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -124,7 +122,6 @@ public enum BundleType {
             case COLLECTION ->
                     "The bundle is a set of resources collected into a single package for ease of distribution that imposes no processing obligations or behavioral rules beyond persistence.";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -140,7 +137,6 @@ public enum BundleType {
             case SEARCHSET -> "Search Results";
             case COLLECTION -> "Collection";
             case NULL -> null;
-            default -> "?";
         };
     }
 }

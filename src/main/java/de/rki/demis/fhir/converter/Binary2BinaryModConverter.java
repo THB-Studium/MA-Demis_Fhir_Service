@@ -35,7 +35,6 @@ public class Binary2BinaryModConverter implements Converter<Binary, BinaryMod> {
         out.setContentType(in.getContentType());
         out.setSecurityContext(ReferenceFhir2Reference.apply(in.getSecurityContext()));
         out.setSecurityContextTarget(ResourceFhir2Resource.apply(in.getSecurityContextTarget()));
-//        out.setData(Base64BinaryTypeFhir2Base64BinaryType.apply(in.getDataElement())); todo
         out.setData(in.getData());
 
         return out;

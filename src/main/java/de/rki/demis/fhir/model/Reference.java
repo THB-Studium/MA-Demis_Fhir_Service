@@ -39,8 +39,8 @@ public class Reference extends BaseReference implements Serializable, BaseEntity
      *           value = "The expected type of the target of the reference. If both Reference.type and Reference.reference
      *                    are populated and Reference.reference is a FHIR URL, both SHALL be consistent.The type is the
      *                    Canonical URL of Resource Definition that is the type this reference refers to. References are URLs
-     *                    that are relative to https://hl7.org/fhir/StructureDefinition/ e.g. \"Patient\" is a reference to
-     *                    https://hl7.org/fhir/StructureDefinition/Patient. Absolute URLs are only allowed for logical models
+     *                    that are relative to <a href="https://hl7.org/fhir/StructureDefinition/">...</a> e.g. \"Patient\" is a reference to
+     *                    <a href="https://hl7.org/fhir/StructureDefinition/Patient">...</a>. Absolute URLs are only allowed for logical models
      *                    (and can only be used in references in logical models, not resources)."
      ***/
     @OneToOne

@@ -3,7 +3,7 @@ package de.rki.demis.fhir.service;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import de.rki.demis.fhir.repository.ResourceRepository;
 import de.rki.demis.fhir.util.constant.RequestOperation;
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
+import de.rki.demis.fhir.model.Resource;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;

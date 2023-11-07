@@ -80,7 +80,7 @@ dependencies {
 
 // For generated class of jpa metadata model generator:....
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ["-AgeneratedAnnotationProcessorSourcesDirectory=" + file(generatedMainJava).absolutePath]
+    options.compilerArgs += ['-AgeneratedAnnotationProcessorSourcesDirectory=' + file(generatedMainJava).absolutePath]
 }
 
 sourceSets {
@@ -92,6 +92,6 @@ sourceSets {
 }
 
 // task for tests:....
-tasks.named("test") {
-    useJUnitPlatform()
+tasks.named('test') {
+
 }

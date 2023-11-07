@@ -41,7 +41,7 @@ public enum HTTPVerb {
 
 
     public static HTTPVerb fromCode(String codeString) throws FHIRException {
-        if (codeString == null || "".equals(codeString))
+        if (codeString == null || codeString.isEmpty())
             return null;
         if ("GET".equals(codeString))
             return GET;
@@ -70,7 +70,6 @@ public enum HTTPVerb {
             case DELETE -> "DELETE";
             case PATCH -> "PATCH";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -78,7 +77,6 @@ public enum HTTPVerb {
         return switch (this) {
             case GET, PATCH, DELETE, PUT, POST, HEAD -> "http://hl7.org/fhir/http-verb";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -91,7 +89,6 @@ public enum HTTPVerb {
             case DELETE -> "HTTP DELETE Command.";
             case PATCH -> "HTTP PATCH Command.";
             case NULL -> null;
-            default -> "?";
         };
     }
 
@@ -104,7 +101,6 @@ public enum HTTPVerb {
             case DELETE -> "DELETE";
             case PATCH -> "PATCH";
             case NULL -> null;
-            default -> "?";
         };
     }
 }

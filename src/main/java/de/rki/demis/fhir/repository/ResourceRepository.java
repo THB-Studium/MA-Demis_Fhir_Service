@@ -1,6 +1,6 @@
 package de.rki.demis.fhir.repository;
 
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
+import de.rki.demis.fhir.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

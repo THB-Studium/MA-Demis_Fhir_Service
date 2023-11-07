@@ -1,7 +1,6 @@
 package de.rki.demis.fhir.service;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import de.rki.demis.fhir.model.BundleEntryComponent;
 import de.rki.demis.fhir.model.BundleEntryRequestComponent;
 import de.rki.demis.fhir.repository.BundleEntryRequestComponentRepository;
 import lombok.RequiredArgsConstructor;

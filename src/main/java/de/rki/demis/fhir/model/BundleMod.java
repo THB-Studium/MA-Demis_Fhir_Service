@@ -1,6 +1,5 @@
 package de.rki.demis.fhir.model;
 
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import de.rki.demis.fhir.util.fhir_object.enums.BundleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,7 +55,7 @@ public class BundleMod extends Resource implements Serializable, BaseEntity {
     /***
      * shortDefinition = "If search, the total number of matches",
      *           value = "If a set of search matches, this is the total number of entries of type 'match' across all pages
-     *                    in the search.  It does not include search.mode = 'include' or 'outcome' entries and it does not
+     *                    in the search.  It does not include search.mode = 'include' or 'outcome' entries, and it does not
      *                    provide a count of the number of entries in the Bundle."
      ***/
     private int total;

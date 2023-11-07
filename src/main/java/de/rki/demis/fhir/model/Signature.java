@@ -1,6 +1,5 @@
 package de.rki.demis.fhir.model;
 
-import de.rki.demis.fhir.util.fhir_object.classes.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -86,7 +85,5 @@ public class Signature extends Type implements Serializable, BaseEntity {
      *           value = "The base64 encoding of the Signature content. When signature is not recorded electronically
      *                    this element would be empty."
      ***/
-//    @OneToOne
-//    private Base64BinaryType data;
     private byte[] data; // base64Binary: JSON string - base64 content - Regex: (\s*([0-9a-zA-Z\+\=]){4}\s*)+
 }
