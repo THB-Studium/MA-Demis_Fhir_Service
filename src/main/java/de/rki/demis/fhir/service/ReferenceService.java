@@ -18,28 +18,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
 import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
-=======
-import static de.rki.demis.fhir.util.constant.Constants.CREATE_OP;
-import static de.rki.demis.fhir.util.constant.Constants.UPDATE_OP;
-=======
->>>>>>> acf3b2c (wip)
-import static de.rki.demis.fhir.util.service.PersistenceService.persistExtensionEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistIdentifierEntity;
-import static de.rki.demis.fhir.util.service.PersistenceService.persistUriTypeEntity;
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
-import static de.rki.demis.fhir.util.service.PersistenceService.persistEntity;
-import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 
 @Service
 @RequiredArgsConstructor
@@ -68,46 +49,15 @@ public class ReferenceService implements BaseService<Reference> {
     }
 
     public Reference create(@NotNull Reference newReference) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         checkForUniqueness(newReference, repository);
         persistReferenceComponents(newReference, RequestOperation.Create);
-=======
-        persistReferenceComponents(newReference, CREATE_OP);
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
-        persistReferenceComponents(newReference, RequestOperation.Create);
->>>>>>> acf3b2c (wip)
         newReference.setId(null);
         return repository.save(newReference);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     public Reference update(UUID referenceId, @NotNull Reference update) throws ResourceNotFoundException {
         getOne(referenceId); // to check if the update exist
         persistReferenceComponents(update, RequestOperation.Update);
-=======
-    public void update(UUID referenceId, @NotNull Reference update) throws ResourceNotFoundException {
-        getOne(referenceId);
-
-        if (!referenceId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
-<<<<<<< HEAD
-        persistReferenceComponents(update, UPDATE_OP);
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
-=======
-    public Reference update(UUID referenceId, @NotNull Reference update) throws ResourceNotFoundException {
-        getOne(referenceId); // to check if the update exist
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
-        persistReferenceComponents(update, RequestOperation.Update);
->>>>>>> acf3b2c (wip)
         update.setId(referenceId);
         return repository.save(update);
     }
@@ -120,32 +70,6 @@ public class ReferenceService implements BaseService<Reference> {
     @Override
     public JpaRepository<?, UUID> getRepository() {
         return repository;
-<<<<<<< HEAD
-    }
-
-    private void persistReferenceComponents(@NotNull Reference reference, RequestOperation requestOperation) {
-        Set<Extension> extension = new HashSet<>();
-
-        // extension
-        if (Objects.nonNull(reference.getExtension())) {
-            reference.getExtension().forEach(item ->
-                    extension.add(persistEntity(item, extensionService, requestOperation))
-            );
-        }
-
-        // Type
-        if (Objects.nonNull(reference.getType())) {
-            reference.setType(persistEntity(reference.getType(), uriTypeService, requestOperation));
-        }
-
-        // Identifier
-        if (Objects.nonNull(reference.getIdentifier())) {
-            reference.setIdentifier(persistEntity(reference.getIdentifier(), identifierService, requestOperation));
-        }
-
-        reference.setExtension(extension);
-=======
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
     }
 
     private void persistReferenceComponents(@NotNull Reference reference, RequestOperation requestOperation) {

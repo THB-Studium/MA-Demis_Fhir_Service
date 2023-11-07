@@ -17,17 +17,6 @@ public class Constants {
   public static final String ALL_OK                      = "All OK";
   public static final String NOT_EMPTY_MSG               = "must not be empty";
   public static final String NOT_NULL_MSG                = "must not be null";
-<<<<<<< HEAD
-
-  public static final String NOT_EXIST_MSG               = "::: A %s with 'id = %s' does not exist :::";
-  public static final String ALREADY_EXIST_MSG           = "::: A %s with 'id = %s' already exists :::";
-
-
-  /** Request Operation */
-  public static final String CREATE_OP  = "create";
-  public static final String UPDATE_OP  = "update";
-=======
->>>>>>> acf3b2c (wip)
 
   public static final String NOT_EXIST_MSG               = "::: A %s with 'id = %s' does not exist :::";
   public static final String ALREADY_EXIST_MSG           = "::: A %s with 'id = %s' already exists :::";

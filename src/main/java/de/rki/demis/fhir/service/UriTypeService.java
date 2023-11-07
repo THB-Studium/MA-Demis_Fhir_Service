@@ -13,14 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
-=======
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
-=======
-import static de.rki.demis.fhir.util.constant.Constants.NOT_EXIST_MSG;
->>>>>>> 694cae4 (some refactorings are done)
 import static de.rki.demis.fhir.util.service.CheckForUniquenessService.checkForUniqueness;
 
 @Service
@@ -52,23 +45,8 @@ public class UriTypeService implements BaseService<UriType> {
         return repository.save(newUriType);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     public UriType update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
         getOne(uriTypeId); // to check if the update exist
-=======
-    public void update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
-        getOne(uriTypeId);
-
-        if (!uriTypeId.equals(update.getId())) {
-            checkForUniqueness(update);
-        }
-
->>>>>>> acf3b2c (wip)
-=======
-    public UriType update(UUID uriTypeId, @NotNull UriType update) throws ResourceNotFoundException {
-        getOne(uriTypeId); // to check if the update exist
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
         update.setId(uriTypeId);
         return repository.save(update);
     }

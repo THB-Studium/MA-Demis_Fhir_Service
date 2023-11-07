@@ -62,7 +62,6 @@ dependencies {
 
     // DBs:....
     runtimeOnly "org.postgresql:postgresql:42.5.4" // Postgres
-//    implementation "io.timescale:timescaledb-jdbc:1.2.3" // TimeScaleDB
 
 
     // Extras Tools:....

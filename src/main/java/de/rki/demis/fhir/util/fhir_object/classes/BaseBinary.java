@@ -1,10 +1,7 @@
 package de.rki.demis.fhir.util.fhir_object.classes;
 
 import de.rki.demis.fhir.model.BaseEntity;
-<<<<<<< HEAD
 import de.rki.demis.fhir.model.Resource;
-=======
->>>>>>> e9e3b2c (fixe update issues and some refactorings are done)
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

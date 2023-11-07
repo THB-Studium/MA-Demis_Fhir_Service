@@ -3,13 +3,6 @@ package de.rki.demis.fhir.controller.binairies;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.BinaryMod;
 import de.rki.demis.fhir.service.BinaryService;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import de.rki.demis.fhir.transfert.binary.Binary2BinaryMod;
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
->>>>>>> f67cebc (some refactorings done)
 import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Binary;
@@ -44,14 +37,7 @@ public class BinaryItemController {
     private static final Logger log = LoggerFactory.getLogger(BinaryItemController.class);
     private final BinaryService service;
     private final FhirParserService fhirParserService;
-<<<<<<< HEAD
-<<<<<<< HEAD
     private final ConversionService conversionService;
-=======
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
-    private final ConversionService conversionService;
->>>>>>> f67cebc (some refactorings done)
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -80,15 +66,7 @@ public class BinaryItemController {
         log.info("::: BinaryItemController.update() - Update the BinaryMod [id={}] :::", binaryId);
         Binary binary = fhirParserService.parseBinary(updateString, mediaType);
         binary.setId("");
-<<<<<<< HEAD
-<<<<<<< HEAD
         BinaryMod update = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Binary object to BinaryMod object
-=======
-        BinaryMod update = Objects.requireNonNull(Binary2BinaryMod.apply(binary));
->>>>>>> c598496 (update issues in BinaryService fixed)
-=======
-        BinaryMod update = Objects.requireNonNull(conversionService.convert(binary, BinaryMod.class)); // to covert Bundle object to BundleMod object
->>>>>>> f67cebc (some refactorings done)
         service.update(binaryId, update);
         log.info("::: BinaryItemController.update() - BinaryMod with [id={}] updated :::", binaryId);
     }
