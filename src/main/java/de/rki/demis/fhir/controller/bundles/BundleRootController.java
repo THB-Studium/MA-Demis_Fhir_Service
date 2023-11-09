@@ -3,6 +3,7 @@ package de.rki.demis.fhir.controller.bundles;
 import de.rki.demis.fhir.controller.ApiConstants;
 import de.rki.demis.fhir.model.table.BundleMod;
 import de.rki.demis.fhir.service.BundleService;
+import de.rki.demis.fhir.transfert.bundle.Bundle2BundleMod;
 import de.rki.demis.fhir.util.service.FhirParserService;
 import lombok.RequiredArgsConstructor;
 import org.hl7.fhir.r4.model.Bundle;
@@ -48,7 +49,8 @@ public class BundleRootController {
         log.info("::: create() - create a Bundle :::");
         Bundle bundle = fhirParserService.parseBundle(newBundleString, mediaType);
         bundle.setId("");
-        BundleMod newBundleMod = Objects.requireNonNull(conversionService.convert(bundle, BundleMod.class)); // to covert Bundle object to BundleMod object
+//        BundleMod newBundleMod = Objects.requireNonNull(conversionService.convert(bundle, BundleMod.class)); // to covert Bundle object to BundleMod object
+        BundleMod newBundleMod = Objects.requireNonNull(Bundle2BundleMod.apply(bundle)); // to covert Bundle object to BundleMod object
         BundleMod created = service.create(newBundleMod);
         log.info("::: create() - Bundle created :::");
 

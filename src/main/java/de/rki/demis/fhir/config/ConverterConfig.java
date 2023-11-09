@@ -17,7 +17,7 @@ public class ConverterConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(@NotNull FormatterRegistry registry) {
         registry.addConverter(new Binary2BinaryModConverter());
-        registry.addConverter(new Bundle2BundleModConverter());
+//        registry.addConverter(new Bundle2BundleModConverter());
         registry.addConverter(new EnumerationToEnumBundleTypeConverter());
         registry.addConverter(new EnumerationToEnumHTTPVerbConverter());
         registry.addConverter(new EnumerationToEnumSearchEntryModeConverter());

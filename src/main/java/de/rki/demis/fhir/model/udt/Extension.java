@@ -37,8 +37,6 @@ public class Extension extends BaseExtension implements Serializable {
      * value = "Value of extension - must be one of a constrained set of the data types
      * (see [Extensibility](extensibility.html) for a list)."
      **/
-    // @JsonIdentityInfo is used here to fix circular reference btw. "Element" and "Extension"
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @CassandraType(type = CassandraType.Name.UDT, userTypeName = "type_udt")
     private Type value;
 }
