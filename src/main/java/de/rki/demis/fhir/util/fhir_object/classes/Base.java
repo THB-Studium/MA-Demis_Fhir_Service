@@ -30,6 +30,6 @@ public class Base implements Serializable {
     private Set<String> formatCommentsPost;
 
     public boolean isEmpty() {
-        return true;
+        return formatCommentsPre.isEmpty() && formatCommentsPost.isEmpty();
     }
 }
